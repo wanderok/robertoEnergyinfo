@@ -1,0 +1,14 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<BorlandProject>
+	<Transactions>
+    <Transaction>2024/12/03 10:07:55.000.628,=C:\Users\wande\Documents\Embarcadero\Studio\Projects\Unit2.pas</Transaction>
+    <Transaction>2024/12/03 10:09:01.000.712,C:\Users\wande\Documents\Embarcadero\Studio\Projects\Unit2.pas=C:\sistemas\robertoEnergyinfo\ConciliacaoBancaria\Principal.pas</Transaction>
+    <Transaction>2024/12/03 10:09:01.000.712,C:\Users\wande\Documents\Embarcadero\Studio\Projects\Unit2.dfm=C:\sistemas\robertoEnergyinfo\ConciliacaoBancaria\Principal.dfm</Transaction>
+    <Transaction>2024/12/03 10:09:09.000.180,C:\Users\wande\Documents\Embarcadero\Studio\Projects\Project2.dproj=C:\sistemas\robertoEnergyinfo\ConciliacaoBancaria\ConciliacaoBancaria.dproj</Transaction>
+    <Transaction>2024/12/03 15:35:41.000.127,C:\sistemas\robertoEnergyinfo\ConciliacaoBancaria\Principal.dfm=C:\sistemas\robertoEnergyinfo\ConciliacaoBancaria\uPrincipal.dfm</Transaction>
+    <Transaction>2024/12/03 15:35:41.000.127,C:\sistemas\robertoEnergyinfo\ConciliacaoBancaria\Principal.pas=C:\sistemas\robertoEnergyinfo\ConciliacaoBancaria\uPrincipal.pas</Transaction>
+    <Transaction>2024/12/03 17:34:35.000.662,=C:\sistemas\robertoEnergyinfo\ConciliacaoBancaria\Unit1.pas</Transaction>
+    <Transaction>2024/12/03 17:35:18.000.963,C:\sistemas\robertoEnergyinfo\ConciliacaoBancaria\uEnergyInfo.dfm=C:\sistemas\robertoEnergyinfo\ConciliacaoBancaria\Unit1.dfm</Transaction>
+    <Transaction>2024/12/03 17:35:18.000.963,C:\sistemas\robertoEnergyinfo\ConciliacaoBancaria\uEnergyInfo.pas=C:\sistemas\robertoEnergyinfo\ConciliacaoBancaria\Unit1.pas</Transaction>
+  </Transactions>
+</BorlandProject>
