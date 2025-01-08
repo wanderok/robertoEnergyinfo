@@ -15,11 +15,11 @@ object Form1: TForm1
   PixelsPerInch = 96
   TextHeight = 15
   object Button1: TButton
-    Left = 240
-    Top = 24
-    Width = 75
-    Height = 25
-    Caption = 'Button1'
+    Left = 32
+    Top = 16
+    Width = 89
+    Height = 50
+    Caption = 'GET'
     TabOrder = 0
     OnClick = Button1Click
   end
@@ -32,5 +32,14 @@ object Form1: TForm1
     Lines.Strings = (
       'Memo1')
     TabOrder = 1
+  end
+  object Button2: TButton
+    Left = 136
+    Top = 16
+    Width = 89
+    Height = 50
+    Caption = 'POST'
+    TabOrder = 2
+    OnClick = Button2Click
   end
 end

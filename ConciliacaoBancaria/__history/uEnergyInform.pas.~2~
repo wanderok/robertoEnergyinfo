@@ -1,4 +1,4 @@
-unit uEnergyInfo;
+unit uEnergyInform;
 
 interface
 
@@ -29,10 +29,7 @@ TBradesco = class
     function Extrato(Inicio, Fim: TDateTime): String;
   end;
   TForm1 = class(TForm)
-    Button1: TButton;
     Memo1: TMemo;
-    Button2: TButton;
-    procedure Button1Click(Sender: TObject);
     procedure Button2Click(Sender: TObject);
 
   private
@@ -50,39 +47,6 @@ implementation
 
 {$R *.dfm}
 { TForm1 }
-
-procedure TForm1.Button1Click(Sender: TObject);
-var
-  HttpClient: TIdHTTP;
-  Response: string;
-  SSLIOHandler: TIdSSLIOHandlerSocketOpenSSL;
-begin
-  HttpClient := TIdHTTP.Create(nil);
-  SSLIOHandler := TIdSSLIOHandlerSocketOpenSSL.Create(HttpClient);
-
-  // Atribuir o manipulador SSL
-    HttpClient.IOHandler := SSLIOHandler;
-    SSLIOHandler.SSLOptions.SSLVersions := [sslvTLSv1_2];
-  try
-    // Configurar para lidar com SSL (caso seja necessário para APIs HTTPS)
-    HttpClient.IOHandler := TIdSSLIOHandlerSocketOpenSSL.Create(HttpClient);
-
-    try
-      // Realizar a requisição GET
-      //Response := HttpClient.Get('http://localhost:3000/api/grafico001');
-      Response := HttpClient.Get('https://dicas-on-line.vercel.app/api/dicas');
-      Memo1.Lines.Text := Response;
-    except
-      on E: Exception do
-      begin
-        Memo1.Lines.Text := E.Message;
-        ShowMessage('Erro: ' + E.Message);
-      end;
-    end;
-  finally
-    HttpClient.Free;
-  end;
-end;
 
 procedure TForm1.Button2Click(Sender: TObject);
 var

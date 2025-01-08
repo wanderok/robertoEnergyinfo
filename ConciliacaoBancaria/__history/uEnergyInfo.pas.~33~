@@ -26,7 +26,7 @@ TBradesco = class
     property CertificadoDigital: string read FCertificadoDigital write FCertificadoDigital;
     property Conta: string read FConta write FConta;
     property Agencia: string read FAgencia write FAgencia;
-    function Extrato(Inicio, Fim: TDateTime): String;
+    function Extrato(Inicio, Fim: TDateTime): TStringList;
   end;
   TForm1 = class(TForm)
     Button1: TButton;
@@ -136,7 +136,7 @@ end;
 
 { TBradesco }
 
-function TBradesco.Extrato(Inicio, Fim: TDateTime): String;
+function TBradesco.Extrato(Inicio, Fim: TDateTime): TStringList;
 var
   HttpClient: TIdHTTP;
   Response: string;
@@ -167,13 +167,15 @@ begin
         ShowMessage('Erro: ' + E.Message);
       end;
     end;
-    result := Retorno.Text;
+    result := Retorno;
   finally
     Retorno.Free;
     HttpClient.Free;
   end;
 end;
 
+
+end;
 
 end.
 

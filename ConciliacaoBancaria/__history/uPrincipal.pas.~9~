@@ -27,7 +27,7 @@ implementation
 
 {$R *.dfm}
 
-uses uOxymed;
+uses uEnergyInfo;
 
 procedure TfrmPrincipal.Button1Click(Sender: TObject);
 var Bradesco : TBradesco;
@@ -43,7 +43,7 @@ begin
      Memo1.Lines.Clear;
      vData1 := Date;
      vData2 := Date + 30;
-     Memo1.Text := Bradesco.Extrato(vData1,vData2);
+     Memo1.Text := Bradesco.Extrato(vData1,vData2).Text;
      Bradesco.Free;
 end;
 

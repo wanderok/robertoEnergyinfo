@@ -26,7 +26,7 @@ TBradesco = class
     property CertificadoDigital: string read FCertificadoDigital write FCertificadoDigital;
     property Conta: string read FConta write FConta;
     property Agencia: string read FAgencia write FAgencia;
-    function Extrato(Inicio, Fim: TDateTime): String;
+    function Extrato(Inicio, Fim: TDateTime): TMemo;
   end;
   TForm1 = class(TForm)
     Button1: TButton;
@@ -136,44 +136,10 @@ end;
 
 { TBradesco }
 
-function TBradesco.Extrato(Inicio, Fim: TDateTime): String;
-var
-  HttpClient: TIdHTTP;
-  Response: string;
-  SSLIOHandler: TIdSSLIOHandlerSocketOpenSSL;
-  Retorno : TStringList;
+function TBradesco.Extrato(Inicio, Fim: TDateTime): TMemo;
 begin
 
-  Retorno := TStringList.Create;
-  HttpClient := TIdHTTP.Create(nil);
-  SSLIOHandler := TIdSSLIOHandlerSocketOpenSSL.Create(HttpClient);
-
-  // Atribuir o manipulador SSL
-    HttpClient.IOHandler := SSLIOHandler;
-    SSLIOHandler.SSLOptions.SSLVersions := [sslvTLSv1_2];
-  try
-    // Configurar para lidar com SSL (caso seja necessário para APIs HTTPS)
-    HttpClient.IOHandler := TIdSSLIOHandlerSocketOpenSSL.Create(HttpClient);
-
-    try
-      // Realizar a requisição GET
-      //Response := HttpClient.Get('http://localhost:3000/api/grafico001');
-      Response := HttpClient.Get('https://dicas-on-line.vercel.app/api/dicas');
-      Retorno.Text := Response;
-    except
-      on E: Exception do
-      begin
-        Retorno.Text := E.Message;
-        ShowMessage('Erro: ' + E.Message);
-      end;
-    end;
-    result := Retorno.Text;
-  finally
-    Retorno.Free;
-    HttpClient.Free;
-  end;
 end;
-
 
 end.
 

@@ -1,0 +1,36 @@
+unit uOxymed;
+
+interface
+
+uses
+  Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants,
+  System.Classes, Vcl.Graphics,
+  Vcl.Controls, Vcl.Forms, Vcl.Dialogs, IdHTTP, IdSSL, IdSSLOpenSSL,
+  Vcl.StdCtrls,
+  IdGlobal,
+  System.JSON;
+
+type
+  TBradesco = class
+  private
+    FRazaoSocial: string;
+    FClienteID: Integer;
+    FCNPJ: string;
+    FCertificadoDigital: string;
+    FConta: String;
+    FAgencia: String;
+  public
+    property RazaoSocial: string read FRazaoSocial write FRazaoSocial;
+    property ClienteID: Integer read FClienteID write FClienteID;
+    property CNPJ: string read FCNPJ write FCNPJ;
+    property CertificadoDigital: string read FCertificadoDigital
+      write FCertificadoDigital;
+    property Conta: string read FConta write FConta;
+    property Agencia: string read FAgencia write FAgencia;
+    function Extrato(Inicio, Fim: TDateTime): String;
+  end;
+
+implementation
+
+
+end.

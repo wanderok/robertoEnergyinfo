@@ -30,14 +30,4 @@ object frmPrincipal: TfrmPrincipal
     TabOrder = 1
     OnClick = Button1Click
   end
-  object Memo1: TMemo
-    Left = 0
-    Top = 72
-    Width = 624
-    Height = 369
-    Align = alBottom
-    Lines.Strings = (
-      'Memo1')
-    TabOrder = 2
-  end
 end

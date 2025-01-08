@@ -27,11 +27,10 @@ implementation
 
 {$R *.dfm}
 
-uses uOxymed;
+uses uEnergyInfo;
 
 procedure TfrmPrincipal.Button1Click(Sender: TObject);
 var Bradesco : TBradesco;
-    vData1, vData2 : TDateTime;
 begin
      Bradesco := TBradesco.Create;
      Bradesco.RazaoSocial := 'OXYMED COMERCIO E LOCACAO DE EQUIPAMENTO';
@@ -41,9 +40,7 @@ begin
      Bradesco.ClienteID := 0000;
      Bradesco.CertificadoDigital := 'xxxx';
      Memo1.Lines.Clear;
-     vData1 := Date;
-     vData2 := Date + 30;
-     Memo1.Text := Bradesco.Extrato(vData1,vData2);
+     Memo1.Text := Bradesco.Extrato();
      Bradesco.Free;
 end;
 

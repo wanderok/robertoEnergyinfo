@@ -27,7 +27,7 @@ implementation
 
 {$R *.dfm}
 
-uses uOxymed;
+uses uEnergyInfo;
 
 procedure TfrmPrincipal.Button1Click(Sender: TObject);
 var Bradesco : TBradesco;

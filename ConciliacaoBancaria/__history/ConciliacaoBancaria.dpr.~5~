@@ -3,7 +3,7 @@ program ConciliacaoBancaria;
 uses
   Vcl.Forms,
   uPrincipal in 'uPrincipal.pas' {frmPrincipal},
-  uOxymed in 'uOxymed.pas';
+  uEnergyInfo in 'uEnergyInfo.pas' {Form1};
 
 {$R *.res}
 
