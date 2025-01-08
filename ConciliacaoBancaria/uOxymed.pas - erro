@@ -1,0 +1,83 @@
+unit uOxymed;
+
+interface
+
+uses
+  Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants,
+  System.Classes, IPPeerCommon, //IPPeerMgr,  // Necessário para suporte a comunicação de rede
+  System.JSON, System.Threading,
+  REST.Client, REST.Types, System.Net.HttpClient, System.Net.URLClient,
+  Data.Bind.Components, Data.Bind.ObjectScope;
+
+type
+  TBradesco = class
+  private
+    FRazaoSocial: string;
+    FClienteID: Integer;
+    FCNPJ: string;
+    FCertificadoDigital: string;
+    FConta: String;
+    FAgencia: String;
+  public
+    property RazaoSocial: string read FRazaoSocial write FRazaoSocial;
+    property ClienteID: Integer read FClienteID write FClienteID;
+    property CNPJ: string read FCNPJ write FCNPJ;
+    property CertificadoDigital: string read FCertificadoDigital
+      write FCertificadoDigital;
+    property Conta: string read FConta write FConta;
+    property Agencia: string read FAgencia write FAgencia;
+    function Extrato(Inicio, Fim: TDateTime): String;
+  end;
+
+implementation
+
+function TBradesco.Extrato(Inicio, Fim: TDateTime): String;
+var
+  RESTClient: TRESTClient;
+  RESTRequest: TRESTRequest;
+  RESTResponse: TRESTResponse;
+  resposta, URL: string;
+begin
+  // Criando as instâncias dos objetos REST
+  RESTClient := TRESTClient.Create(nil);
+//  RESTClient.BaseURL := 'https://dicas-on-line.vercel.app';  // URL base da API
+RESTClient.BaseURL := 'http://localhost:3000';  // URL base da API
+
+  RESTRequest := TRESTRequest.Create(nil);
+  RESTResponse := TRESTResponse.Create(nil);
+
+  try
+    RESTRequest.Client := RESTClient;
+    RESTRequest.Response := RESTResponse;
+    RESTRequest.Resource := '/api/dicas'; // Endpoint da API
+
+    // Configurando o método HTTP (GET)
+    RESTRequest.Method := TRESTRequestMethod.rmGET;  // Definir como GET (ou POST)
+
+    // Usando TTask para executar a requisição de forma assíncrona
+    TTask.Run(
+      procedure
+      begin
+        try
+          // Enviando a requisição de forma assíncrona
+          RESTRequest.Execute;
+
+          // Verificando a resposta
+          if RESTResponse.StatusCode = 200 then
+            resposta := 'Resposta: ' + RESTResponse.Content
+          else
+            resposta := 'Erro: ' + RESTResponse.StatusText;
+        except
+          on E: Exception do
+            resposta := 'Erro: ' + E.Message;
+        end;
+      end);
+
+    Result := resposta;  // Retorna a resposta obtida
+  finally
+    RESTRequest.Free;
+    RESTResponse.Free;
+    RESTClient.Free;
+  end;
+end;
+end.

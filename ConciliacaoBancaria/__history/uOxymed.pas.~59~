@@ -19,7 +19,7 @@ uses
   IdGlobal,
   System.JSON,
 
-   System.Net.HttpClient, System.Net.URLClient;
+   System.Net.HttpClient, System.Net.URLClient, System.Classes;
 
 type
   TBradesco = class
