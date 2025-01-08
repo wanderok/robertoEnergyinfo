@@ -4,8 +4,8 @@ File_1=TSourceModule,'c:\program files (x86)\embarcadero\studio\14.0\source\Indy
 
 [Modules]
 Module0=C:\fi9404\pessoal\delphi\robertoEnergyinfo\ConciliacaoBancaria\uOxymed.pas
-Module1=C:\fi9404\pessoal\delphi\robertoEnergyinfo\ConciliacaoBancaria\uPrincipal.pas
-Module2=default.htm
+Module1=default.htm
+Module2=C:\fi9404\pessoal\delphi\robertoEnergyinfo\ConciliacaoBancaria\uPrincipal.pas
 Module3=c:\program files (x86)\embarcadero\studio\14.0\source\Indy10\System\IdStack.pas
 Count=4
 EditWindowCount=1
@@ -15,13 +15,13 @@ ModuleType=TSourceModule
 FormState=0
 FormOnTop=0
 
+[default.htm]
+ModuleType=TURLModule
+
 [C:\fi9404\pessoal\delphi\robertoEnergyinfo\ConciliacaoBancaria\uPrincipal.pas]
 ModuleType=TSourceModule
 FormState=1
 FormOnTop=0
-
-[default.htm]
-ModuleType=TURLModule
 
 [c:\program files (x86)\embarcadero\studio\14.0\source\Indy10\System\IdStack.pas]
 ModuleType=TSourceModule
@@ -71,9 +71,9 @@ WelcomePageURL=bds:/default.htm
 [View1]
 CustomEditViewType=TEditView
 Module=C:\fi9404\pessoal\delphi\robertoEnergyinfo\ConciliacaoBancaria\uOxymed.pas
-CursorX=60
-CursorY=35
-TopLine=21
+CursorX=29
+CursorY=40
+TopLine=43
 LeftCol=1
 Elisions=
 Bookmarks=
