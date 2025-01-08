@@ -1,0 +1,64 @@
+unit uEnergyInfo;
+
+interface
+
+uses
+  Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants,
+  System.Classes, Vcl.Graphics,
+  Vcl.Controls, Vcl.Forms, Vcl.Dialogs, IdHTTP, IdSSL, IdSSLOpenSSL,
+  Vcl.StdCtrls;
+
+type
+  TForm1 = class(TForm)
+    Button1: TButton;
+    Memo1: TMemo;
+    procedure Button1Click(Sender: TObject);
+
+  private
+    { Private declarations }
+    procedure ok;
+  public
+    { Public declarations }
+  end;
+
+var
+  Form1: TForm1;
+
+implementation
+
+{$R *.dfm}
+{ TForm1 }
+
+procedure TForm1.Button1Click(Sender: TObject);
+var
+  HttpClient: TIdHTTP;
+  Response: string;
+begin
+  HttpClient := TIdHTTP.Create(nil);
+  try
+    // Configurar para lidar com SSL (caso seja necessário para APIs HTTPS)
+    HttpClient.IOHandler := TIdSSLIOHandlerSocketOpenSSL.Create(HttpClient);
+
+    try
+      // Realizar a requisição GET
+      //Response := HttpClient.Get('http://localhost:3000/api/grafico001');
+      Response := HttpClient.Get('https://dicas-on-line.vercel.app/api/dicas');
+      Memo1.Lines.Text := Response;
+    except
+      on E: Exception do
+      begin
+        Memo1.Lines.Text := E.Message;
+        ShowMessage('Erro: ' + E.Message);
+      end;
+    end;
+  finally
+    HttpClient.Free;
+  end;
+end;
+
+procedure TForm1.ok;
+begin
+
+end;
+
+end.

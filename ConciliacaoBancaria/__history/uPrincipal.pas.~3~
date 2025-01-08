@@ -1,0 +1,29 @@
+unit uPrincipal;
+
+interface
+
+uses
+  Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes, Vcl.Graphics,
+  Vcl.Controls, Vcl.Forms, Vcl.Dialogs,
+  System.Net.HttpClient, System.Net.HttpClientComponent, Soap.InvokeRegistry,
+  Soap.Rio, Soap.SOAPHTTPClient;
+
+type
+  TfrmPrincipal = class(TForm)
+    HTTPRIO1: THTTPRIO;
+  private
+    { Private declarations }
+  public
+    { Public declarations }
+  end;
+
+var
+  frmPrincipal: TfrmPrincipal;
+
+implementation
+
+{$R *.dfm}
+
+uses uEnergyInfo;
+
+end.
