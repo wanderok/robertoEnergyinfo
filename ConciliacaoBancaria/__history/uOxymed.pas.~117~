@@ -34,6 +34,7 @@ type
     FAgencia: String;
     FJWS:String;
     FToken:String;
+    FHeader:String;
     function CriarHeader: string;
     function CriarPayload: string;
     function ClientKey:String;
@@ -53,6 +54,7 @@ type
       write FCertificadoDigital;
     property Conta: string read FConta write FConta;
     property Agencia: string read FAgencia write FAgencia;
+    property Header: string read FHeader write FHeader;
     function Extrato(Inicio, Fim: TDateTime): String;
   end;
 
@@ -147,6 +149,7 @@ var
   Response: IHTTPResponse;
   StringStream: TStringStream;
   JsonBody, FormBody: string;
+  JsonResponse: TJSONObject;
 begin
   HttpClient := THTTPClient.Create;
   try
@@ -158,8 +161,6 @@ begin
     //HttpClient.CustomHeaders['Authorization'] := 'Bearer ' + self.FJWS;  // O seu JWS ou token JWT
     HttpClient.CustomHeaders['Content-Type'] := 'application/x-www-form-urlencoded'; // ou 'application/json' dependendo da API
 
-    // Definir os cabeçalhos necessários
-    HttpClient.CustomHeaders['Content-Type'] := 'application/x-www-form-urlencoded'; // Formato esperado pela API
 
     // Montar o corpo da requisição com os parâmetros necessários
     FormBody := 'grant_type=urn:ietf:params:oauth:grant-type:jwt-bearer&assertion=' + self.FJWS;
@@ -170,8 +171,35 @@ begin
     try
       // Realizando a requisição GET
       Response := HttpClient.Post(self.APIToken, StringStream);
+
+      // Verificando a resposta
+      if Response.StatusCode = 200 then
+      begin
+        // Se a resposta for bem-sucedida, processar o JSON
+        JsonResponse := TJSONObject.ParseJSONValue(Response.ContentAsString) as TJSONObject;
+        try
+          // Verificar se o campo "access_token" existe
+          if Assigned(JsonResponse) and (JsonResponse.GetValue('access_token') <> nil) then
+          begin
+            // Retornar o Bearer Token
+            Result := JsonResponse.GetValue('access_token').Value;
+          end
+          else
+          begin
+            // Se o campo "access_token" não for encontrado
+            Result := 'Erro: "access_token" não encontrado na resposta.';
+          end;
+        finally
+          JsonResponse.Free;
+        end;
+      end
+      else
+      begin
+        // Caso haja erro HTTP
+        Result := 'Erro HTTP: ' + IntToStr(Response.StatusCode) + ' - ' + Response.StatusText;
+      end;
       // A resposta será recebida diretamente
-      Result := Response.ContentAsString;
+      //Result := Response.ContentAsString;
     except
       on E: Exception do
       begin
@@ -179,6 +207,7 @@ begin
       end;
     end;
   finally
+    StringStream.Free;
     HttpClient.Free;
   end;
 end;
@@ -224,6 +253,7 @@ var
   Header, Payload, Signature: string;
 begin
   Header := CriarHeader;
+  self.FHeader := Header;
   Payload := CriarPayload;
 
   // Codifica o Header e Payload em Base64

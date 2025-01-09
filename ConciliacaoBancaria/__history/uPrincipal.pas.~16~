@@ -87,9 +87,6 @@ begin
      Memo2.Lines.Clear;
      Memo2.Lines.Add('Header:');
      Memo2.Lines.Add(Bradesco.Header);
-     Memo2.Lines.Add(' ');
-     Memo2.Lines.Add('Payload:');
-     Memo2.Lines.Add(Bradesco.Payload);
      Bradesco.RazaoSocial := edtRazaoSocial.Text; // 'OXYMED COMERCIO E LOCACAO DE EQUIPAMENTO';
      Bradesco.CNPJ := edtCNPJ.Text; //'38.052.160/0057-01';
      Bradesco.Agencia := edtAgenciaBradesco.Text; //'3995';

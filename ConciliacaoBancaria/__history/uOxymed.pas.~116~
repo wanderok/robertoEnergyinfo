@@ -34,6 +34,7 @@ type
     FAgencia: String;
     FJWS:String;
     FToken:String;
+    FHeader:String;
     function CriarHeader: string;
     function CriarPayload: string;
     function ClientKey:String;
@@ -53,6 +54,7 @@ type
       write FCertificadoDigital;
     property Conta: string read FConta write FConta;
     property Agencia: string read FAgencia write FAgencia;
+    property Header: string read FHeader write FHeader;
     function Extrato(Inicio, Fim: TDateTime): String;
   end;
 
@@ -152,7 +154,6 @@ begin
   HttpClient := THTTPClient.Create;
   try
      // Configuração do TLS 1.2 (se necessário)
-     HttpClient.SSLContext.SecureProtocols := [sslTLSv1_2];
     HttpClient.AcceptEncoding := 'gzip, deflate';
     HttpClient.UserAgent := 'Delphi HTTP Client';
 

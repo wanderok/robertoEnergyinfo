@@ -4,6 +4,10 @@ Client Key: 9693f06b-b929-4a9c-8182-e25270c4029d
 Client Secret: 7cb3d3eb-a2c9-4084-8e03-72230000b4dd
 
 https://slproweb.com/products/Win32OpenSSL.html
+
+Boleto Hibrido Bradesco no Delphi, Pix e Código de Barras, Gerando o JWS
+https://youtu.be/QZ8a5T-OVxA?si=xTvTrc2y561Un72u
+git clone https://github.com/HelioNeto/delphi-api-bradesco.git
 }
 
 unit uOxymed;
@@ -21,7 +25,8 @@ uses
   System.Net.HttpClientComponent,
   System.NetEncoding,
   System.IOUtils,
-  System.Diagnostics;
+  System.Diagnostics,
+  System.DateUtils;
 
 type
   TBradesco = class
@@ -34,6 +39,8 @@ type
     FAgencia: String;
     FJWS:String;
     FToken:String;
+    FHeader:String;
+    FPayload:String;
     function CriarHeader: string;
     function CriarPayload: string;
     function ClientKey:String;
@@ -53,6 +60,8 @@ type
       write FCertificadoDigital;
     property Conta: string read FConta write FConta;
     property Agencia: string read FAgencia write FAgencia;
+    property Header: string read FHeader write FHeader;
+    property Payload: string read FPayload write FPayload;
     function Extrato(Inicio, Fim: TDateTime): String;
   end;
 
@@ -97,8 +106,11 @@ function TBradesco.CriarPayload: string;
 var
   Payload: TJSONObject;
   IAT, EXP, JTI: Int64;  // Alterado para Int64  // Integer;
+  DataAtual:TDateTime;
 begin
   // Obter o timestamp atual em segundos
+  DataAtual := now;
+  //IAT := DateTimeToUnix(DataAtual,false);
   IAT := Trunc(Now * 86400) + 25569; // Converte de "tData" para timestamp em segundos
   EXP := IAT + 3600; // Expiração de 1 hora
   JTI := IAT * 1000; // jti em milissegundos
@@ -251,7 +263,9 @@ var
   Header, Payload, Signature: string;
 begin
   Header := CriarHeader;
+  self.FHeader := Header;
   Payload := CriarPayload;
+  self.FPayload := Payload;
 
   // Codifica o Header e Payload em Base64
   Header := CodificarBase64(Header);
