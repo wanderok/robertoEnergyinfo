@@ -2,7 +2,7 @@ object frmPrincipal: TfrmPrincipal
   Left = 0
   Top = 0
   Caption = 'frmPrincipal'
-  ClientHeight = 467
+  ClientHeight = 501
   ClientWidth = 624
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
@@ -41,29 +41,32 @@ object frmPrincipal: TfrmPrincipal
     Left = 0
     Top = 58
     Width = 624
-    Height = 409
-    ActivePage = TabSheet1
+    Height = 443
+    ActivePage = TabSheet2
     Align = alClient
     TabOrder = 1
+    ExplicitHeight = 409
     object TabSheet1: TTabSheet
       Caption = 'Extrato'
       object Memo1: TMemo
         Left = 0
         Top = 0
         Width = 616
-        Height = 328
+        Height = 362
         Align = alClient
         TabOrder = 0
+        ExplicitHeight = 328
       end
       object Button1: TButton
         Left = 0
-        Top = 328
+        Top = 362
         Width = 616
         Height = 51
         Align = alBottom
         Caption = 'Gerar Extrato'
         TabOrder = 1
         OnClick = Button1Click
+        ExplicitTop = 328
       end
     end
     object TabSheet2: TTabSheet
@@ -113,11 +116,12 @@ object frmPrincipal: TfrmPrincipal
       end
       object Panel2: TPanel
         Left = 0
-        Top = 321
+        Top = 355
         Width = 616
         Height = 58
         Align = alBottom
         TabOrder = 3
+        ExplicitTop = 321
         object Button3: TButton
           Left = 209
           Top = 0
@@ -135,38 +139,39 @@ object frmPrincipal: TfrmPrincipal
         end
       end
       object PageControl2: TPageControl
-        Left = -8
+        Left = 0
         Top = 138
-        Width = 624
-        Height = 177
+        Width = 616
+        Height = 217
         ActivePage = TabSheet3
+        Align = alBottom
         TabOrder = 4
         object TabSheet3: TTabSheet
           Caption = 'Bradesco'
           object Label4: TLabel
             Left = 10
-            Top = 10
+            Top = 18
             Width = 43
             Height = 15
             Caption = 'Ag'#234'ncia'
           end
           object Label5: TLabel
             Left = 79
-            Top = 10
+            Top = 18
             Width = 81
             Height = 15
             Caption = 'Conta Corrente'
           end
           object Label6: TLabel
             Left = 10
-            Top = 53
+            Top = 61
             Width = 53
             Height = 15
             Caption = 'Client Key'
           end
           object Label7: TLabel
             Left = 10
-            Top = 99
+            Top = 107
             Width = 66
             Height = 15
             Caption = 'Client Secret'
@@ -174,7 +179,7 @@ object frmPrincipal: TfrmPrincipal
           object Label12: TLabel
             Left = 0
             Top = 0
-            Width = 616
+            Width = 608
             Height = 15
             Align = alTop
             Alignment = taCenter
@@ -189,28 +194,28 @@ object frmPrincipal: TfrmPrincipal
           end
           object edtAgenciaBradesco: TEdit
             Left = 7
-            Top = 27
+            Top = 35
             Width = 69
             Height = 23
             TabOrder = 0
           end
           object edtContaBradesco: TEdit
             Left = 76
-            Top = 27
+            Top = 35
             Width = 125
             Height = 23
             TabOrder = 1
           end
           object edtClienteKeyBradesco: TEdit
             Left = 7
-            Top = 70
+            Top = 78
             Width = 607
             Height = 23
             TabOrder = 2
           end
           object edtClienteSecretBradesco: TEdit
             Left = 7
-            Top = 116
+            Top = 124
             Width = 607
             Height = 23
             TabOrder = 3
@@ -221,28 +226,28 @@ object frmPrincipal: TfrmPrincipal
           ImageIndex = 1
           object Label8: TLabel
             Left = 10
-            Top = 10
+            Top = 18
             Width = 43
             Height = 15
             Caption = 'Ag'#234'ncia'
           end
           object Label9: TLabel
             Left = 79
-            Top = 10
+            Top = 18
             Width = 81
             Height = 15
             Caption = 'Conta Corrente'
           end
           object Label10: TLabel
             Left = 10
-            Top = 53
+            Top = 61
             Width = 53
             Height = 15
             Caption = 'Client Key'
           end
           object Label11: TLabel
             Left = 10
-            Top = 99
+            Top = 107
             Width = 66
             Height = 15
             Caption = 'Client Secret'
@@ -250,7 +255,7 @@ object frmPrincipal: TfrmPrincipal
           object Label13: TLabel
             Left = 0
             Top = 0
-            Width = 27
+            Width = 608
             Height = 15
             Align = alTop
             Alignment = taCenter
@@ -261,31 +266,32 @@ object frmPrincipal: TfrmPrincipal
             Font.Name = 'Segoe UI'
             Font.Style = [fsBold]
             ParentFont = False
+            ExplicitWidth = 27
           end
           object Edit6: TEdit
             Left = 7
-            Top = 27
+            Top = 35
             Width = 69
             Height = 23
             TabOrder = 0
           end
           object Edit7: TEdit
             Left = 76
-            Top = 27
+            Top = 35
             Width = 125
             Height = 23
             TabOrder = 1
           end
           object Edit8: TEdit
             Left = 7
-            Top = 70
+            Top = 78
             Width = 607
             Height = 23
             TabOrder = 2
           end
           object Edit9: TEdit
             Left = 7
-            Top = 116
+            Top = 124
             Width = 607
             Height = 23
             TabOrder = 3
@@ -297,7 +303,7 @@ object frmPrincipal: TfrmPrincipal
           object Label14: TLabel
             Left = 0
             Top = 0
-            Width = 616
+            Width = 608
             Height = 15
             Align = alTop
             Alignment = taCenter
