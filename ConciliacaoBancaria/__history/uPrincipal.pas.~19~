@@ -12,7 +12,6 @@ uses
 type
   TfrmPrincipal = class(TForm)
     Panel1: TPanel;
-    Button1: TButton;
     Button2: TButton;
     PageControl1: TPageControl;
     TabSheet1: TTabSheet;
@@ -49,6 +48,9 @@ type
     Label12: TLabel;
     Label13: TLabel;
     Label14: TLabel;
+    Button1: TButton;
+    Memo2: TMemo;
+    Memo3: TMemo;
     procedure Button1Click(Sender: TObject);
     procedure FormShow(Sender: TObject);
     procedure Button3Click(Sender: TObject);
@@ -82,6 +84,16 @@ var Bradesco : TBradesco;
     vData1, vData2 : TDateTime;
 begin
      Bradesco := TBradesco.Create;
+     Memo2.Lines.Clear;
+     Memo2.Lines.Add('Header:');
+     Memo2.Lines.Add(Bradesco.Header);
+     Memo2.Lines.Add(' ');
+     Memo2.Lines.Add('Payload:');
+     Memo2.Lines.Add(Bradesco.Payload);
+     Memo2.Lines.Add(' ');
+     Memo2.Lines.Add('JWS:');
+     Memo2.Lines.Add(Bradesco.JWS);
+
      Bradesco.RazaoSocial := edtRazaoSocial.Text; // 'OXYMED COMERCIO E LOCACAO DE EQUIPAMENTO';
      Bradesco.CNPJ := edtCNPJ.Text; //'38.052.160/0057-01';
      Bradesco.Agencia := edtAgenciaBradesco.Text; //'3995';
@@ -92,6 +104,7 @@ begin
      vData1 := Date-30;
      vData2 := Date;
      Memo1.Text := Bradesco.Extrato(vData1,vData2);
+
      Bradesco.Free;
 end;
 

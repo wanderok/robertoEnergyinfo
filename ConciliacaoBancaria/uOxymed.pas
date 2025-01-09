@@ -1,13 +1,13 @@
 {
-As credenciais do ambiente de homologação já foram criadas, segue abaixo:
-Client Key: 9693f06b-b929-4a9c-8182-e25270c4029d
-Client Secret: 7cb3d3eb-a2c9-4084-8e03-72230000b4dd
+  As credenciais do ambiente de homologação já foram criadas, segue abaixo:
+  Client Key: 9693f06b-b929-4a9c-8182-e25270c4029d
+  Client Secret: 7cb3d3eb-a2c9-4084-8e03-72230000b4dd
 
-https://slproweb.com/products/Win32OpenSSL.html
+  https://slproweb.com/products/Win32OpenSSL.html
 
-Boleto Hibrido Bradesco no Delphi, Pix e Código de Barras, Gerando o JWS
-https://youtu.be/QZ8a5T-OVxA?si=xTvTrc2y561Un72u
-git clone https://github.com/HelioNeto/delphi-api-bradesco.git
+  Boleto Hibrido Bradesco no Delphi, Pix e Código de Barras, Gerando o JWS
+  https://youtu.be/QZ8a5T-OVxA?si=xTvTrc2y561Un72u
+  git clone https://github.com/HelioNeto/delphi-api-bradesco.git
 }
 
 unit uOxymed;
@@ -19,7 +19,7 @@ uses
   Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants,
   System.Classes, Vcl.Graphics,
   Vcl.Controls, Vcl.Forms, Vcl.Dialogs, IdHTTP, IdSSL, IdSSLOpenSSL,
-  Vcl.StdCtrls,  IdGlobal,   System.JSON,
+  Vcl.StdCtrls, IdGlobal, System.JSON,
   System.Net.HttpClient, System.Net.URLClient,
   Winapi.ShellAPI,
   System.Net.HttpClientComponent,
@@ -37,20 +37,24 @@ type
     FCertificadoDigital: string;
     FConta: String;
     FAgencia: String;
-    FJWS:String;
-    FToken:String;
-    FHeader:String;
-    FPayload:String;
+    FJWS: String;
+    FJWT: String;
+    FToken: String;
+    FHeader: String;
+    FPayload: String;
+    FClientKey: String;
     function CriarHeader: string;
     function CriarPayload: string;
-    function ClientKey:String;
-    function APIToken:String;
+    // function ClientKey:String;
+    function APIToken: String;
     function CodificarBase64(const Texto: string): string;
     function GerarAssinatura(const JWS: string): string;
     function MontarJWS: string;
     function ObterBearerToken(const JWS: string): string;
-    function GerarToken:String;
+    function GerarToken: String;
     procedure ExecutarComando(const Comando: string);
+    procedure SaveJWTToFile;
+    function Base64ToBase64URL(const Base64: string): string;
   public
     constructor Create;
     property RazaoSocial: string read FRazaoSocial write FRazaoSocial;
@@ -62,30 +66,41 @@ type
     property Agencia: string read FAgencia write FAgencia;
     property Header: string read FHeader write FHeader;
     property Payload: string read FPayload write FPayload;
+    property JWS: string read FJWS write FJWS;
+    property ClientKey: string read FClientKey write FClientKey;
+    property Token: string read FToken write FToken;
     function Extrato(Inicio, Fim: TDateTime): String;
+
   end;
 
 implementation
 
 function TBradesco.APIToken: String;
 begin
-  result :=  'https://proxy.api.prebanco.com.br/auth/server/v1.1/token';
+  result := 'https://proxy.api.prebanco.com.br/auth/server/v1.1/token';
 end;
 
-function TBradesco.ClientKey: String;
+function TBradesco.Base64ToBase64URL(const Base64: string): string;
 begin
-   result := '9693f06b-b929-4a9c-8182-e25270c4029d';
+  Result := StringReplace(Base64, '+', '-', [rfReplaceAll]);
+  Result := StringReplace(Result, '/', '_', [rfReplaceAll]);
+  Result := StringReplace(Result, '=', '', [rfReplaceAll]);  // Remove paddings
 end;
+
+// function TBradesco.ClientKey: String;
+// begin
+// result := '9693f06b-b929-4a9c-8182-e25270c4029d';
+// end;
 
 function TBradesco.CodificarBase64(const Texto: string): string;
 begin
-   Result := TNetEncoding.Base64.Encode(Texto);
+  result := TNetEncoding.Base64.Encode(Texto);
 end;
 
 constructor TBradesco.Create;
 begin
-  FJWS := Self.MontarJWS;
-//  FToken := self.GerarToken;
+  // FJWS := Self.MontarJWS;
+  // FToken := self.GerarToken;
 end;
 
 function TBradesco.CriarHeader: string;
@@ -96,7 +111,7 @@ begin
   try
     Header.AddPair('alg', 'RS256');
     Header.AddPair('typ', 'JWT');
-    Result := Header.ToString;
+    result := Header.ToString;
   finally
     Header.Free;
   end;
@@ -105,10 +120,11 @@ end;
 function TBradesco.CriarPayload: string;
 var
   Payload: TJSONObject;
-  IAT, EXP, JTI: Int64;  // Alterado para Int64  // Integer;
+  IAT, EXP, JTI: Int64; // Alterado para Int64  // Integer;
 begin
   // Obter o timestamp atual em segundos
-  IAT := Trunc(Now * 86400) + 25569; // Converte de "tData" para timestamp em segundos
+  IAT := Trunc(Now * 86400) + 25569;
+  // Converte de "tData" para timestamp em segundos
   EXP := IAT + 3600; // Expiração de 1 hora
   JTI := IAT * 1000; // jti em milissegundos
 
@@ -120,7 +136,7 @@ begin
     Payload.AddPair('exp', EXP);
     Payload.AddPair('jti', JTI);
     Payload.AddPair('ver', '1.1');
-    Result := Payload.ToString;
+    result := Payload.ToString;
   finally
     Payload.Free;
   end;
@@ -140,7 +156,8 @@ begin
   Cmd := 'cmd.exe /c ' + Comando; // O /c executa e fecha o cmd após a execução
 
   // Cria o processo e executa o comando
-  if not CreateProcess(nil, PChar(Cmd), nil, nil, False, 0, nil, nil, StartupInfo, ProcessInfo) then
+  if not CreateProcess(nil, PChar(Cmd), nil, nil, False, 0, nil, nil,
+    StartupInfo, ProcessInfo) then
     RaiseLastOSError; // Caso ocorra erro
 
   // Aguarda o processo terminar
@@ -148,7 +165,6 @@ begin
   CloseHandle(ProcessInfo.hProcess);
   CloseHandle(ProcessInfo.hThread);
 end;
-
 
 function TBradesco.Extrato(Inicio, Fim: TDateTime): String;
 var
@@ -158,19 +174,24 @@ var
   JsonBody, FormBody: string;
   JsonResponse: TJSONObject;
 begin
+  self.FJWS := self.MontarJWS;
   HttpClient := THTTPClient.Create;
+
   try
-     // Configuração do TLS 1.2 (se necessário)
+    // Configuração do TLS 1.2 (se necessário)
     HttpClient.AcceptEncoding := 'gzip, deflate';
     HttpClient.UserAgent := 'Delphi HTTP Client';
 
     // Configurar os headers personalizados (por exemplo, token Bearer)
-    //HttpClient.CustomHeaders['Authorization'] := 'Bearer ' + self.FJWS;  // O seu JWS ou token JWT
-    HttpClient.CustomHeaders['Content-Type'] := 'application/x-www-form-urlencoded'; // ou 'application/json' dependendo da API
-
+    // HttpClient.CustomHeaders['Authorization'] := 'Bearer ' + self.FJWS;  // O seu JWS ou token JWT
+    HttpClient.CustomHeaders['Content-Type'] :=
+      'application/x-www-form-urlencoded';
+    // ou 'application/json' dependendo da API
 
     // Montar o corpo da requisição com os parâmetros necessários
-    FormBody := 'grant_type=urn:ietf:params:oauth:grant-type:jwt-bearer&assertion=' + self.FJWS;
+    FormBody :=
+      'grant_type=urn:ietf:params:oauth:grant-type:jwt-bearer&assertion=' +
+      self.FJWS;
 
     // Criar o StringStream a partir do corpo da requisição
     StringStream := TStringStream.Create(FormBody, TEncoding.UTF8);
@@ -183,18 +204,20 @@ begin
       if Response.StatusCode = 200 then
       begin
         // Se a resposta for bem-sucedida, processar o JSON
-        JsonResponse := TJSONObject.ParseJSONValue(Response.ContentAsString) as TJSONObject;
+        JsonResponse := TJSONObject.ParseJSONValue(Response.ContentAsString)
+          as TJSONObject;
         try
           // Verificar se o campo "access_token" existe
-          if Assigned(JsonResponse) and (JsonResponse.GetValue('access_token') <> nil) then
+          if Assigned(JsonResponse) and
+            (JsonResponse.GetValue('access_token') <> nil) then
           begin
             // Retornar o Bearer Token
-            Result := JsonResponse.GetValue('access_token').Value;
+            result := JsonResponse.GetValue('access_token').Value;
           end
           else
           begin
             // Se o campo "access_token" não for encontrado
-            Result := 'Erro: "access_token" não encontrado na resposta.';
+            result := 'Erro: "access_token" não encontrado na resposta.';
           end;
         finally
           JsonResponse.Free;
@@ -203,14 +226,15 @@ begin
       else
       begin
         // Caso haja erro HTTP
-        Result := 'Erro HTTP: ' + IntToStr(Response.StatusCode) + ' - ' + Response.StatusText;
+        result := 'Erro HTTP: ' + IntToStr(Response.StatusCode) + ' - ' +
+          Response.StatusText;
       end;
       // A resposta será recebida diretamente
-      //Result := Response.ContentAsString;
+      // Result := Response.ContentAsString;
     except
       on E: Exception do
       begin
-        Result := 'Erro: ' + E.Message;
+        result := 'Erro: ' + E.Message;
       end;
     end;
   finally
@@ -222,7 +246,7 @@ end;
 function TBradesco.GerarAssinatura(const JWS: string): string;
 var
   Cmd, OutputFile, InputFile: string;
-//  Process: TProcess;
+  // Process: TProcess;
 begin
   // Salva o JWS (Header + Payload) em um arquivo temporário
   InputFile := 'C:\wander\assinaturas\jwt.txt';
@@ -232,16 +256,21 @@ begin
   TFile.WriteAllText(InputFile, JWS);
 
   // Monta o comando para executar o OpenSSL
-  Cmd := 'openssl dgst -sha256 -keyform pem -sign chaves\privada\oxymed.homologacao.key.pem -out ' + OutputFile + ' ' + InputFile;
+  // Cmd := 'openssl dgst -sha256 -keyform pem -sign chaves\privada\oxymed.homologacao.key.pem -out ' + OutputFile + ' ' + InputFile;
+  // Cmd := 'echo -n "$(cat jwt.txt)" | openssl dgst -sha256 -keyform pem -sign chaves\privada\oxymed.homologacao.key.pem|base64|tr -d"=[space:]" | tr "+/" "-_";
+
+  // Cmd := 'echo -n "$(cat jwt.txt)" | openssl dgst -sha256 -keyform pem -sign chaves\privada\oxymed.homologacao.key.pem|base64|tr -d"=[space:]" | tr "+/" "-_"';
+  Cmd := 'openssl dgst -sha256 -keyform pem -sign chaves\privada\oxymed.homologacao.key.pem -out '
+    + OutputFile + ' ' + InputFile;
 
   // Executa o comando
   ShellExecute(0, 'open', 'cmd.exe', PChar('/c ' + Cmd), nil, SW_HIDE);
 
   // Lê a assinatura gerada
-  Result := TFile.ReadAllText(OutputFile);
+  result := TFile.ReadAllText(OutputFile);
 end;
 
-function TBradesco.GerarToken:String;
+function TBradesco.GerarToken: String;
 var
   JWS, BearerToken: string;
 begin
@@ -268,37 +297,103 @@ begin
   Header := CodificarBase64(Header);
   Payload := CodificarBase64(Payload);
 
+  self.FJWT := Header + '.' + Payload;
+  SaveJWTToFile;
+
   // Gera a assinatura (JWS)
-  Signature := GerarAssinatura(Header + '.' + Payload);
+  Signature := GerarAssinatura(self.FJWT);
 
   // Concatena tudo para formar o JWS completo
-  Result := Header + '.' + Payload + '.' + Signature;
+  result := Header + '.' + Payload + '.' + Signature;
 end;
+
+// function TBradesco.ObterBearerToken(const JWS: string): string;
+// var
+// HttpClient: THttpClient;
+// Response: IHTTPResponse;
+// Params: TStringList;
+// Body: string;
+// begin
+// HttpClient := THttpClient.Create;
+// Params := TStringList.Create;
+// try
+// // Definir os parâmetros do corpo da requisição
+// Params.Add('grant_type=urn:ietf:params:oauth:grant-type:jwt-bearer');
+// Params.Add('assertion=' + self.JWS);
+//
+// // Codificando os parâmetros para 'application/x-www-form-urlencoded'
+// Body := Params.DelimitedText;
+//
+// // Definir os cabeçalhos da requisição
+// HttpClient.ContentType := 'application/x-www-form-urlencoded';
+//
+// // Enviar a requisição POST para obter o Bearer Token
+// Response := HttpClient.Post(self.APIToken, Params);
+/// /    // Retornar o corpo da resposta, que deve ser o Bearer Token
+/// /    Result := Response.ContentAsString();
+//
+// // Exibindo a resposta (aqui você pode verificar a resposta da API)
+// if Response.StatusCode = 200 then
+// begin
+// result := Response.ContentAsString();
+// end
+// else
+// begin
+// result := 'Erro na requisição: ' + Response.StatusCode.ToString;
+// end;
+// finally
+// HttpClient.Free;
+// Params.Free;
+// end;
+// end;
 
 function TBradesco.ObterBearerToken(const JWS: string): string;
 var
-  HttpClient: THttpClient;
+  HttpClient: THTTPClient;
   Response: IHTTPResponse;
   Params: TStringList;
 begin
-  HttpClient := THttpClient.Create;
+  HttpClient := THTTPClient.Create;
   Params := TStringList.Create;
   try
     // Definir os parâmetros do corpo da requisição
     Params.Add('grant_type=urn:ietf:params:oauth:grant-type:jwt-bearer');
-    Params.Add('assertion=' + JWS);
+    Params.Add('assertion=' + self.JWS);
 
-    // Definir os cabeçalhos da requisição
+    // Definir o cabeçalho Content-Type
     HttpClient.ContentType := 'application/x-www-form-urlencoded';
 
     // Enviar a requisição POST para obter o Bearer Token
-    Response := HttpClient.Post('https://homologacao/auth/server/v1.1/token', Params);
+    Response := HttpClient.Post(self.APIToken, Params);
 
-    // Retornar o corpo da resposta, que deve ser o Bearer Token
-    Result := Response.ContentAsString();
+    // Verificar se a resposta é bem-sucedida
+    if Response.StatusCode = 200 then
+    begin
+      // Se sucesso, retornar o conteúdo da resposta
+      result := Response.ContentAsString();
+    end
+    else
+    if Response.StatusCode = 500 then
+    begin
+      // Exibir o corpo da resposta para obter mais detalhes sobre o erro
+      result := 'Erro HTTP 500: ' + Response.ContentAsString();
+    end
+    else
+    begin
+      result := 'Erro HTTP: ' + IntToStr(Response.StatusCode) + ' - ' +
+        Response.StatusText;
+    end;
+
   finally
     HttpClient.Free;
     Params.Free;
   end;
 end;
+
+procedure TBradesco.SaveJWTToFile;
+begin
+  // Salva o conteúdo de self.FJW em um arquivo chamado jwt.txt
+  TFile.WriteAllText('jwt.txt', CodificarBase64(self.FJWT));
+end;
+
 end.
