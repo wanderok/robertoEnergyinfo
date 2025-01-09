@@ -156,7 +156,7 @@ begin
     HttpClient.UserAgent := 'Delphi HTTP Client';
 
     // Configurar os headers personalizados (por exemplo, token Bearer)
-    //HttpClient.CustomHeaders['Authorization'] := 'Bearer ' + self.FJWS;  // O seu JWS ou token JWT
+    HttpClient.CustomHeaders['Authorization'] := 'Bearer ' + self.FJWS;  // O seu JWS ou token JWT
     HttpClient.CustomHeaders['Content-Type'] := 'application/x-www-form-urlencoded'; // ou 'application/json' dependendo da API
 
 

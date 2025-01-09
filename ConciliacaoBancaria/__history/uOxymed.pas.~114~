@@ -152,6 +152,7 @@ begin
   HttpClient := THTTPClient.Create;
   try
      // Configuração do TLS 1.2 (se necessário)
+    HttpClient.SSLContext.SecureProtocols := [sslTLSv1_2];
     HttpClient.AcceptEncoding := 'gzip, deflate';
     HttpClient.UserAgent := 'Delphi HTTP Client';
 

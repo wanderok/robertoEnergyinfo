@@ -159,6 +159,8 @@ begin
     //HttpClient.CustomHeaders['Authorization'] := 'Bearer ' + self.FJWS;  // O seu JWS ou token JWT
     HttpClient.CustomHeaders['Content-Type'] := 'application/x-www-form-urlencoded'; // ou 'application/json' dependendo da API
 
+    // Definir os cabeçalhos necessários
+    HttpClient.CustomHeaders['Content-Type'] := 'application/x-www-form-urlencoded'; // Formato esperado pela API
 
     // Montar o corpo da requisição com os parâmetros necessários
     FormBody := 'grant_type=urn:ietf:params:oauth:grant-type:jwt-bearer&assertion=' + self.FJWS;

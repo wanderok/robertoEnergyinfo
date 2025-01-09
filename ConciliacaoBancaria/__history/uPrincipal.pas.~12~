@@ -12,6 +12,7 @@ uses
 type
   TfrmPrincipal = class(TForm)
     Panel1: TPanel;
+    Button1: TButton;
     Button2: TButton;
     PageControl1: TPageControl;
     TabSheet1: TTabSheet;
@@ -48,7 +49,6 @@ type
     Label12: TLabel;
     Label13: TLabel;
     Label14: TLabel;
-    Button1: TButton;
     procedure Button1Click(Sender: TObject);
     procedure FormShow(Sender: TObject);
     procedure Button3Click(Sender: TObject);

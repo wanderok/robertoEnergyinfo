@@ -54,6 +54,7 @@ object frmPrincipal: TfrmPrincipal
         Height = 328
         Align = alClient
         TabOrder = 0
+        ExplicitHeight = 273
       end
       object Button1: TButton
         Left = 0
@@ -139,7 +140,7 @@ object frmPrincipal: TfrmPrincipal
         Top = 138
         Width = 624
         Height = 177
-        ActivePage = TabSheet3
+        ActivePage = TabSheet5
         TabOrder = 4
         object TabSheet3: TTabSheet
           Caption = 'Bradesco'
@@ -250,7 +251,7 @@ object frmPrincipal: TfrmPrincipal
           object Label13: TLabel
             Left = 0
             Top = 0
-            Width = 27
+            Width = 616
             Height = 15
             Align = alTop
             Alignment = taCenter
@@ -261,6 +262,7 @@ object frmPrincipal: TfrmPrincipal
             Font.Name = 'Segoe UI'
             Font.Style = [fsBold]
             ParentFont = False
+            ExplicitWidth = 27
           end
           object Edit6: TEdit
             Left = 7

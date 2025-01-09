@@ -159,6 +159,8 @@ begin
     //HttpClient.CustomHeaders['Authorization'] := 'Bearer ' + self.FJWS;  // O seu JWS ou token JWT
     HttpClient.CustomHeaders['Content-Type'] := 'application/x-www-form-urlencoded'; // ou 'application/json' dependendo da API
 
+    // Definir os cabeçalhos necessários
+    HttpClient.CustomHeaders['Content-Type'] := 'application/x-www-form-urlencoded'; // Formato esperado pela API
 
     // Montar o corpo da requisição com os parâmetros necessários
     FormBody := 'grant_type=urn:ietf:params:oauth:grant-type:jwt-bearer&assertion=' + self.FJWS;
@@ -177,7 +179,7 @@ begin
         JsonResponse := TJSONObject.ParseJSONValue(Response.ContentAsString) as TJSONObject;
         try
           // Verificar se o campo "access_token" existe
-          if Assigned(JsonResponse) and (JsonResponse.GetValue('access_token') <> nil) then
+          if Assigned(JsonResponse) and JsonResponse.GetValue('access_token') <> nil then
           begin
             // Retornar o Bearer Token
             Result := JsonResponse.GetValue('access_token').Value;
@@ -190,14 +192,9 @@ begin
         finally
           JsonResponse.Free;
         end;
-      end
-      else
-      begin
-        // Caso haja erro HTTP
-        Result := 'Erro HTTP: ' + IntToStr(Response.StatusCode) + ' - ' + Response.StatusText;
-      end;
+end;
       // A resposta será recebida diretamente
-      //Result := Response.ContentAsString;
+      Result := Response.ContentAsString;
     except
       on E: Exception do
       begin
@@ -205,7 +202,6 @@ begin
       end;
     end;
   finally
-    StringStream.Free;
     HttpClient.Free;
   end;
 end;
