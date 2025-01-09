@@ -106,11 +106,8 @@ function TBradesco.CriarPayload: string;
 var
   Payload: TJSONObject;
   IAT, EXP, JTI: Int64;  // Alterado para Int64  // Integer;
-  DataAtual:TDateTime;
 begin
   // Obter o timestamp atual em segundos
-  DataAtual := now;
-  //IAT := DateTimeToUnix(DataAtual,false);
   IAT := Trunc(Now * 86400) + 25569; // Converte de "tData" para timestamp em segundos
   EXP := IAT + 3600; // Expiração de 1 hora
   JTI := IAT * 1000; // jti em milissegundos
