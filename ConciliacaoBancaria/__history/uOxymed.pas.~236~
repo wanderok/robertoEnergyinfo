@@ -72,7 +72,6 @@ type
 
 implementation
 
-
 function TBradesco.APIBarenToken: String;
 begin
   result := 'https://proxy.api.prebanco.com.br/auth/server/v1.1/token';
@@ -189,10 +188,7 @@ var
   RequestStream, ResponseStream: TMemoryStream;
 begin
   // Recupera o Bearer Token
-  //GerarToken;
-
-
-  BearerToken := ObterBearerToken(self.FJWS); //self.FToken;
+  BearerToken := self.FToken;
 
   // Gera o nonce (pode ser o JTI ou timestamp)
   Nonce := IntToStr(GetCurrentTimeInMilliseconds); // Exemplo com timestamp
@@ -334,6 +330,7 @@ end;
 function TBradesco.MontarJWS: string;
 var
   Header, Payload, Signature: string;
+  Stream: TStringStream;
 begin
   // Criação do Header e Payload
   Header := CriarHeader;
@@ -346,74 +343,67 @@ begin
   Payload := CodificarBase64(Payload);
 
   self.FJWT := Header + '.' + Payload;
-
-
-  // Exibir o Header e Payload codificados para verificar
-  ShowMessage('Header codificado: ' + Header);
-  ShowMessage('Payload codificado: ' + Payload);
-
   SaveJWTToFile;
 
   // Gera a assinatura (JWS)
-  Signature := GerarAssinatura;
-
-  // Exibir a assinatura antes de codificar para Base64URL
-  ShowMessage('Assinatura gerada (Base64): ' + Signature);
+  // Concatenando Header e Payload para gerar a assinatura
+  Stream := TStringStream.Create(Header + '.' + Payload);
+  try
+    // Gera a assinatura com o conteúdo concatenado (Header + Payload)
+    Signature := GerarAssinatura;
+  finally
+    Stream.Free;
+  end;
 
   // Converte a assinatura para Base64URL
-  //Signature := Base64ToBase64URL(Signature);
-  Signature := CodificarBase64(Signature);
-
-  // Exibir a assinatura em Base64URL
-  ShowMessage('Assinatura em Base64URL: ' + Signature);
+  Signature := Base64ToBase64URL(Signature);
 
   // Concatena tudo para formar o JWS completo
   result := Header + '.' + Payload + '.' + Signature;
-//  result := base64Url(Header) + '.' + base64Url(Payload) + '.' + base64Url(Signature)
-  self.JWS := result;
-
-  // Exibir o JWS completo antes de retornar
-  ShowMessage('JWS completo: ' + result);
 end;
-
-
 
 function TBradesco.ObterBearerToken(const JWS: string): string;
 var
-  HttpClient: THTTPClient;
+  HttpClient: THttpClient;
   Response: IHTTPResponse;
   Params: TStringList;
 begin
-  HttpClient := THTTPClient.Create;
+  HttpClient := THttpClient.Create;
   Params := TStringList.Create;
   try
-    // Adiciona os parâmetros para a requisição
+    // Definir os parâmetros do corpo da requisição
     Params.Add('grant_type=urn:ietf:params:oauth:grant-type:jwt-bearer');
-    Params.Add('assertion=' + JWS);  // O JWS gerado
+    Params.Add('assertion=' + self.FJWS);
 
-    // Define o cabeçalho Content-Type
+    // Definir o cabeçalho Content-Type
     HttpClient.ContentType := 'application/x-www-form-urlencoded';
 
-    // Envia a requisição POST para obter o Bearer Token
+    // Enviar a requisição POST para obter o Bearer Token
     Response := HttpClient.Post(self.APIToken, Params);
 
-    // Verificar a resposta da API
+    // Verificar se a resposta é bem-sucedida
     if Response.StatusCode = 200 then
     begin
-      // Se a resposta for 200 OK, o Bearer Token é extraído
-      result := Response.ContentAsString;
+      // Se sucesso, retornar o conteúdo da resposta
+      result := Response.ContentAsString();
+    end
+    else if Response.StatusCode = 500 then
+    begin
+      // Exibir o corpo da resposta para obter mais detalhes sobre o erro
+      result := 'Erro HTTP ' + IntToStr(Response.StatusCode) + ': ' +
+        Response.ContentAsString();
     end
     else
     begin
-      // Se não for sucesso, exibe a resposta para depuração
-      result := 'Erro HTTP ' + IntToStr(Response.StatusCode) + ': ' + Response.ContentAsString();
+      result := 'Erro HTTP ' + IntToStr(Response.StatusCode) + ' : ' +
+        Response.StatusText;
     end;
+
   finally
     HttpClient.Free;
     Params.Free;
   end;
 end;
-
 
 procedure TBradesco.SaveJWTToFile;
 begin

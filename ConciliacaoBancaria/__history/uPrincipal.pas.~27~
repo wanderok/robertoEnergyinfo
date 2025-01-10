@@ -84,18 +84,19 @@ var Bradesco : TBradesco;
     vData1, vData2 : TDateTime;
 begin
      Bradesco := TBradesco.Create;
-     Memo2.Lines.Clear;
-     Memo2.Lines.Add('Header:');
-     Memo2.Lines.Add(Bradesco.Header);
-     Memo2.Lines.Add(' ');
-     Memo2.Lines.Add('Payload:');
-     Memo2.Lines.Add(Bradesco.Payload);
-     Memo2.Lines.Add(' ');
-     Memo2.Lines.Add('JWS:');
-     Memo2.Lines.Add(Bradesco.JWS);
+//     Memo2.Lines.Clear;
+//     Memo2.Lines.Add('Header:');
+//     Memo2.Lines.Add(Bradesco.Header);
+//     Memo2.Lines.Add(' ');
+//     Memo2.Lines.Add('Payload:');
+//     Memo2.Lines.Add(Bradesco.Payload);
+//     Memo2.Lines.Add(' ');
+//     Memo2.Lines.Add('JWS:');
+//     Memo2.Lines.Add(Bradesco.JWS);
 
      Bradesco.RazaoSocial := edtRazaoSocial.Text; // 'OXYMED COMERCIO E LOCACAO DE EQUIPAMENTO';
      Bradesco.CNPJ := edtCNPJ.Text; //'38.052.160/0057-01';
+     Bradesco.ClientKey := edtClienteKeyBradesco.Text;
      Bradesco.Agencia := edtAgenciaBradesco.Text; //'3995';
      Bradesco.Conta := edtContaBradesco.Text; // '75557-5';
      //Bradesco.ClienteID := 0000;
@@ -105,6 +106,12 @@ begin
      vData2 := Date;
      Memo1.Text := Bradesco.Extrato(vData1,vData2);
 
+     Memo2.Lines.Clear;
+     Memo2.Lines.Add('JWS:');
+     Memo2.Lines.Add(Bradesco.JWS);
+
+     Memo2.Lines.Add('Token:');
+     Memo2.Lines.Add(Bradesco.Token);
      Bradesco.Free;
 end;
 

@@ -42,7 +42,7 @@ object frmPrincipal: TfrmPrincipal
     Top = 58
     Width = 624
     Height = 479
-    ActivePage = TabSheet1
+    ActivePage = TabSheet2
     Align = alClient
     TabOrder = 1
     object TabSheet1: TTabSheet
@@ -63,6 +63,7 @@ object frmPrincipal: TfrmPrincipal
         Caption = 'Gerar Extrato'
         TabOrder = 1
         OnClick = Button1Click
+        ExplicitTop = 362
       end
       object Memo2: TMemo
         Left = 0
@@ -278,7 +279,7 @@ object frmPrincipal: TfrmPrincipal
           object Label13: TLabel
             Left = 0
             Top = 0
-            Width = 608
+            Width = 27
             Height = 15
             Align = alTop
             Alignment = taCenter
@@ -289,7 +290,6 @@ object frmPrincipal: TfrmPrincipal
             Font.Name = 'Segoe UI'
             Font.Style = [fsBold]
             ParentFont = False
-            ExplicitWidth = 27
           end
           object Edit6: TEdit
             Left = 7
@@ -326,7 +326,7 @@ object frmPrincipal: TfrmPrincipal
           object Label14: TLabel
             Left = 0
             Top = 0
-            Width = 608
+            Width = 29
             Height = 15
             Align = alTop
             Alignment = taCenter
@@ -337,7 +337,6 @@ object frmPrincipal: TfrmPrincipal
             Font.Name = 'Segoe UI'
             Font.Style = [fsBold]
             ParentFont = False
-            ExplicitWidth = 29
           end
         end
       end

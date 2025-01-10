@@ -2,7 +2,7 @@ object frmPrincipal: TfrmPrincipal
   Left = 0
   Top = 0
   Caption = 'frmPrincipal'
-  ClientHeight = 537
+  ClientHeight = 501
   ClientWidth = 624
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
@@ -41,7 +41,7 @@ object frmPrincipal: TfrmPrincipal
     Left = 0
     Top = 58
     Width = 624
-    Height = 479
+    Height = 443
     ActivePage = TabSheet1
     Align = alClient
     TabOrder = 1
@@ -56,7 +56,7 @@ object frmPrincipal: TfrmPrincipal
       end
       object Button1: TButton
         Left = 0
-        Top = 398
+        Top = 362
         Width = 616
         Height = 51
         Align = alBottom
@@ -126,7 +126,7 @@ object frmPrincipal: TfrmPrincipal
       end
       object Panel2: TPanel
         Left = 0
-        Top = 391
+        Top = 355
         Width = 616
         Height = 58
         Align = alBottom
@@ -151,15 +151,15 @@ object frmPrincipal: TfrmPrincipal
         Left = 0
         Top = 138
         Width = 616
-        Height = 253
+        Height = 217
         ActivePage = TabSheet3
         Align = alBottom
         TabOrder = 4
         object TabSheet3: TTabSheet
           Caption = 'Bradesco'
           object Label4: TLabel
-            Left = 3
-            Top = 21
+            Left = 10
+            Top = 18
             Width = 43
             Height = 15
             Caption = 'Ag'#234'ncia'
@@ -172,14 +172,14 @@ object frmPrincipal: TfrmPrincipal
             Caption = 'Conta Corrente'
           end
           object Label6: TLabel
-            Left = 3
+            Left = 10
             Top = 61
             Width = 53
             Height = 15
             Caption = 'Client Key'
           end
           object Label7: TLabel
-            Left = 3
+            Left = 10
             Top = 107
             Width = 66
             Height = 15
@@ -188,7 +188,7 @@ object frmPrincipal: TfrmPrincipal
           object Label12: TLabel
             Left = 0
             Top = 0
-            Width = 608
+            Width = 62
             Height = 15
             Align = alTop
             Alignment = taCenter
@@ -199,49 +199,34 @@ object frmPrincipal: TfrmPrincipal
             Font.Name = 'Segoe UI'
             Font.Style = [fsBold]
             ParentFont = False
-            ExplicitWidth = 62
-          end
-          object Label15: TLabel
-            Left = 3
-            Top = 154
-            Width = 217
-            Height = 15
-            Caption = 'Caminho dos arquivos de trabalho (APIS)'
           end
           object edtAgenciaBradesco: TEdit
-            Left = 2
+            Left = 7
             Top = 35
             Width = 69
             Height = 23
             TabOrder = 0
           end
           object edtContaBradesco: TEdit
-            Left = 71
+            Left = 76
             Top = 35
             Width = 125
             Height = 23
             TabOrder = 1
           end
           object edtClienteKeyBradesco: TEdit
-            Left = 2
+            Left = 7
             Top = 78
-            Width = 599
+            Width = 607
             Height = 23
             TabOrder = 2
           end
           object edtClienteSecretBradesco: TEdit
-            Left = 2
+            Left = 7
             Top = 124
-            Width = 599
+            Width = 607
             Height = 23
             TabOrder = 3
-          end
-          object edtPastaDeTrabalhoBradesco: TEdit
-            Left = 2
-            Top = 173
-            Width = 599
-            Height = 23
-            TabOrder = 4
           end
         end
         object TabSheet4: TTabSheet
@@ -278,7 +263,7 @@ object frmPrincipal: TfrmPrincipal
           object Label13: TLabel
             Left = 0
             Top = 0
-            Width = 608
+            Width = 27
             Height = 15
             Align = alTop
             Alignment = taCenter
@@ -289,7 +274,6 @@ object frmPrincipal: TfrmPrincipal
             Font.Name = 'Segoe UI'
             Font.Style = [fsBold]
             ParentFont = False
-            ExplicitWidth = 27
           end
           object Edit6: TEdit
             Left = 7
@@ -326,7 +310,7 @@ object frmPrincipal: TfrmPrincipal
           object Label14: TLabel
             Left = 0
             Top = 0
-            Width = 608
+            Width = 29
             Height = 15
             Align = alTop
             Alignment = taCenter
@@ -337,7 +321,6 @@ object frmPrincipal: TfrmPrincipal
             Font.Name = 'Segoe UI'
             Font.Style = [fsBold]
             ParentFont = False
-            ExplicitWidth = 29
           end
         end
       end

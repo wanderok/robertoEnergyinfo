@@ -51,6 +51,8 @@ type
     Button1: TButton;
     Memo2: TMemo;
     Memo3: TMemo;
+    Label15: TLabel;
+    edtPastaDeTrabalhoBradesco: TEdit;
     procedure Button1Click(Sender: TObject);
     procedure FormShow(Sender: TObject);
     procedure Button3Click(Sender: TObject);
@@ -94,11 +96,13 @@ begin
 //     Memo2.Lines.Add('JWS:');
 //     Memo2.Lines.Add(Bradesco.JWS);
 
+     LerConfig;
      Bradesco.RazaoSocial := edtRazaoSocial.Text; // 'OXYMED COMERCIO E LOCACAO DE EQUIPAMENTO';
      Bradesco.CNPJ := edtCNPJ.Text; //'38.052.160/0057-01';
      Bradesco.ClientKey := edtClienteKeyBradesco.Text;
      Bradesco.Agencia := edtAgenciaBradesco.Text; //'3995';
      Bradesco.Conta := edtContaBradesco.Text; // '75557-5';
+     Bradesco.PastaDeTrabalho:= edtPastaDeTrabalhoBradesco.Text;
      //Bradesco.ClienteID := 0000;
      Bradesco.CertificadoDigital := edtChaveCertificado.Text;// 'xxxx';
      Memo1.Lines.Clear;
@@ -152,8 +156,15 @@ end;
 procedure TfrmPrincipal.GravarConfig;
 var
   Ini: TIniFile;
+  localDoArquivoINI: String;
 begin
-  Ini := TIniFile.Create(ARQUIVO_INI);
+  if edtPastaDeTrabalhoBradesco.Text = '' then
+  begin
+    edtPastaDeTrabalhoBradesco.Text := 'C:\WANDER';
+  end;
+
+  localDoArquivoINI := edtPastaDeTrabalhoBradesco.Text+'\'+ARQUIVO_INI;
+  Ini := TIniFile.Create(localDoArquivoINI);
   try
     Ini.WriteString('Empresa', 'RazaoSocial', CriptografarTexto(edtRazaoSocial.Text));
     Ini.WriteString('Empresa', 'CNPJ', CriptografarTexto(edtCNPJ.Text));
@@ -163,6 +174,7 @@ begin
     //Ini.WriteString('Bradesco', 'ID', CriptografarTexto(edtClienteID.Text));
     Ini.WriteString('Bradesco', 'Key', CriptografarTexto(edtClienteKeyBradesco.Text));
     Ini.WriteString('Bradesco', 'Secret', CriptografarTexto(edtClienteSecretBradesco.Text));
+    Ini.WriteString('Bradesco', 'PastaDeTrabalho', CriptografarTexto(edtPastaDeTrabalhoBradesco.Text));
   finally
     Ini.Free;
   end;
@@ -171,10 +183,15 @@ end;
 procedure TfrmPrincipal.LerConfig;
 var
   Ini: TIniFile;
+  localDoArquivoINI: String;
 begin
-  Ini := TIniFile.Create(ARQUIVO_INI);
+  if edtPastaDeTrabalhoBradesco.Text = '' then
+  begin
+    edtPastaDeTrabalhoBradesco.Text := 'C:\WANDER';
+  end;
+  localDoArquivoINI := edtPastaDeTrabalhoBradesco.Text+'\'+ARQUIVO_INI;
+  Ini := TIniFile.Create(localDoArquivoINI);
   try
-
     edtRazaoSocial.Text := DescriptografarTexto(Ini.ReadString('Empresa', 'RazaoSocial', ''));
     edtCNPJ.Text := DescriptografarTexto(Ini.ReadString('Empresa', 'CNPJ', ''));
     edtChaveCertificado.Text := DescriptografarTexto(Ini.ReadString('Certificados', 'ChaveCertificado', ''));
@@ -183,6 +200,7 @@ begin
     //edtClienteID.Text := DescriptografarTexto(Ini.ReadString('Bradesco', 'ID', ''));
     edtClienteKeyBradesco.Text := DescriptografarTexto(Ini.ReadString('Bradesco', 'Key', ''));
     edtClienteSecretBradesco.Text := DescriptografarTexto(Ini.ReadString('Bradesco', 'Secret', ''));
+    edtPastaDeTrabalhoBradesco.Text := DescriptografarTexto(Ini.ReadString('Bradesco', 'PastaDeTrabalho', ''));
   finally
     Ini.Free;
   end;

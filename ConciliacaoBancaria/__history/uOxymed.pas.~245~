@@ -368,8 +368,8 @@ begin
   ShowMessage('Assinatura em Base64URL: ' + Signature);
 
   // Concatena tudo para formar o JWS completo
-  result := Header + '.' + Payload + '.' + Signature;
-//  result := base64Url(Header) + '.' + base64Url(Payload) + '.' + base64Url(Signature)
+  //result := Header + '.' + Payload + '.' + Signature;
+  result := base64Url(Header) + '.' + base64Url(Payload) + '.' + base64Url(Signature)
   self.JWS := result;
 
   // Exibir o JWS completo antes de retornar

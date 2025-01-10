@@ -189,10 +189,8 @@ var
   RequestStream, ResponseStream: TMemoryStream;
 begin
   // Recupera o Bearer Token
-  //GerarToken;
-
-
-  BearerToken := ObterBearerToken(self.FJWS); //self.FToken;
+  GerarToken;
+  BearerToken := self.FToken;
 
   // Gera o nonce (pode ser o JTI ou timestamp)
   Nonce := IntToStr(GetCurrentTimeInMilliseconds); // Exemplo com timestamp
@@ -334,6 +332,7 @@ end;
 function TBradesco.MontarJWS: string;
 var
   Header, Payload, Signature: string;
+  Stream: TStringStream;
 begin
   // Criação do Header e Payload
   Header := CriarHeader;
@@ -346,37 +345,24 @@ begin
   Payload := CodificarBase64(Payload);
 
   self.FJWT := Header + '.' + Payload;
-
-
-  // Exibir o Header e Payload codificados para verificar
-  ShowMessage('Header codificado: ' + Header);
-  ShowMessage('Payload codificado: ' + Payload);
-
   SaveJWTToFile;
 
   // Gera a assinatura (JWS)
-  Signature := GerarAssinatura;
-
-  // Exibir a assinatura antes de codificar para Base64URL
-  ShowMessage('Assinatura gerada (Base64): ' + Signature);
+  // Concatenando Header e Payload para gerar a assinatura
+  Stream := TStringStream.Create(Header + '.' + Payload);
+  try
+    // Gera a assinatura com o conteúdo concatenado (Header + Payload)
+    Signature := GerarAssinatura;
+  finally
+    Stream.Free;
+  end;
 
   // Converte a assinatura para Base64URL
-  //Signature := Base64ToBase64URL(Signature);
-  Signature := CodificarBase64(Signature);
-
-  // Exibir a assinatura em Base64URL
-  ShowMessage('Assinatura em Base64URL: ' + Signature);
+  Signature := Base64ToBase64URL(Signature);
 
   // Concatena tudo para formar o JWS completo
   result := Header + '.' + Payload + '.' + Signature;
-//  result := base64Url(Header) + '.' + base64Url(Payload) + '.' + base64Url(Signature)
-  self.JWS := result;
-
-  // Exibir o JWS completo antes de retornar
-  ShowMessage('JWS completo: ' + result);
 end;
-
-
 
 function TBradesco.ObterBearerToken(const JWS: string): string;
 var
@@ -413,7 +399,6 @@ begin
     Params.Free;
   end;
 end;
-
 
 procedure TBradesco.SaveJWTToFile;
 begin

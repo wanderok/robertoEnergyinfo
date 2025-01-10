@@ -51,6 +51,8 @@ type
     Button1: TButton;
     Memo2: TMemo;
     Memo3: TMemo;
+    Label15: TLabel;
+    edtPastaDeTrabalhoBradesco: TEdit;
     procedure Button1Click(Sender: TObject);
     procedure FormShow(Sender: TObject);
     procedure Button3Click(Sender: TObject);
@@ -99,12 +101,18 @@ begin
      Bradesco.ClientKey := edtClienteKeyBradesco.Text;
      Bradesco.Agencia := edtAgenciaBradesco.Text; //'3995';
      Bradesco.Conta := edtContaBradesco.Text; // '75557-5';
+     Bradesco.PastaDeTrabalho:= edtPastaDeTrabalhoBradesco.Text;
      //Bradesco.ClienteID := 0000;
      Bradesco.CertificadoDigital := edtChaveCertificado.Text;// 'xxxx';
      Memo1.Lines.Clear;
      vData1 := Date-30;
      vData2 := Date;
      Memo1.Text := Bradesco.Extrato(vData1,vData2);
+
+     Memo2.Lines.Clear;
+     Memo2.Lines.Add('JWS:');
+     Memo2.Lines.Add(Bradesco.JWS);
+
      Memo2.Lines.Add('Token:');
      Memo2.Lines.Add(Bradesco.Token);
      Bradesco.Free;
@@ -158,6 +166,7 @@ begin
     //Ini.WriteString('Bradesco', 'ID', CriptografarTexto(edtClienteID.Text));
     Ini.WriteString('Bradesco', 'Key', CriptografarTexto(edtClienteKeyBradesco.Text));
     Ini.WriteString('Bradesco', 'Secret', CriptografarTexto(edtClienteSecretBradesco.Text));
+    Ini.WriteString('Bradesco', 'PastaDeTrabalho', CriptografarTexto(edtPastaDeTrabalhoBradesco.Text));
   finally
     Ini.Free;
   end;
@@ -178,6 +187,7 @@ begin
     //edtClienteID.Text := DescriptografarTexto(Ini.ReadString('Bradesco', 'ID', ''));
     edtClienteKeyBradesco.Text := DescriptografarTexto(Ini.ReadString('Bradesco', 'Key', ''));
     edtClienteSecretBradesco.Text := DescriptografarTexto(Ini.ReadString('Bradesco', 'Secret', ''));
+    edtPastaDeTrabalhoBradesco.Text := DescriptografarTexto(Ini.ReadString('Bradesco', 'PastaDeTrabalho', ''));
   finally
     Ini.Free;
   end;
