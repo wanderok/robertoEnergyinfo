@@ -49,7 +49,7 @@ type
     // function ClientKey:String;
     function APIToken: String;
     function CodificarBase64(const Texto: string): string;
-    function GerarAssinatura(const JWS: string): string;
+    function GerarAssinatura: string;
 //    function GerarAssinatura(Aut: TStream): string;
     function MontarJWS: string;
     function ObterBearerToken(const JWS: string): string;
@@ -245,7 +245,7 @@ begin
   end;
 end;
 
-function TBradesco.GerarAssinatura(const JWS: string): string;
+function TBradesco.GerarAssinatura: string;
 var
   Cmd, OutputFile, InputFile: string;
   // Process: TProcess;
@@ -255,7 +255,8 @@ begin
   OutputFile := 'C:\wander\assinaturas\signature.txt';
 
   // Cria o arquivo com o conteúdo do JWS
-  TFile.WriteAllText(InputFile, JWS);
+  TFile.WriteAllText(InputFile, self.FJWS);
+  //TFile.WriteAllText(InputFile, TNetEncoding.Base64.Encode(self.FJWS));
 
   // Monta o comando para executar o OpenSSL
   // Cmd := 'openssl dgst -sha256 -keyform pem -sign chaves\privada\oxymed.homologacao.key.pem -out ' + OutputFile + ' ' + InputFile;
@@ -343,7 +344,7 @@ begin
   SaveJWTToFile;
 
   // Gera a assinatura (JWS)
-   Signature := GerarAssinatura(self.FJWT);
+   Signature := GerarAssinatura;
 //  Stream := TStringStream.Create(Header + '.' + Payload);
 //  Signature := GerarAssinatura(Stream);
 
