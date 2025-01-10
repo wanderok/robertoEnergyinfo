@@ -49,8 +49,8 @@ type
     // function ClientKey:String;
     function APIToken: String;
     function CodificarBase64(const Texto: string): string;
-    function GerarAssinatura(const JWS: string): string;
-//    function GerarAssinatura(Aut: TStream): string;
+//    function GerarAssinatura(const JWS: string): string;
+    function GerarAssinatura(Aut: TStream): string;
     function MontarJWS: string;
     function ObterBearerToken(const JWS: string): string;
     function GerarToken: String;
@@ -343,9 +343,9 @@ begin
   SaveJWTToFile;
 
   // Gera a assinatura (JWS)
-   Signature := GerarAssinatura(self.FJWT);
-//  Stream := TStringStream.Create(Header + '.' + Payload);
-//  Signature := GerarAssinatura(Stream);
+  // Signature := GerarAssinatura(self.FJWT);
+  Stream := TStringStream.Create(Header + '.' + Payload);
+  Signature := GerarAssinatura(Stream);
 
 
   // Concatena tudo para formar o JWS completo

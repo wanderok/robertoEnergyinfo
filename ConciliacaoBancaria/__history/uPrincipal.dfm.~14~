@@ -188,7 +188,7 @@ object frmPrincipal: TfrmPrincipal
           object Label12: TLabel
             Left = 0
             Top = 0
-            Width = 62
+            Width = 608
             Height = 15
             Align = alTop
             Alignment = taCenter
@@ -199,6 +199,7 @@ object frmPrincipal: TfrmPrincipal
             Font.Name = 'Segoe UI'
             Font.Style = [fsBold]
             ParentFont = False
+            ExplicitWidth = 62
           end
           object edtAgenciaBradesco: TEdit
             Left = 7
@@ -263,7 +264,7 @@ object frmPrincipal: TfrmPrincipal
           object Label13: TLabel
             Left = 0
             Top = 0
-            Width = 27
+            Width = 608
             Height = 15
             Align = alTop
             Alignment = taCenter
@@ -274,6 +275,7 @@ object frmPrincipal: TfrmPrincipal
             Font.Name = 'Segoe UI'
             Font.Style = [fsBold]
             ParentFont = False
+            ExplicitWidth = 27
           end
           object Edit6: TEdit
             Left = 7
@@ -310,7 +312,7 @@ object frmPrincipal: TfrmPrincipal
           object Label14: TLabel
             Left = 0
             Top = 0
-            Width = 29
+            Width = 608
             Height = 15
             Align = alTop
             Alignment = taCenter
@@ -321,6 +323,7 @@ object frmPrincipal: TfrmPrincipal
             Font.Name = 'Segoe UI'
             Font.Style = [fsBold]
             ParentFont = False
+            ExplicitWidth = 29
           end
         end
       end

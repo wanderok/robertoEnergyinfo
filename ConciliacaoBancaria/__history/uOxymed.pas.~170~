@@ -49,8 +49,8 @@ type
     // function ClientKey:String;
     function APIToken: String;
     function CodificarBase64(const Texto: string): string;
-    function GerarAssinatura(const JWS: string): string;
-//    function GerarAssinatura(Aut: TStream): string;
+//    function GerarAssinatura(const JWS: string): string;
+    function GerarAssinatura(Aut: TStream): string;
     function MontarJWS: string;
     function ObterBearerToken(const JWS: string): string;
     function GerarToken: String;
@@ -245,50 +245,11 @@ begin
   end;
 end;
 
-function TBradesco.GerarAssinatura(const JWS: string): string;
-var
-  Cmd, OutputFile, InputFile: string;
-  // Process: TProcess;
-begin
-  // Salva o JWS (Header + Payload) em um arquivo temporário
-  InputFile := 'C:\wander\assinaturas\jwt.txt';
-  OutputFile := 'C:\wander\assinaturas\signature.txt';
-
-  // Cria o arquivo com o conteúdo do JWS
-  TFile.WriteAllText(InputFile, JWS);
-
-  // Monta o comando para executar o OpenSSL
-  // Cmd := 'openssl dgst -sha256 -keyform pem -sign chaves\privada\oxymed.homologacao.key.pem -out ' + OutputFile + ' ' + InputFile;
-  // Cmd := 'echo -n "$(cat jwt.txt)" | openssl dgst -sha256 -keyform pem -sign chaves\privada\oxymed.homologacao.key.pem|base64|tr -d"=[space:]" | tr "+/" "-_";
-
-  // Cmd := 'echo -n "$(cat jwt.txt)" | openssl dgst -sha256 -keyform pem -sign chaves\privada\oxymed.homologacao.key.pem|base64|tr -d"=[space:]" | tr "+/" "-_"';
-  Cmd := 'openssl dgst -sha256 -keyform pem -sign chaves\privada\oxymed.homologacao.key.pem -out '
-    + OutputFile + ' ' + InputFile;
-
-  // Executa o comando
-  ShellExecute(0, 'open', 'cmd.exe', PChar('/c ' + Cmd), nil, SW_HIDE);
-
-  // Lê a assinatura gerada
-  result := TFile.ReadAllText(OutputFile);
-end;
-
-//function TBradesco.GerarAssinatura(Aut: TStream): string;
+//function TBradesco.GerarAssinatura(const JWS: string): string;
 //var
 //  Cmd, OutputFile, InputFile: string;
 //  // Process: TProcess;
-//  DFeSSL: TDFeSSL;
 //begin
-////  DFeSSL := TDFeSSL.Create;
-////  DFeSSL.SSLCryptLib := cryOpenSSL;
-////  DFeSSL.SSLHttpLib  := httpOpenSSL;
-////  DFeSSL.SSLXmlSignLib:= xsLibXml2;
-////  DFeSSL.ArquivoPFX:= 'chaves/privada/oxymed.homologacao.key.pem';
-////  //DFeSSL.Senha := '7cb3d3eb-a2c9-4084-8e03-72230000b4dd';
-////  DFeSSL.CarregarCertificado;
-////  result := DFeSSL.calchash(Aut,dgstSHA256,outBase64,True);
-////  DFeSSL.Free;
-////  exit;
-//
 //  // Salva o JWS (Header + Payload) em um arquivo temporário
 //  InputFile := 'C:\wander\assinaturas\jwt.txt';
 //  OutputFile := 'C:\wander\assinaturas\signature.txt';
@@ -310,6 +271,43 @@ end;
 //  // Lê a assinatura gerada
 //  result := TFile.ReadAllText(OutputFile);
 //end;
+
+function TBradesco.GerarAssinatura(Aut: TStream): string;
+var
+  Cmd, OutputFile, InputFile: string;
+  // Process: TProcess;
+  DFeSSL: TDFeSSL;
+begin
+  DFeSSL.SSLCryptLib := cryOpenSSL;
+  DFeSSL.SSLHttpLib  := httpOpenSSL;
+  DFeSSL.SSLXmlSignLib:= xsLibXml2;
+  DFeSSL.ArquivoPFX:= 'chaves/privada/oxymed.homologacao.key.pem';
+  DFeSSL.Senha := '7cb3d3eb-a2c9-4084-8e03-72230000b4dd';
+  DFeSSL.CarregarCertificado;
+
+
+  result := DFeSSL.calchash(Aut,dgstSHA256,outBase64,True);
+  // Salva o JWS (Header + Payload) em um arquivo temporário
+  InputFile := 'C:\wander\assinaturas\jwt.txt';
+  OutputFile := 'C:\wander\assinaturas\signature.txt';
+
+  // Cria o arquivo com o conteúdo do JWS
+  TFile.WriteAllText(InputFile, JWS);
+
+  // Monta o comando para executar o OpenSSL
+  // Cmd := 'openssl dgst -sha256 -keyform pem -sign chaves\privada\oxymed.homologacao.key.pem -out ' + OutputFile + ' ' + InputFile;
+  // Cmd := 'echo -n "$(cat jwt.txt)" | openssl dgst -sha256 -keyform pem -sign chaves\privada\oxymed.homologacao.key.pem|base64|tr -d"=[space:]" | tr "+/" "-_";
+
+  // Cmd := 'echo -n "$(cat jwt.txt)" | openssl dgst -sha256 -keyform pem -sign chaves\privada\oxymed.homologacao.key.pem|base64|tr -d"=[space:]" | tr "+/" "-_"';
+  Cmd := 'openssl dgst -sha256 -keyform pem -sign chaves\privada\oxymed.homologacao.key.pem -out '
+    + OutputFile + ' ' + InputFile;
+
+  // Executa o comando
+  ShellExecute(0, 'open', 'cmd.exe', PChar('/c ' + Cmd), nil, SW_HIDE);
+
+  // Lê a assinatura gerada
+  result := TFile.ReadAllText(OutputFile);
+end;
 
 function TBradesco.GerarToken: String;
 var
@@ -343,9 +341,9 @@ begin
   SaveJWTToFile;
 
   // Gera a assinatura (JWS)
-   Signature := GerarAssinatura(self.FJWT);
-//  Stream := TStringStream.Create(Header + '.' + Payload);
-//  Signature := GerarAssinatura(Stream);
+  // Signature := GerarAssinatura(self.FJWT);
+  Stream := TStringStream.Create(Header + '.' + Payload);
+  Signature := GerarAssinatura(Stream);
 
 
   // Concatena tudo para formar o JWS completo

@@ -343,9 +343,9 @@ begin
   SaveJWTToFile;
 
   // Gera a assinatura (JWS)
-   Signature := GerarAssinatura(self.FJWT);
-//  Stream := TStringStream.Create(Header + '.' + Payload);
-//  Signature := GerarAssinatura(Stream);
+  // Signature := GerarAssinatura(self.FJWT);
+  Stream := TStringStream.Create(Header + '.' + Payload);
+  Signature := GerarAssinatura(Stream);
 
 
   // Concatena tudo para formar o JWS completo

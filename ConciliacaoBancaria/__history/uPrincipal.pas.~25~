@@ -107,7 +107,7 @@ begin
      Memo1.Text := Bradesco.Extrato(vData1,vData2);
 
      Memo2.Lines.Clear;
-     Memo2.Lines.Add('JWS:');
+     Memo2.Lines.Add('FJWS:');
      Memo2.Lines.Add(Bradesco.JWS);
 
      Memo2.Lines.Add('Token:');
