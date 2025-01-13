@@ -627,14 +627,10 @@ end;
 
 function TBradesco.GerarAssinatura: string;
 var
-  CmdLine: string;
+  CmdLine, StdErrString: string;
   ProcessInfo: TProcessInformation;
   StartupInfo: TStartupInfo;
   ExitCode: DWORD;
-  PipeRead, PipeWrite: THandle;
-  Buffer: array[0..1023] of AnsiChar;
-  BytesRead: DWORD;
-  StdErrString: string;
 begin
   // Caminhos dos arquivos
   CmdLine := 'cmd.exe /C echo -n "' + self.FPastaDeTrabalho + '\jwt.txt" | ' +
@@ -642,25 +638,12 @@ begin
              'C:\WANDER\chaves\privada\oxymed.homologacao.key.pem" | ' +
              'base64 | tr -d "=[:space:]" | tr "+/" "-_"';
 
-  // Cria o pipe para capturar a saída do comando
-//  if not CreatePipe(PipeRead, PipeWrite) then
-//  begin
-//    ShowMessage('Erro ao criar o pipe');
-//    Exit;
-//  end;
-
   // Inicializa as estruturas para o CreateProcess
   ZeroMemory(@StartupInfo, SizeOf(StartupInfo));
   StartupInfo.cb := SizeOf(StartupInfo);
 
-  // Inicializa as propriedades para redirecionamento da saída padrão
-  StartupInfo.dwFlags := STARTF_USESTDHANDLES;
-  StartupInfo.hStdOutput := PipeWrite;
-  StartupInfo.hStdError := PipeWrite;
-  StartupInfo.hStdInput := PipeRead;
-
   // Cria o processo para executar o comando OpenSSL
-  if not CreateProcess(nil, PChar(CmdLine), nil, nil, True, CREATE_NO_WINDOW, nil, nil, StartupInfo, ProcessInfo) then
+  if not CreateProcess(nil, PChar(CmdLine), nil, nil, False, CREATE_NO_WINDOW, nil, nil, StartupInfo, ProcessInfo) then
   begin
     ShowMessage('Erro ao executar OpenSSL: ' + SysErrorMessage(GetLastError));
     Exit;
@@ -677,7 +660,8 @@ begin
 //    Exit;
 //  end;
 
-  // Lê a saída do processo (a assinatura gerada)
+
+// Lê a saída do processo (a assinatura gerada)
   StdErrString := '';
   while ReadFile(PipeRead, Buffer, SizeOf(Buffer), BytesRead, nil) and (BytesRead > 0) do
   begin
@@ -686,12 +670,13 @@ begin
 
   // Exibe a assinatura gerada
   ShowMessage('Assinatura gerada com sucesso! A assinatura é: ' + StdErrString);
-
   // Fechar handles
   CloseHandle(ProcessInfo.hProcess);
   CloseHandle(ProcessInfo.hThread);
-  CloseHandle(PipeRead);
-  CloseHandle(PipeWrite);
+
+
+
+  ShowMessage('Assinatura gerada com sucesso!');
 end;
 
 
