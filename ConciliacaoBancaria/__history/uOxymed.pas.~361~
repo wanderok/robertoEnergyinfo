@@ -1,5 +1,9 @@
 unit uOxymed;
 
+{
+https://jwt.io/
+}
+
 interface
 
 uses
@@ -17,8 +21,6 @@ uses
   System.DateUtils,
   ACBrDFeSSL;
 
-
-
 type
   TBradesco = class
   private
@@ -35,6 +37,7 @@ type
     FHeader: String;
     FPayload: String;
     FClientKey: String;
+    FAssinatura: String;
     function CriarHeader: string;
     function CriarPayload: string;
     // function ClientKey:String;
@@ -55,6 +58,8 @@ type
     procedure CriarRequestTxt(const Metodo, Endpoint, Parametros, Body: string);
     function GetCurrentTimeInMilliseconds: Int64;
 
+
+
   public
     constructor Create;
     property RazaoSocial: string read FRazaoSocial write FRazaoSocial;
@@ -67,12 +72,14 @@ type
     property Header: string read FHeader write FHeader;
     property Payload: string read FPayload write FPayload;
     property JWS: string read FJWS write FJWS;
+    property JWT: string read FJWT write FJWT;
     property ClientKey: string read FClientKey write FClientKey;
     property Token: string read FToken write FToken;
+    property Assinatura: string read FAssinatura write FAssinatura;
     property PastaDeTrabalho: string read FPastaDeTrabalho
       write FPastaDeTrabalho;
     function Extrato(Inicio, Fim: TDateTime): String;
-
+    procedure GeraTokenAssinado;
   end;
 
 implementation
@@ -198,7 +205,7 @@ begin
   // Recupera o Bearer Token
   //GerarToken;
 
-  GerarTokenJWT_01;
+//  GerarTokenJWT_01;
 
   // Gera a assinatura JWS
   Signature := GerarAssinatura;
@@ -525,48 +532,145 @@ end;
 
 
 //ok ok ok ok ok ok ok ok ok ok ok ok ok ok
+function TBradesco.GerarAssinatura: string;
+var
+  CmdLine, OutputFile, InputFile: string;
+  Base64Signature: string;
+  ProcessInfo: TProcessInformation;
+  StartupInfo: TStartupInfo;
+  ExitCode: DWORD;
+  Buffer: array[0..1023] of AnsiChar;
+  BytesRead: DWORD;
+  OpenSSLPath: string;
+  CmdOutputFile: string;
+  TempSignatureFile: string;
+  HeaderBase64Url, PayloadBase64Url: string;
+begin
+  // Codifique o Header e Payload em Base64Url
+  HeaderBase64Url := CodificarBase64(self.Header);
+  PayloadBase64Url := CodificarBase64(self.Payload);
+
+  // Concatenar Header + Payload e salvar em um arquivo
+  TFile.WriteAllText('c:\wander\jwt.txt', HeaderBase64Url + '.' + PayloadBase64Url);
+
+  // Caminhos dos arquivos
+  InputFile := 'c:\wander\jwt.txt';  // O arquivo de entrada
+  TempSignatureFile := 'c:\wander\signature.bin';  // Arquivo temporário para assinatura binária
+  CmdOutputFile := 'c:\wander\signature.base64';  // Arquivo final com assinatura em base64
+
+  // Caminho completo para o OpenSSL (adapte conforme a sua instalação)
+  OpenSSLPath := '"C:\Program Files\OpenSSL-Win64\bin\openssl.exe"';  // Exemplo, substitua pelo seu caminho real
+
+  // Comando OpenSSL para assinar o conteúdo
+  CmdLine := OpenSSLPath + ' dgst -sha256 -keyform pem -sign "' +
+             self.FPastaDeTrabalho + '\chaves\privada\oxymed.homologacao.key.pem" < "' +
+             InputFile + '" > "' + TempSignatureFile + '"';
+
+  TFile.WriteAllText(self.FPastaDeTrabalho + '\CmdLine2.txt', CmdLine);
+
+  // Inicializa as estruturas para o CreateProcess
+  ZeroMemory(@StartupInfo, SizeOf(StartupInfo));
+  StartupInfo.cb := SizeOf(StartupInfo);
+
+  // Cria o processo para executar o comando OpenSSL
+  if not CreateProcess(nil, PChar('cmd.exe /C ' + CmdLine), nil, nil, False, CREATE_NO_WINDOW, nil, nil, StartupInfo, ProcessInfo) then
+  begin
+    ShowMessage('Erro ao executar OpenSSL: ' + SysErrorMessage(GetLastError));
+    Exit;
+  end;
+
+  // Aguarda a execução do comando
+  WaitForSingleObject(ProcessInfo.hProcess, INFINITE);
+  GetExitCodeProcess(ProcessInfo.hProcess, ExitCode);
+
+  // Verifica o código de saída do OpenSSL
+//  if ExitCode <> 0 then
+//  begin
+//    ShowMessage('Erro ao executar OpenSSL. Código de saída: ' + IntToStr(ExitCode));
+//    Exit;
+//  end;
+
+  // Fechar handles
+  CloseHandle(ProcessInfo.hProcess);
+  CloseHandle(ProcessInfo.hThread);
+
+  // Agora, vamos usar o CertUtil para codificar a assinatura binária em Base64
+  CmdLine := 'certutil -encode "' + TempSignatureFile + '" "' + CmdOutputFile + '"';
+
+  // Inicializa novamente o processo para rodar o CertUtil
+  if not CreateProcess(nil, PChar('cmd.exe /C ' + CmdLine), nil, nil, False, CREATE_NO_WINDOW, nil, nil, StartupInfo, ProcessInfo) then
+  begin
+    ShowMessage('Erro ao executar CertUtil: ' + SysErrorMessage(GetLastError));
+    Exit;
+  end;
+
+  // Aguarda a execução do comando CertUtil
+  WaitForSingleObject(ProcessInfo.hProcess, INFINITE);
+  GetExitCodeProcess(ProcessInfo.hProcess, ExitCode);
+
+  // Verifica o código de saída do CertUtil
+//  if ExitCode <> 0 then
+//  begin
+//    ShowMessage('Erro ao executar CertUtil. Código de saída: ' + IntToStr(ExitCode));
+//    Exit;
+//  end;
+
+  // Fechar handles
+  CloseHandle(ProcessInfo.hProcess);
+  CloseHandle(ProcessInfo.hThread);
+
+  // Lê a assinatura Base64 do arquivo de saída
+  Base64Signature := TFile.ReadAllText(CmdOutputFile);
+
+  // Opcional: Remover a linha extra gerada pelo certutil (essa linha pode ser removida se estiver em formato certutil)
+  //Base64Signature := Copy(Base64Signature, Pos(#13#10, Base64Signature) + 2, MaxInt);
+  Base64Signature := Base64ToBase64URL(Base64Signature);
+
+  TFile.WriteAllText(self.FPastaDeTrabalho + '\AssinaturaOK.txt', Base64Signature);
+  // Exibe a assinatura gerada
+  //ShowMessage('Assinatura gerada com sucesso! Base64: ' + Base64Signature);
+  result := Base64Signature;
+end;
+
+
+
 //function TBradesco.GerarAssinatura: string;
 //var
-//  CmdLine, OutputFile, InputFile: string;
-//  Base64Signature: string;
+//  CmdLine: string;
 //  ProcessInfo: TProcessInformation;
 //  StartupInfo: TStartupInfo;
 //  ExitCode: DWORD;
+//  PipeRead, PipeWrite: THandle;
 //  Buffer: array[0..1023] of AnsiChar;
 //  BytesRead: DWORD;
-//  OpenSSLPath: string;
-//  CmdOutputFile: string;
-//  TempSignatureFile: string;
-//  HeaderBase64Url, PayloadBase64Url: string;
+//  StdErrString: string;
 //begin
-//  // Codifique o Header e Payload em Base64Url
-//  HeaderBase64Url := CodificarBase64(self.Header);
-//  PayloadBase64Url := CodificarBase64(self.Payload);
-//
-//  // Concatenar Header + Payload e salvar em um arquivo
-//  TFile.WriteAllText('c:\wander\jwt.txt', HeaderBase64Url + '.' + PayloadBase64Url);
-//
 //  // Caminhos dos arquivos
-//  InputFile := 'c:\wander\jwt.txt';  // O arquivo de entrada
-//  TempSignatureFile := 'c:\wander\signature.bin';  // Arquivo temporário para assinatura binária
-//  CmdOutputFile := 'c:\wander\signature.base64';  // Arquivo final com assinatura em base64
+//  CmdLine := 'cmd.exe /C echo -n "' + self.FPastaDeTrabalho + '\jwt.txt" | ' +
+//             '"C:\Program Files\OpenSSL-Win64\bin\openssl.exe" dgst -sha256 -keyform pem -sign "' +
+//             'C:\WANDER\chaves\privada\oxymed.homologacao.key.pem" | ' +
+//             'base64 | tr -d "=[:space:]" | tr "+/" "-_"';
 //
-//  // Caminho completo para o OpenSSL (adapte conforme a sua instalação)
-//  OpenSSLPath := '"C:\Program Files\OpenSSL-Win64\bin\openssl.exe"';  // Exemplo, substitua pelo seu caminho real
-//
-//  // Comando OpenSSL para assinar o conteúdo
-//  CmdLine := OpenSSLPath + ' dgst -sha256 -keyform pem -sign "' +
-//             self.FPastaDeTrabalho + '\chaves\privada\oxymed.homologacao.key.pem" < "' +
-//             InputFile + '" > "' + TempSignatureFile + '"';
-//
-//  TFile.WriteAllText(self.FPastaDeTrabalho + '\CmdLine2.txt', CmdLine);
+//  // Cria o pipe para capturar a saída do comando
+////  if not CreatePipe(PipeRead, PipeWrite) then
+//  if not CreatePipe(PipeRead, PipeWrite, nil, 4096) then
+//  begin
+//    ShowMessage('Erro ao criar o pipe');
+//    Exit;
+//  end;
 //
 //  // Inicializa as estruturas para o CreateProcess
 //  ZeroMemory(@StartupInfo, SizeOf(StartupInfo));
 //  StartupInfo.cb := SizeOf(StartupInfo);
 //
+//  // Inicializa as propriedades para redirecionamento da saída padrão
+//  StartupInfo.dwFlags := STARTF_USESTDHANDLES;
+//  StartupInfo.hStdOutput := PipeWrite;
+//  StartupInfo.hStdError := PipeWrite;
+//  StartupInfo.hStdInput := PipeRead;
+//
 //  // Cria o processo para executar o comando OpenSSL
-//  if not CreateProcess(nil, PChar('cmd.exe /C ' + CmdLine), nil, nil, False, CREATE_NO_WINDOW, nil, nil, StartupInfo, ProcessInfo) then
+//  if not CreateProcess(nil, PChar(CmdLine), nil, nil, True, CREATE_NO_WINDOW, nil, nil, StartupInfo, ProcessInfo) then
 //  begin
 //    ShowMessage('Erro ao executar OpenSSL: ' + SysErrorMessage(GetLastError));
 //    Exit;
@@ -583,114 +687,117 @@ end;
 ////    Exit;
 ////  end;
 //
+//  // Lê a saída do processo (a assinatura gerada)
+//  StdErrString := '';
+//  while ReadFile(PipeRead, Buffer, SizeOf(Buffer), BytesRead, nil) and (BytesRead > 0) do
+//  begin
+//    SetString(StdErrString, PAnsiChar(@Buffer), BytesRead);
+//  end;
+//
+//  // Exibe a assinatura gerada
+// // ShowMessage('Assinatura gerada com sucesso! A assinatura é: ' + StdErrString);
+//
 //  // Fechar handles
 //  CloseHandle(ProcessInfo.hProcess);
 //  CloseHandle(ProcessInfo.hThread);
+//  CloseHandle(PipeRead);
+//  CloseHandle(PipeWrite);
+//end;
+
+//function TBradesco.GerarAssinatura: string;
+//var
+//  CmdLine: string;
+//  ProcessInfo: TProcessInformation;
+//  StartupInfo: TStartupInfo;
+//  ExitCode: DWORD;
+//  PipeRead, PipeWrite: THandle;
+//  Buffer: array[0..1023] of AnsiChar;
+//  BytesRead: DWORD;
+//  StdErrString: string;
+//  StartTime: DWORD;
+//begin
+//  // Caminhos dos arquivos
+//  CmdLine := 'cmd.exe /C echo -n "' + self.FPastaDeTrabalho + '\jwt.txt" | ' +
+//             '"C:\Program Files\OpenSSL-Win64\bin\openssl.exe" dgst -sha256 -keyform pem -sign "' +
+//             'C:\WANDER\chaves\privada\oxymed.homologacao.key.pem" | ' +
+//             'base64 | tr -d "=[:space:]" | tr "+/" "-_"';
 //
-//  // Agora, vamos usar o CertUtil para codificar a assinatura binária em Base64
-//  CmdLine := 'certutil -encode "' + TempSignatureFile + '" "' + CmdOutputFile + '"';
-//
-//  // Inicializa novamente o processo para rodar o CertUtil
-//  if not CreateProcess(nil, PChar('cmd.exe /C ' + CmdLine), nil, nil, False, CREATE_NO_WINDOW, nil, nil, StartupInfo, ProcessInfo) then
+//  // Cria o pipe para capturar a saída do comando
+//  if not CreatePipe(PipeRead, PipeWrite, nil, 4096) then
 //  begin
-//    ShowMessage('Erro ao executar CertUtil: ' + SysErrorMessage(GetLastError));
+//    ShowMessage('Erro ao criar o pipe');
 //    Exit;
 //  end;
 //
-//  // Aguarda a execução do comando CertUtil
+//  // Inicializa as estruturas para o CreateProcess
+//  ZeroMemory(@StartupInfo, SizeOf(StartupInfo));
+//  StartupInfo.cb := SizeOf(StartupInfo);
+//
+//  // Inicializa as propriedades para redirecionamento da saída padrão
+//  StartupInfo.dwFlags := STARTF_USESTDHANDLES;
+//  StartupInfo.hStdOutput := PipeWrite;
+//  StartupInfo.hStdError := PipeWrite;
+//  StartupInfo.hStdInput := PipeRead;
+//
+//  // Cria o processo para executar o comando OpenSSL
+//  if not CreateProcess(nil, PChar(CmdLine), nil, nil, True, CREATE_NO_WINDOW, nil, nil, StartupInfo, ProcessInfo) then
+//  begin
+//    ShowMessage('Erro ao executar OpenSSL: ' + SysErrorMessage(GetLastError));
+//    Exit;
+//  end;
+//
+//  // Aguarda a execução do comando
 //  WaitForSingleObject(ProcessInfo.hProcess, INFINITE);
 //  GetExitCodeProcess(ProcessInfo.hProcess, ExitCode);
 //
-//  // Verifica o código de saída do CertUtil
-////  if ExitCode <> 0 then
-////  begin
-////    ShowMessage('Erro ao executar CertUtil. Código de saída: ' + IntToStr(ExitCode));
-////    Exit;
-////  end;
+//  // Verifica o código de saída do OpenSSL
+//  if ExitCode <> 0 then
+//  begin
+//    ShowMessage('Erro ao executar OpenSSL. Código de saída: ' + IntToStr(ExitCode));
+//    Exit;
+//  end;
+//
+//  // Lê a saída do processo (a assinatura gerada)
+//  StdErrString := '';
+//  StartTime := GetTickCount;  // Obtém o tempo atual em milissegundos
+//
+//  while True do
+//  begin
+//    // Tenta ler do pipe
+//    if ReadFile(PipeRead, Buffer, SizeOf(Buffer), BytesRead, nil) then
+//    begin
+//      if BytesRead > 0 then
+//      begin
+//        // Adiciona os dados lidos à string de erro
+//        SetString(StdErrString, PAnsiChar(@Buffer), BytesRead);
+//      end
+//      else
+//        Break;  // Se não há mais dados para ler, sai do loop
+//    end
+//    else
+//    begin
+//      // Em caso de erro na leitura do pipe
+//      ShowMessage('Erro ao ler o pipe: ' + SysErrorMessage(GetLastError));
+//      Break;
+//    end;
+//
+//    // Verifica se o tempo de leitura ultrapassou 10 segundos (timeout)
+//    if (GetTickCount - StartTime) > 10000 then
+//    begin
+//      ShowMessage('Leitura do pipe demorou mais de 10 segundos.');
+//      Break;  // Encerra a leitura após 10 segundos
+//    end;
+//  end;
+//
+//  // Exibe a assinatura gerada
+//  ShowMessage('Assinatura gerada com sucesso! A assinatura é: ' + StdErrString);
 //
 //  // Fechar handles
 //  CloseHandle(ProcessInfo.hProcess);
 //  CloseHandle(ProcessInfo.hThread);
-//
-//  // Lê a assinatura Base64 do arquivo de saída
-//  Base64Signature := TFile.ReadAllText(CmdOutputFile);
-//
-//  // Opcional: Remover a linha extra gerada pelo certutil (essa linha pode ser removida se estiver em formato certutil)
-//  // Base64Signature := Copy(Base64Signature, Pos(#13#10, Base64Signature) + 2, MaxInt);
-//
-//  TFile.WriteAllText(self.FPastaDeTrabalho + '\AssinaturaOK.txt', Base64Signature);
-//  // Exibe a assinatura gerada
-//  ShowMessage('Assinatura gerada com sucesso! Base64: ' + Base64Signature);
+//  CloseHandle(PipeRead);
+//  CloseHandle(PipeWrite);
 //end;
-//
-
-
-function TBradesco.GerarAssinatura: string;
-var
-  CmdLine: string;
-  ProcessInfo: TProcessInformation;
-  StartupInfo: TStartupInfo;
-  ExitCode: DWORD;
-  PipeRead, PipeWrite: THandle;
-  Buffer: array[0..1023] of AnsiChar;
-  BytesRead: DWORD;
-  StdErrString: string;
-begin
-  // Caminhos dos arquivos
-  CmdLine := 'cmd.exe /C echo -n "' + self.FPastaDeTrabalho + '\jwt.txt" | ' +
-             '"C:\Program Files\OpenSSL-Win64\bin\openssl.exe" dgst -sha256 -keyform pem -sign "' +
-             'C:\WANDER\chaves\privada\oxymed.homologacao.key.pem" | ' +
-             'base64 | tr -d "=[:space:]" | tr "+/" "-_"';
-
-  // Cria o pipe para capturar a saída do comando
-  if not CreatePipe(PipeRead, PipeWrite) then
-  begin
-    ShowMessage('Erro ao criar o pipe');
-    Exit;
-  end;
-
-  // Inicializa as estruturas para o CreateProcess
-  ZeroMemory(@StartupInfo, SizeOf(StartupInfo));
-  StartupInfo.cb := SizeOf(StartupInfo);
-
-  // Cria o processo para executar o comando OpenSSL
-  if not CreateProcess(nil, PChar(CmdLine), nil, nil, False, CREATE_NO_WINDOW, nil, nil, StartupInfo, ProcessInfo) then
-  begin
-    ShowMessage('Erro ao executar OpenSSL: ' + SysErrorMessage(GetLastError));
-    Exit;
-  end;
-
-  // Aguarda a execução do comando
-  WaitForSingleObject(ProcessInfo.hProcess, INFINITE);
-  GetExitCodeProcess(ProcessInfo.hProcess, ExitCode);
-
-  // Verifica o código de saída do OpenSSL
-  if ExitCode <> 0 then
-  begin
-    ShowMessage('Erro ao executar OpenSSL. Código de saída: ' + IntToStr(ExitCode));
-    Exit;
-  end;
-
-  // Lê a saída do processo (a assinatura gerada)
-  StdErrString := '';
-  while ReadFile(PipeRead, Buffer, SizeOf(Buffer), BytesRead, nil) and (BytesRead > 0) do
-  begin
-    SetString(StdErrString, PAnsiChar(@Buffer), BytesRead);
-  end;
-
-  // Exibe a assinatura gerada
-  //ShowMessage('Assinatura gerada com sucesso! A assinatura é: ' + StdErrString);
-
-  // Fechar handles
-  CloseHandle(ProcessInfo.hProcess);
-  CloseHandle(ProcessInfo.hThread);
-  CloseHandle(PipeRead);
-  CloseHandle(PipeWrite);
-end;
-
-
-
-
 
 function TBradesco.GerarToken: String;
 var
@@ -742,6 +849,13 @@ begin
 
 end;
 
+procedure TBradesco.GeraTokenAssinado;
+begin
+   self.GerarTokenJWT_01;
+   self.FAssinatura := self.GerarAssinatura;
+
+end;
+
 function TBradesco.GetCurrentTimeInMilliseconds: Int64;
 begin
   // Obtém o número de milissegundos desde a "época" (01/01/1970)
@@ -752,18 +866,18 @@ function TBradesco.MontarJWS: string;
 var Signature: string;
 begin
   // Gera a assinatura (JWS)
-  Signature := GerarAssinatura;
+  Signature := self.FAssinatura; // GerarAssinatura;
 
   // Exibir a assinatura antes de codificar para Base64URL
-  ShowMessage('Assinatura gerada (Base64): ' + Signature);
+  //ShowMessage('Assinatura gerada (Base64): ' + Signature);
 
   // Converte a assinatura para Base64URL
-  Signature := Base64ToBase64URL(Signature);
+  //Signature := Base64ToBase64URL(Signature);
   //Signature := CodificarBase64(Signature);
   //Signature := CodificarBase64(Signature);
 
   // Exibir a assinatura em Base64URL
-  ShowMessage('Assinatura em Base64URL: ' + Signature);
+  //ShowMessage('Assinatura em Base64URL: ' + Signature);
 
   // Concatena tudo para formar o JWS completo
   result := Header + '.' + Payload + '.' + Signature;
@@ -826,4 +940,5 @@ end.
  CmdLine := 'echo -n "(' + self.FPastaDeTrabalho + '\jwt.txt)" | openssl dgst -sha256 -keyform pem -sign "' +
               self.FPastaDeTrabalho + '\chaves\privada\oxymed.homologacao.key.pem" | ' +
               'base64 | tr -d ''=[:space:]'' | tr ''+/'' ''-_''';
+
 

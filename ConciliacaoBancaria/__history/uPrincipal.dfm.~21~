@@ -2,7 +2,7 @@ object frmPrincipal: TfrmPrincipal
   Left = 0
   Top = 0
   Caption = 'frmPrincipal'
-  ClientHeight = 501
+  ClientHeight = 537
   ClientWidth = 624
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
@@ -41,7 +41,7 @@ object frmPrincipal: TfrmPrincipal
     Left = 0
     Top = 58
     Width = 624
-    Height = 443
+    Height = 479
     ActivePage = TabSheet1
     Align = alClient
     TabOrder = 1
@@ -56,7 +56,7 @@ object frmPrincipal: TfrmPrincipal
       end
       object Button1: TButton
         Left = 0
-        Top = 362
+        Top = 398
         Width = 616
         Height = 51
         Align = alBottom
@@ -75,8 +75,15 @@ object frmPrincipal: TfrmPrincipal
         Left = 0
         Top = 216
         Width = 616
-        Height = 121
+        Height = 89
         TabOrder = 3
+      end
+      object Memo4: TMemo
+        Left = 0
+        Top = 311
+        Width = 616
+        Height = 81
+        TabOrder = 4
       end
     end
     object TabSheet2: TTabSheet
@@ -126,7 +133,7 @@ object frmPrincipal: TfrmPrincipal
       end
       object Panel2: TPanel
         Left = 0
-        Top = 355
+        Top = 391
         Width = 616
         Height = 58
         Align = alBottom
@@ -151,15 +158,15 @@ object frmPrincipal: TfrmPrincipal
         Left = 0
         Top = 138
         Width = 616
-        Height = 217
+        Height = 253
         ActivePage = TabSheet3
         Align = alBottom
         TabOrder = 4
         object TabSheet3: TTabSheet
           Caption = 'Bradesco'
           object Label4: TLabel
-            Left = 10
-            Top = 18
+            Left = 3
+            Top = 21
             Width = 43
             Height = 15
             Caption = 'Ag'#234'ncia'
@@ -172,14 +179,14 @@ object frmPrincipal: TfrmPrincipal
             Caption = 'Conta Corrente'
           end
           object Label6: TLabel
-            Left = 10
+            Left = 3
             Top = 61
             Width = 53
             Height = 15
             Caption = 'Client Key'
           end
           object Label7: TLabel
-            Left = 10
+            Left = 3
             Top = 107
             Width = 66
             Height = 15
@@ -201,33 +208,47 @@ object frmPrincipal: TfrmPrincipal
             ParentFont = False
             ExplicitWidth = 62
           end
+          object Label15: TLabel
+            Left = 3
+            Top = 154
+            Width = 217
+            Height = 15
+            Caption = 'Caminho dos arquivos de trabalho (APIS)'
+          end
           object edtAgenciaBradesco: TEdit
-            Left = 7
+            Left = 2
             Top = 35
             Width = 69
             Height = 23
             TabOrder = 0
           end
           object edtContaBradesco: TEdit
-            Left = 76
+            Left = 71
             Top = 35
             Width = 125
             Height = 23
             TabOrder = 1
           end
           object edtClienteKeyBradesco: TEdit
-            Left = 7
+            Left = 2
             Top = 78
-            Width = 607
+            Width = 599
             Height = 23
             TabOrder = 2
           end
           object edtClienteSecretBradesco: TEdit
-            Left = 7
+            Left = 2
             Top = 124
-            Width = 607
+            Width = 599
             Height = 23
             TabOrder = 3
+          end
+          object edtPastaDeTrabalhoBradesco: TEdit
+            Left = 2
+            Top = 173
+            Width = 599
+            Height = 23
+            TabOrder = 4
           end
         end
         object TabSheet4: TTabSheet

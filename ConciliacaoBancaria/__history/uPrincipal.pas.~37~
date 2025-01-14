@@ -97,18 +97,20 @@ begin
 //     Memo2.Lines.Add(Bradesco.JWS);
 
      LerConfig;
-//     Bradesco.RazaoSocial := edtRazaoSocial.Text; // 'OXYMED COMERCIO E LOCACAO DE EQUIPAMENTO';
-//     Bradesco.CNPJ := edtCNPJ.Text; //'38.052.160/0057-01';
-//     Bradesco.ClientKey := edtClienteKeyBradesco.Text;
-//     Bradesco.Agencia := edtAgenciaBradesco.Text; //'3995';
-//     Bradesco.Conta := edtContaBradesco.Text; // '75557-5';
-//     Bradesco.PastaDeTrabalho:= edtPastaDeTrabalhoBradesco.Text;
-//     //Bradesco.ClienteID := 0000;
-//     Bradesco.CertificadoDigital := edtChaveCertificado.Text;// 'xxxx';
+     Bradesco.RazaoSocial := edtRazaoSocial.Text; // 'OXYMED COMERCIO E LOCACAO DE EQUIPAMENTO';
+     Bradesco.CNPJ := edtCNPJ.Text; //'38.052.160/0057-01';
+     Bradesco.ClientKey := edtClienteKeyBradesco.Text;
+     Bradesco.Agencia := edtAgenciaBradesco.Text; //'3995';
+     Bradesco.Conta := edtContaBradesco.Text; // '75557-5';
+     Bradesco.PastaDeTrabalho:= edtPastaDeTrabalhoBradesco.Text;
+     //Bradesco.ClienteID := 0000;
+     Bradesco.CertificadoDigital := edtChaveCertificado.Text;// 'xxxx';
      Memo1.Lines.Clear;
      vData1 := Date-30;
      vData2 := Date;
-     Memo1.Text := Bradesco.Extrato(vData1,vData2);
+     Memo1.lines := Bradesco.JWS;
+     Memo2.lines := Bradesco.Assinatura;
+     Memo3.Text := Bradesco.Extrato(vData1,vData2);
 
      Memo2.Lines.Clear;
      Memo2.Lines.Add('JWS:');
@@ -158,6 +160,11 @@ var
   Ini: TIniFile;
   localDoArquivoINI: String;
 begin
+  if edtPastaDeTrabalhoBradesco.Text = '' then
+  begin
+    edtPastaDeTrabalhoBradesco.Text := 'C:\WANDER';
+  end;
+
   localDoArquivoINI := edtPastaDeTrabalhoBradesco.Text+'\'+ARQUIVO_INI;
   Ini := TIniFile.Create(localDoArquivoINI);
   try
@@ -178,8 +185,14 @@ end;
 procedure TfrmPrincipal.LerConfig;
 var
   Ini: TIniFile;
+  localDoArquivoINI: String;
 begin
-  Ini := TIniFile.Create(ARQUIVO_INI);
+  if edtPastaDeTrabalhoBradesco.Text = '' then
+  begin
+    edtPastaDeTrabalhoBradesco.Text := 'C:\WANDER';
+  end;
+  localDoArquivoINI := edtPastaDeTrabalhoBradesco.Text+'\'+ARQUIVO_INI;
+  Ini := TIniFile.Create(localDoArquivoINI);
   try
     edtRazaoSocial.Text := DescriptografarTexto(Ini.ReadString('Empresa', 'RazaoSocial', ''));
     edtCNPJ.Text := DescriptografarTexto(Ini.ReadString('Empresa', 'CNPJ', ''));

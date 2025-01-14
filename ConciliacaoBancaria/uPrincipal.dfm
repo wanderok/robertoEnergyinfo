@@ -75,8 +75,15 @@ object frmPrincipal: TfrmPrincipal
         Left = 0
         Top = 216
         Width = 616
-        Height = 121
+        Height = 89
         TabOrder = 3
+      end
+      object Memo4: TMemo
+        Left = 0
+        Top = 311
+        Width = 616
+        Height = 81
+        TabOrder = 4
       end
     end
     object TabSheet2: TTabSheet

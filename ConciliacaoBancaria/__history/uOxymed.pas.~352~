@@ -17,8 +17,6 @@ uses
   System.DateUtils,
   ACBrDFeSSL;
 
-
-
 type
   TBradesco = class
   private
@@ -35,6 +33,7 @@ type
     FHeader: String;
     FPayload: String;
     FClientKey: String;
+    FAssinatura: String;
     function CriarHeader: string;
     function CriarPayload: string;
     // function ClientKey:String;
@@ -55,6 +54,8 @@ type
     procedure CriarRequestTxt(const Metodo, Endpoint, Parametros, Body: string);
     function GetCurrentTimeInMilliseconds: Int64;
 
+
+
   public
     constructor Create;
     property RazaoSocial: string read FRazaoSocial write FRazaoSocial;
@@ -69,10 +70,11 @@ type
     property JWS: string read FJWS write FJWS;
     property ClientKey: string read FClientKey write FClientKey;
     property Token: string read FToken write FToken;
+    property Assinatura: string read FAssinatura write FAssinatura;
     property PastaDeTrabalho: string read FPastaDeTrabalho
       write FPastaDeTrabalho;
     function Extrato(Inicio, Fim: TDateTime): String;
-
+    procedure GeraTokenAssinado;
   end;
 
 implementation
@@ -198,7 +200,7 @@ begin
   // Recupera o Bearer Token
   //GerarToken;
 
-  GerarTokenJWT_01;
+//  GerarTokenJWT_01;
 
   // Gera a assinatura JWS
   Signature := GerarAssinatura;
@@ -625,16 +627,87 @@ end;
 //
 
 
+//function TBradesco.GerarAssinatura: string;
+//var
+//  CmdLine: string;
+//  ProcessInfo: TProcessInformation;
+//  StartupInfo: TStartupInfo;
+//  ExitCode: DWORD;
+//  PipeRead, PipeWrite: THandle;
+//  Buffer: array[0..1023] of AnsiChar;
+//  BytesRead: DWORD;
+//  StdErrString: string;
+//begin
+//  // Caminhos dos arquivos
+//  CmdLine := 'cmd.exe /C echo -n "' + self.FPastaDeTrabalho + '\jwt.txt" | ' +
+//             '"C:\Program Files\OpenSSL-Win64\bin\openssl.exe" dgst -sha256 -keyform pem -sign "' +
+//             'C:\WANDER\chaves\privada\oxymed.homologacao.key.pem" | ' +
+//             'base64 | tr -d "=[:space:]" | tr "+/" "-_"';
+//
+//  // Cria o pipe para capturar a saída do comando
+////  if not CreatePipe(PipeRead, PipeWrite) then
+//  if not CreatePipe(PipeRead, PipeWrite, nil, 4096) then
+//  begin
+//    ShowMessage('Erro ao criar o pipe');
+//    Exit;
+//  end;
+//
+//  // Inicializa as estruturas para o CreateProcess
+//  ZeroMemory(@StartupInfo, SizeOf(StartupInfo));
+//  StartupInfo.cb := SizeOf(StartupInfo);
+//
+//  // Inicializa as propriedades para redirecionamento da saída padrão
+//  StartupInfo.dwFlags := STARTF_USESTDHANDLES;
+//  StartupInfo.hStdOutput := PipeWrite;
+//  StartupInfo.hStdError := PipeWrite;
+//  StartupInfo.hStdInput := PipeRead;
+//
+//  // Cria o processo para executar o comando OpenSSL
+//  if not CreateProcess(nil, PChar(CmdLine), nil, nil, True, CREATE_NO_WINDOW, nil, nil, StartupInfo, ProcessInfo) then
+//  begin
+//    ShowMessage('Erro ao executar OpenSSL: ' + SysErrorMessage(GetLastError));
+//    Exit;
+//  end;
+//
+//  // Aguarda a execução do comando
+//  WaitForSingleObject(ProcessInfo.hProcess, INFINITE);
+//  GetExitCodeProcess(ProcessInfo.hProcess, ExitCode);
+//
+//  // Verifica o código de saída do OpenSSL
+////  if ExitCode <> 0 then
+////  begin
+////    ShowMessage('Erro ao executar OpenSSL. Código de saída: ' + IntToStr(ExitCode));
+////    Exit;
+////  end;
+//
+//  // Lê a saída do processo (a assinatura gerada)
+//  StdErrString := '';
+//  while ReadFile(PipeRead, Buffer, SizeOf(Buffer), BytesRead, nil) and (BytesRead > 0) do
+//  begin
+//    SetString(StdErrString, PAnsiChar(@Buffer), BytesRead);
+//  end;
+//
+//  // Exibe a assinatura gerada
+// // ShowMessage('Assinatura gerada com sucesso! A assinatura é: ' + StdErrString);
+//
+//  // Fechar handles
+//  CloseHandle(ProcessInfo.hProcess);
+//  CloseHandle(ProcessInfo.hThread);
+//  CloseHandle(PipeRead);
+//  CloseHandle(PipeWrite);
+//end;
+
 function TBradesco.GerarAssinatura: string;
 var
-  CmdLine, StdErrString: string;
+  CmdLine: string;
   ProcessInfo: TProcessInformation;
   StartupInfo: TStartupInfo;
   ExitCode: DWORD;
-   PipeRead, PipeWrite: THandle;
-   Buffer: array[0..1023] of AnsiChar;
-   BytesRead: DWORD;
+  PipeRead, PipeWrite: THandle;
+  Buffer: array[0..1023] of AnsiChar;
+  BytesRead: DWORD;
   StdErrString: string;
+  StartTime: DWORD;
 begin
   // Caminhos dos arquivos
   CmdLine := 'cmd.exe /C echo -n "' + self.FPastaDeTrabalho + '\jwt.txt" | ' +
@@ -642,12 +715,25 @@ begin
              'C:\WANDER\chaves\privada\oxymed.homologacao.key.pem" | ' +
              'base64 | tr -d "=[:space:]" | tr "+/" "-_"';
 
+  // Cria o pipe para capturar a saída do comando
+  if not CreatePipe(PipeRead, PipeWrite, nil, 4096) then
+  begin
+    ShowMessage('Erro ao criar o pipe');
+    Exit;
+  end;
+
   // Inicializa as estruturas para o CreateProcess
   ZeroMemory(@StartupInfo, SizeOf(StartupInfo));
   StartupInfo.cb := SizeOf(StartupInfo);
 
+  // Inicializa as propriedades para redirecionamento da saída padrão
+  StartupInfo.dwFlags := STARTF_USESTDHANDLES;
+  StartupInfo.hStdOutput := PipeWrite;
+  StartupInfo.hStdError := PipeWrite;
+  StartupInfo.hStdInput := PipeRead;
+
   // Cria o processo para executar o comando OpenSSL
-  if not CreateProcess(nil, PChar(CmdLine), nil, nil, False, CREATE_NO_WINDOW, nil, nil, StartupInfo, ProcessInfo) then
+  if not CreateProcess(nil, PChar(CmdLine), nil, nil, True, CREATE_NO_WINDOW, nil, nil, StartupInfo, ProcessInfo) then
   begin
     ShowMessage('Erro ao executar OpenSSL: ' + SysErrorMessage(GetLastError));
     Exit;
@@ -658,34 +744,53 @@ begin
   GetExitCodeProcess(ProcessInfo.hProcess, ExitCode);
 
   // Verifica o código de saída do OpenSSL
-//  if ExitCode <> 0 then
-//  begin
-//    ShowMessage('Erro ao executar OpenSSL. Código de saída: ' + IntToStr(ExitCode));
-//    Exit;
-//  end;
-
-
-// Lê a saída do processo (a assinatura gerada)
-  StdErrString := '';
-  while ReadFile(PipeRead, Buffer, SizeOf(Buffer), BytesRead, nil) and (BytesRead > 0) do
+  if ExitCode <> 0 then
   begin
-    SetString(StdErrString, PAnsiChar(@Buffer), BytesRead);
+    ShowMessage('Erro ao executar OpenSSL. Código de saída: ' + IntToStr(ExitCode));
+    Exit;
+  end;
+
+  // Lê a saída do processo (a assinatura gerada)
+  StdErrString := '';
+  StartTime := GetTickCount;  // Obtém o tempo atual em milissegundos
+
+  while True do
+  begin
+    // Tenta ler do pipe
+    if ReadFile(PipeRead, Buffer, SizeOf(Buffer), BytesRead, nil) then
+    begin
+      if BytesRead > 0 then
+      begin
+        // Adiciona os dados lidos à string de erro
+        SetString(StdErrString, PAnsiChar(@Buffer), BytesRead);
+      end
+      else
+        Break;  // Se não há mais dados para ler, sai do loop
+    end
+    else
+    begin
+      // Em caso de erro na leitura do pipe
+      ShowMessage('Erro ao ler o pipe: ' + SysErrorMessage(GetLastError));
+      Break;
+    end;
+
+    // Verifica se o tempo de leitura ultrapassou 10 segundos (timeout)
+    if (GetTickCount - StartTime) > 10000 then
+    begin
+      ShowMessage('Leitura do pipe demorou mais de 10 segundos.');
+      Break;  // Encerra a leitura após 10 segundos
+    end;
   end;
 
   // Exibe a assinatura gerada
   ShowMessage('Assinatura gerada com sucesso! A assinatura é: ' + StdErrString);
+
   // Fechar handles
   CloseHandle(ProcessInfo.hProcess);
   CloseHandle(ProcessInfo.hThread);
-
-
-
-  ShowMessage('Assinatura gerada com sucesso!');
+  CloseHandle(PipeRead);
+  CloseHandle(PipeWrite);
 end;
-
-
-
-
 
 function TBradesco.GerarToken: String;
 var
@@ -735,6 +840,12 @@ begin
 
   SaveJWTToFile;
 
+end;
+
+procedure TBradesco.GeraTokenAssinado;
+begin
+   self.GerarTokenJWT_01;
+   self.FAssinatura := self.GerarAssinatura;
 end;
 
 function TBradesco.GetCurrentTimeInMilliseconds: Int64;

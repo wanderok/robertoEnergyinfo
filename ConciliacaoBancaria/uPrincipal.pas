@@ -53,6 +53,7 @@ type
     Memo3: TMemo;
     Label15: TLabel;
     edtPastaDeTrabalhoBradesco: TEdit;
+    Memo4: TMemo;
     procedure Button1Click(Sender: TObject);
     procedure FormShow(Sender: TObject);
     procedure Button3Click(Sender: TObject);
@@ -108,14 +109,29 @@ begin
      Memo1.Lines.Clear;
      vData1 := Date-30;
      vData2 := Date;
-     Memo1.Text := Bradesco.Extrato(vData1,vData2);
+
+     Bradesco.GeraTokenAssinado;
+
+     Memo1.Lines.Clear;
+     Memo1.Lines.Add('JWT:');
+     Memo1.lines.add(Bradesco.JWT);
+
 
      Memo2.Lines.Clear;
-     Memo2.Lines.Add('JWS:');
-     Memo2.Lines.Add(Bradesco.JWS);
+     Memo2.Lines.Add('Assinatura:');
+     Memo2.lines.add(Bradesco.Assinatura);
 
-     Memo2.Lines.Add('Token:');
-     Memo2.Lines.Add(Bradesco.Token);
+     Memo3.Lines.Clear;
+     Memo3.Lines.Add('JWS:');
+     Memo3.Lines.Add(Bradesco.JWS);
+
+//     Memo3.Lines.Add('Token:');
+//     Memo3.Lines.Add(Bradesco.Token);
+
+//     Memo4.Lines.Add('Token:');
+//     Memo4.Lines.Add(Bradesco.Token);
+
+     //Memo4.Text := Bradesco.Extrato(vData1,vData2);
      Bradesco.Free;
 end;
 
