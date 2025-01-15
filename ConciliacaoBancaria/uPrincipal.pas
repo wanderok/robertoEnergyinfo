@@ -6,7 +6,8 @@ uses
   Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes, Vcl.Graphics,
   Vcl.Controls, Vcl.Forms, Vcl.Dialogs,Soap.InvokeRegistry, IdHTTP, IdSSL, IdSSLOpenSSL,
   Vcl.StdCtrls, Vcl.ExtCtrls, Vcl.ComCtrls, System.IniFiles, System.Rtti,
-  IdCoderMIME, IdGlobal;
+  IdCoderMIME, IdGlobal, uOxymed, System.JSON;
+
 
 
 type
@@ -54,6 +55,11 @@ type
     Label15: TLabel;
     edtPastaDeTrabalhoBradesco: TEdit;
     Memo4: TMemo;
+    Memo5: TMemo;
+    Memo6: TMemo;
+    Memo7: TMemo;
+    Memo8: TMemo;
+    Memo9: TMemo;
     procedure Button1Click(Sender: TObject);
     procedure FormShow(Sender: TObject);
     procedure Button3Click(Sender: TObject);
@@ -63,7 +69,12 @@ type
     procedure GravarConfig;
     function CriptografarTexto(const Texto: string): string;
     function DescriptografarTexto(const Texto: string): string;
-  public
+    procedure PreencheMemos(Bradesco:TBradesco);
+//    procedure PosicionarNoInicio(Memo:TMemo);
+    procedure PosicionarNoInicio;
+    procedure ScrollMemo(Memo: TMemo; Direction: Integer);
+    procedure FormatAndDisplayJson(const JsonStr: string; Memo: TMemo);
+      public
     { Public declarations }
   end;
 
@@ -74,7 +85,6 @@ implementation
 
 {$R *.dfm}
 
-uses uOxymed;
 
 const
   ARQUIVO_INI = 'oxymed.ini';
@@ -87,15 +97,6 @@ var Bradesco : TBradesco;
     vData1, vData2 : TDateTime;
 begin
      Bradesco := TBradesco.Create;
-//     Memo2.Lines.Clear;
-//     Memo2.Lines.Add('Header:');
-//     Memo2.Lines.Add(Bradesco.Header);
-//     Memo2.Lines.Add(' ');
-//     Memo2.Lines.Add('Payload:');
-//     Memo2.Lines.Add(Bradesco.Payload);
-//     Memo2.Lines.Add(' ');
-//     Memo2.Lines.Add('JWS:');
-//     Memo2.Lines.Add(Bradesco.JWS);
 
      LerConfig;
      Bradesco.RazaoSocial := edtRazaoSocial.Text; // 'OXYMED COMERCIO E LOCACAO DE EQUIPAMENTO';
@@ -110,28 +111,18 @@ begin
      vData1 := Date-30;
      vData2 := Date;
 
-     Bradesco.GeraTokenAssinado;
+     Bradesco.Iniciar;
+     PreencheMemos(Bradesco);
+     PosicionarNoInicio;
 
-     Memo1.Lines.Clear;
-     Memo1.Lines.Add('JWT:');
-     Memo1.lines.add(Bradesco.JWT);
+     Memo9.Lines.Clear;
+     Memo9.Lines.Add('BearerToken:');
+     Memo9.Lines.Add('');
+     Memo9.lines.add(Bradesco.Extrato(vData1,vData2));
+     Memo9.SelStart := 0;
 
+     PreencheMemos(Bradesco);
 
-     Memo2.Lines.Clear;
-     Memo2.Lines.Add('Assinatura:');
-     Memo2.lines.add(Bradesco.Assinatura);
-
-     Memo3.Lines.Clear;
-     Memo3.Lines.Add('JWS:');
-     Memo3.Lines.Add(Bradesco.JWS);
-
-//     Memo3.Lines.Add('Token:');
-//     Memo3.Lines.Add(Bradesco.Token);
-
-//     Memo4.Lines.Add('Token:');
-//     Memo4.Lines.Add(Bradesco.Token);
-
-     //Memo4.Text := Bradesco.Extrato(vData1,vData2);
      Bradesco.Free;
 end;
 
@@ -222,6 +213,122 @@ begin
   end;
 end;
 
-end.
 
+//procedure TfrmPrincipal.PosicionarNoInicio(Memo: TMemo);
+//begin
+//  Memo.SelStart := 0;
+//  Perform(WM_VSCROLL, SB_TOP, 0);
+//end;
+
+procedure TfrmPrincipal.PreencheMemos(Bradesco: TBradesco);
+begin
+     Memo1.Lines.Clear;
+     Memo1.Lines.Add('Header:');
+     Memo1.Lines.Add('');
+     FormatAndDisplayJson(Bradesco.Header, Memo1);
+//     Memo1.lines.add(Bradesco.Header);
+
+     Memo2.Lines.Clear;
+     Memo2.Lines.Add('HeaderBase64:');
+     Memo2.Lines.Add('');
+     Memo2.lines.add(Bradesco.HeaderBase64);
+
+     Memo3.Lines.Clear;
+     Memo3.Lines.Add('Payload:');
+     Memo3.Lines.Add('');
+     FormatAndDisplayJson(Bradesco.Payload, Memo3);
+
+
+     Memo4.Lines.Clear;
+     Memo4.Lines.Add('PayloadBase64:');
+     Memo4.Lines.Add('');
+     Memo4.lines.add(Bradesco.PayloadBase64);
+
+     Memo5.Lines.Clear;
+     Memo5.Lines.Add('JWT:');
+     Memo5.Lines.Add('');
+     Memo5.Lines.Add(Bradesco.JWT);
+
+     Memo6.Lines.Clear;
+     Memo6.Lines.Add('Assinatura:');
+     Memo6.Lines.Add('');
+     Memo6.lines.add(Bradesco.Assinatura);
+
+     Memo7.Lines.Clear;
+     Memo7.Lines.Add('JWS:');
+     Memo7.Lines.Add('');
+     Memo7.lines.add(Bradesco.JWS);
+
+     Memo8.Lines.Clear;
+     Memo8.Lines.Add('BearerToken:');
+     Memo8.Lines.Add('');
+     Memo8.lines.add(Bradesco.BearerToken);
+end;
+
+
+procedure TfrmPrincipal.PosicionarNoInicio;
+var
+  i: Integer;
+begin
+   //ScrollMemo(Memo1, SB_LINEUP); // Rola para o início
+   //ScrollMemo(Memo1, SB_LINEDOWN); // Rola para o final
+  // Itera por todos os componentes no Formulário
+  for i := 0 to ComponentCount - 1 do
+  begin
+    if Components[i] is TMemo then
+    begin
+      ScrollMemo((Components[i] as TMemo), SB_LINEUP);
+
+//      TMemo(Components[i]).SetFocus;
+//      TMemo(Components[i]).SelStart := 0; // Posiciona o cursor no início
+//      TMemo(Components[i]).Perform(WM_VSCROLL, SB_TOP, 0); // Rolagem para o topo
+    end;
+  end;
+end;
+
+procedure TfrmPrincipal.ScrollMemo(Memo: TMemo; Direction: Integer);
+var
+  ScrollMessage: TWMVScroll;
+  I: Integer;
+begin
+  ScrollMessage.Msg := WM_VSCROLL;
+  Memo.Lines.BeginUpdate;
+  try
+    for I := 0 to Memo.Lines.Count do
+    begin
+     ScrollMessage.ScrollCode := Direction;
+     ScrollMessage.Pos := 0;
+     Memo.Dispatch(ScrollMessage);
+    end;
+  finally
+    Memo.Lines.EndUpdate;
+  end;
+end;
+
+
+procedure TfrmPrincipal.FormatAndDisplayJson(const JsonStr: string; Memo: TMemo);
+var
+  JsonValue: TJSONObject;
+  PrettyJson: string;
+begin
+  // Converte a string JSON para um objeto JSON
+  JsonValue := TJSONObject.ParseJSONValue(JsonStr) as TJSONObject;
+  try
+    if JsonValue <> nil then
+    begin
+      // Formata o JSON com indentação
+      PrettyJson := JsonValue.Format(2);  // O número 2 define o número de espaços para a indentação
+
+      // Exibe o JSON formatado no TMemo
+      Memo.Lines.add(PrettyJson);
+    end
+    else
+      Memo.Lines.add('JSON inválido.');
+  finally
+    JsonValue.Free;
+  end;
+end;
+
+
+end.
 

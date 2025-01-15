@@ -33,32 +33,41 @@ type
     FPastaDeTrabalho: String;
     FJWS: String;
     FJWT: String;
-    FToken: String;
+    FJWTBase64: String;
+    FBearerToken: String;
     FHeader: String;
     FPayload: String;
+    FHeaderBase64: String;
+    FPayloadBase64: String;
     FClientKey: String;
     FAssinatura: String;
-    function CriarHeader: string;
-    function CriarPayload: string;
-    // function ClientKey:String;
 
-    procedure GerarTokenJWT_01;
+    procedure GerarParametros;
+    procedure CriarHeader;
+    procedure CriarHeaderBase64;
+
+    procedure CriarPayload;
+    procedure CriarPayloadBase64;
+
+    procedure GerarTokenJWT;
+    procedure GerarTokenJWTBase64;
+
+    procedure GerarJWS;
+    procedure GerarBearerToken;
+
+    function GerarAssinatura: string;
+
+    procedure GravarParametrosGerados;
 
     function APIToken: String;
     function APIBarenToken: String;
     function CodificarBase64(const Texto: string): string;
-    function GerarAssinatura: string;
-    // function GerarAssinatura(Aut: TStream): string;
-    function MontarJWS: string;
-    function ObterBearerToken(const JWS: string): string;
-    function GerarToken: String;
+
     procedure ExecutarComando(const Comando: string);
-    procedure SaveJWTToFile;
     function Base64ToBase64URL(const Base64: string): string;
     procedure CriarRequestTxt(const Metodo, Endpoint, Parametros, Body: string);
     function GetCurrentTimeInMilliseconds: Int64;
-
-
+    procedure GeraTokenAssinado;
 
   public
     constructor Create;
@@ -71,15 +80,19 @@ type
     property Agencia: string read FAgencia write FAgencia;
     property Header: string read FHeader write FHeader;
     property Payload: string read FPayload write FPayload;
+    property HeaderBase64: String read FHeaderBase64 write FHeaderBase64;
+    property PayloadBase64: String read FPayloadBase64 write FPayloadBase64;
+
     property JWS: string read FJWS write FJWS;
     property JWT: string read FJWT write FJWT;
+    property JWTBase64: string read FJWTBase64 write FJWTBase64;
     property ClientKey: string read FClientKey write FClientKey;
-    property Token: string read FToken write FToken;
+    property BearerToken: string read FBearerToken write FBearerToken;
     property Assinatura: string read FAssinatura write FAssinatura;
     property PastaDeTrabalho: string read FPastaDeTrabalho
       write FPastaDeTrabalho;
     function Extrato(Inicio, Fim: TDateTime): String;
-    procedure GeraTokenAssinado;
+    procedure Iniciar;
   end;
 
 implementation
@@ -110,23 +123,35 @@ end;
 
 constructor TBradesco.Create;
 begin
+   self.FHeader :='';
+   self.FPayload :='';
+
+   self.FHeaderBase64 :='';
+   self.FPayloadBase64 :='';
 end;
 
-function TBradesco.CriarHeader: string;
+procedure TBradesco.CriarHeader;
 var
   Header: TJSONObject;
 begin
+
   Header := TJSONObject.Create;
   try
     Header.AddPair('alg', 'RS256');
     Header.AddPair('typ', 'JWT');
-    result := Header.ToString;
+    self.FHeader := Header.ToString;
   finally
     Header.Free;
   end;
+
 end;
 
-function TBradesco.CriarPayload: string;
+procedure TBradesco.CriarHeaderBase64;
+begin
+  self.FHeaderBase64 := CodificarBase64(self.FHeader);
+end;
+
+procedure TBradesco.CriarPayload;
 var
   Payload: TJSONObject;
   IAT, EXP, JTI: Int64; // Alterado para Int64  // Integer;
@@ -145,10 +170,15 @@ begin
     Payload.AddPair('exp', EXP);
     Payload.AddPair('jti', JTI);
     Payload.AddPair('ver', '1.1');
-    result := Payload.ToString;
+    self.FPayload := Payload.ToString;
   finally
     Payload.Free;
   end;
+end;
+
+procedure TBradesco.CriarPayloadBase64;
+begin
+  self.FPayloadBase64 := CodificarBase64(self.FPayload);
 end;
 
 procedure TBradesco.CriarRequestTxt(const Metodo, Endpoint, Parametros,
@@ -196,43 +226,22 @@ function TBradesco.Extrato(Inicio, Fim: TDateTime): String;
 var
   HttpClient: THttpClient;
   Response: IHTTPResponse;
-  BearerToken, Nonce, Signature: string;
+  BearerToken, Nonce: string;
   Headers: TNetHeaders;
   RequestStream, ResponseStream: TMemoryStream;
   HeaderBase64Url ,PayloadBase64Url, Base64Signature: String;
 
 begin
-  // Recupera o Bearer Token
-  //GerarToken;
 
-//  GerarTokenJWT_01;
-
-  // Gera a assinatura JWS
-  Signature := GerarAssinatura;
-  //Signature := Base64ToBase64URL(Signature);
-  TFile.WriteAllText(self.FPastaDeTrabalho + '\assinatura.txt', Signature);
-  Signature := TFile.ReadAllText(self.FPastaDeTrabalho + '\assinaturaOK.txt');
-
-  HeaderBase64Url := Base64ToBase64URL(self.FHeader);
-  PayloadBase64Url := Base64ToBase64URL(self.FPayload);
-  Base64Signature:= Base64ToBase64URL(Signature);
-
-  //self.FJWS := CodificarBase64(Header) + '.' + CodificarBase64(Payload) + Signature;
-  //self.FJWS := self.FHeader + '.' + self.FPayload +  '.' + Base64ToBase64URL(Signature);
-  self.FJWS := HeaderBase64Url + '.' + PayloadBase64Url + '.' + Base64Signature;
-  TFile.WriteAllText(self.FPastaDeTrabalho + '\JWS.txt', self.FJWS);
-
-
-  BearerToken := ObterBearerToken(self.FJWS); //self.FToken;
 
   // Gera o nonce (pode ser o JTI ou timestamp)
   Nonce := IntToStr(GetCurrentTimeInMilliseconds); // Exemplo com timestamp
 
 
   // Verificar os valores dos cabeçalhos antes de enviar a requisição
-ShowMessage('Bearer Token: ' + BearerToken);
-ShowMessage('Nonce: ' + Nonce);
-ShowMessage('Signature: ' + Signature);
+  //ShowMessage('Bearer Token: ' + BearerToken);
+  //ShowMessage('Nonce: ' + Nonce);
+  //ShowMessage('Signature: ' + Signature);
 
 
   // Cria um objeto HttpClient
@@ -242,13 +251,13 @@ ShowMessage('Signature: ' + Signature);
     SetLength(Headers, 3);
 
     Headers[0].Name := 'Authorization';
-    Headers[0].Value := 'Bearer ' + BearerToken;
+    Headers[0].Value := 'Bearer ' + self.FBearerToken;
 
     Headers[1].Name := 'X-Brad-Nonce';
     Headers[1].Value := Nonce;
 
     Headers[2].Name := 'X-Brad-Signature';
-    Headers[2].Value := Signature;
+    Headers[2].Value := self.FAssinatura;
 
     // Criação do stream de requisição (isso pode variar dependendo de como seu corpo de requisição deve ser montado)
     RequestStream := TMemoryStream.Create;
@@ -546,17 +555,10 @@ var
   TempSignatureFile: string;
   HeaderBase64Url, PayloadBase64Url: string;
 begin
-  // Codifique o Header e Payload em Base64Url
-  HeaderBase64Url := CodificarBase64(self.Header);
-  PayloadBase64Url := CodificarBase64(self.Payload);
-
-  // Concatenar Header + Payload e salvar em um arquivo
-  TFile.WriteAllText('c:\wander\jwt.txt', HeaderBase64Url + '.' + PayloadBase64Url);
-
   // Caminhos dos arquivos
   InputFile := 'c:\wander\jwt.txt';  // O arquivo de entrada
   TempSignatureFile := 'c:\wander\signature.bin';  // Arquivo temporário para assinatura binária
-  CmdOutputFile := 'c:\wander\signature.base64';  // Arquivo final com assinatura em base64
+  CmdOutputFile := 'c:\wander\signature.base64.bin';  // Arquivo final com assinatura em base64
 
   // Caminho completo para o OpenSSL (adapte conforme a sua instalação)
   OpenSSLPath := '"C:\Program Files\OpenSSL-Win64\bin\openssl.exe"';  // Exemplo, substitua pelo seu caminho real
@@ -626,13 +628,31 @@ begin
   //Base64Signature := Copy(Base64Signature, Pos(#13#10, Base64Signature) + 2, MaxInt);
   Base64Signature := Base64ToBase64URL(Base64Signature);
 
-  TFile.WriteAllText(self.FPastaDeTrabalho + '\AssinaturaOK.txt', Base64Signature);
-  // Exibe a assinatura gerada
-  //ShowMessage('Assinatura gerada com sucesso! Base64: ' + Base64Signature);
-  result := Base64Signature;
+  // Salva a assinatura gerada
+  self.FAssinatura := Base64Signature;
 end;
 
 
+
+procedure TBradesco.GerarParametros;
+begin
+  CriarHeader;
+  CriarHeaderBase64;
+
+  CriarPayload;
+  CriarPayloadBase64;
+
+  GerarTokenJWT;
+  GerarTokenJWTBase64;
+
+  GerarAssinatura;
+  GerarJWS;
+
+  GerarBearerToken;
+
+  GravarParametrosGerados;
+
+end;
 
 //function TBradesco.GerarAssinatura: string;
 //var
@@ -799,98 +819,7 @@ end;
 //  CloseHandle(PipeWrite);
 //end;
 
-function TBradesco.GerarToken: String;
-var
-  JWS, BearerToken: string;
-begin
-  // Criar o JWS
-  JWS := MontarJWS;
-
-  // Obter o Bearer Token
-  BearerToken := ObterBearerToken(JWS);
-
-  // Exibir o Bearer Token
-  self.FToken := BearerToken;
-end;
-
-procedure TBradesco.GerarTokenJWT_01;
-var
-  Header, Payload: string;
-begin
-  // Criação do Header e Payload
-  Header := CriarHeader;
-
-  self.FHeader := Header;
-  Payload := CriarPayload;
-  self.FPayload := Payload;
-
-  // Codifica o Header e Payload em Base64
-  //Header := CodificarBase64(Header);
-  //Payload := CodificarBase64(Payload);
-
-  self.FHeader := CodificarBase64(Header);
-  self.FPayload := CodificarBase64(Payload);
-
-  //Header := Header;
-  //Payload := Payload;
-
-  //grava para conrerencia
-  TFile.WriteAllText(self.FPastaDeTrabalho + '\header.txt', self.Header);
-  TFile.WriteAllText(self.FPastaDeTrabalho + '\payload.txt', self.Payload);
-
-  self.FJWT := self.Header + '.' + self.Payload;
-
-
-  // Exibir o Header e Payload codificados para verificar
-  //ShowMessage('Header codificado: ' + Header);
-  //ShowMessage('Payload codificado: ' + Payload);
-
-  SaveJWTToFile;
-
-end;
-
-procedure TBradesco.GeraTokenAssinado;
-begin
-   self.GerarTokenJWT_01;
-   self.FAssinatura := self.GerarAssinatura;
-   MontarJWS;
-end;
-
-function TBradesco.GetCurrentTimeInMilliseconds: Int64;
-begin
-  // Obtém o número de milissegundos desde a "época" (01/01/1970)
-  result := DateTimeToUnix(Now) * 1000;
-end;
-
-function TBradesco.MontarJWS: string;
-var Signature: string;
-begin
-  // Gera a assinatura (JWS)
-  Signature := self.FAssinatura; // GerarAssinatura;
-
-  // Exibir a assinatura antes de codificar para Base64URL
-  //ShowMessage('Assinatura gerada (Base64): ' + Signature);
-
-  // Converte a assinatura para Base64URL
-  //Signature := Base64ToBase64URL(Signature);
-  //Signature := CodificarBase64(Signature);
-  //Signature := CodificarBase64(Signature);
-
-  // Exibir a assinatura em Base64URL
-  //ShowMessage('Assinatura em Base64URL: ' + Signature);
-
-  // Concatena tudo para formar o JWS completo
-  result := Header + '.' + Payload + '.' + Signature;
-//  result := base64Url(Header) + '.' + base64Url(Payload) + '.' + base64Url(Signature)
-  self.JWS := result;
-
-  // Exibir o JWS completo antes de retornar
-  ShowMessage('JWS completo: ' + result);
-end;
-
-
-
-function TBradesco.ObterBearerToken(const JWS: string): string;
+procedure TBradesco.GerarBearerToken;
 var
   HttpClient: THTTPClient;
   Response: IHTTPResponse;
@@ -901,7 +830,7 @@ begin
   try
     // Adiciona os parâmetros para a requisição
     Params.Add('grant_type=urn:ietf:params:oauth:grant-type:jwt-bearer');
-    Params.Add('assertion=' + JWS);  // O JWS gerado
+    Params.Add('assertion=' + self.FJWS);
 
     // Define o cabeçalho Content-Type
     HttpClient.ContentType := 'application/x-www-form-urlencoded';
@@ -913,12 +842,12 @@ begin
     if Response.StatusCode = 200 then
     begin
       // Se a resposta for 200 OK, o Bearer Token é extraído
-      result := Response.ContentAsString;
+      self.FBearerToken := Response.ContentAsString;
     end
     else
     begin
       // Se não for sucesso, exibe a resposta para depuração
-      result := 'Erro HTTP ' + IntToStr(Response.StatusCode) + ': ' + Response.ContentAsString();
+      self.FBearerToken := 'Erro HTTP ' + IntToStr(Response.StatusCode) + ': ' + Response.ContentAsString();
     end;
   finally
     HttpClient.Free;
@@ -927,18 +856,77 @@ begin
 end;
 
 
-procedure TBradesco.SaveJWTToFile;
+procedure TBradesco.GerarTokenJWT;
 begin
-  // Salva o conteúdo de self.FJW em um arquivo chamado jwt.txt
-  TFile.WriteAllText(self.FPastaDeTrabalho + '\jwt.txt', self.FJWT);
+
+  self.FJWT := self.FHeader + '.' + self.FPayload;
+
+
+
+
+  // Exibir o Header e Payload codificados para verificar
+  //ShowMessage('Header codificado: ' + Header);
+  //ShowMessage('Payload codificado: ' + Payload);
+
 end;
+
+procedure TBradesco.GerarTokenJWTBase64;
+begin
+   self.FJWTBase64 := CodificarBase64(self.FJWT);
+end;
+
+procedure TBradesco.GeraTokenAssinado;
+begin
+
+end;
+
+function TBradesco.GetCurrentTimeInMilliseconds: Int64;
+begin
+  // Obtém o número de milissegundos desde a "época" (01/01/1970)
+  result := DateTimeToUnix(Now) * 1000;
+end;
+
+procedure TBradesco.GravarParametrosGerados;
+begin
+  TFile.WriteAllText(self.FPastaDeTrabalho + '\header.txt', self.FHeader);
+  TFile.WriteAllText(self.FPastaDeTrabalho + '\payload.txt', self.FPayload);
+
+  TFile.WriteAllText(self.FPastaDeTrabalho + '\headerBase64.txt', self.FHeaderBase64);
+  TFile.WriteAllText(self.FPastaDeTrabalho + '\payloadBase64.txt', self.FPayloadBase64);
+
+  TFile.WriteAllText(self.FPastaDeTrabalho + '\jwt.txt', self.FJWT);
+  TFile.WriteAllText(self.FPastaDeTrabalho + '\jwtBase64.txt', self.FJWTBase64);
+
+  TFile.WriteAllText(self.FPastaDeTrabalho + '\AssinaturaOK.txt', self.FAssinatura);
+
+  TFile.WriteAllText(self.FPastaDeTrabalho + '\jws.txt', self.FJWS);
+
+  TFile.WriteAllText(self.FPastaDeTrabalho + '\BearerToken.txt', self.FBearerToken);
+
+end;
+
+procedure TBradesco.Iniciar;
+begin
+   GerarParametros;
+end;
+
+procedure TBradesco.GerarJWS;
+begin
+  //Base64ToBase64URL(Signature);
+  self.FJWS := self.FHeaderBase64 + '.' + self.FPayloadBase64 + '.' + self.FAssinatura;
+end;
+
+
 
 end.
 
 
 
- CmdLine := 'echo -n "(' + self.FPastaDeTrabalho + '\jwt.txt)" | openssl dgst -sha256 -keyform pem -sign "' +
-              self.FPastaDeTrabalho + '\chaves\privada\oxymed.homologacao.key.pem" | ' +
-              'base64 | tr -d ''=[:space:]'' | tr ''+/'' ''-_''';
+// CmdLine := 'echo -n "(' + self.FPastaDeTrabalho + '\jwt.txt)" | openssl dgst -sha256 -keyform pem -sign "' +
+//              self.FPastaDeTrabalho + '\chaves\privada\oxymed.homologacao.key.pem" | ' +
+//              'base64 | tr -d ''=[:space:]'' | tr ''+/'' ''-_''';
 
+  // Gera a assinatura JWS
+  //Signature := selfGerarAssinatura;
+  //Signature := Base64ToBase64URL(Signature);
 
