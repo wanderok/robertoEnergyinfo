@@ -489,8 +489,7 @@ begin
   HeaderBase64Url := Base64ToBase64URL(self.FHeader);
   PayloadBase64Url := Base64ToBase64URL(self.FPayload);
 
-  //self.FJWS := HeaderBase64Url + '.' + PayloadBase64Url + '.' + Base64ToBase64URL(TFile.ReadAllText('C:\wander\signatureJWS.BASE64'));
-  self.FJWS := self.FHeaderBase64 + '.' + self.FPayloadBase64 + '.' + Base64ToBase64URL(TFile.ReadAllText('C:\wander\signatureJWS.BASE64'));
+  self.FJWS := HeaderBase64Url + '.' + PayloadBase64Url + '.' + Base64ToBase64URL(TFile.ReadAllText('C:\wander\signatureJWS.BASE64'));
   exit;
 
   // Combine header e payload

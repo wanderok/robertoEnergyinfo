@@ -55,9 +55,6 @@ type
     function GerarAssinatura: string;
     procedure GerarAssinaturaJWT;
     procedure RunCommand(const Command: string);
-    function GetBase64FromFile(const FileName: string): string;
-
-
     procedure GravarParametrosGerados;
 
     function APIToken: String;
@@ -383,8 +380,7 @@ begin
   GerarTokenJWTBase64;
 
   GerarAssinatura;
-  GerarAssinaturaJWT;
-  //GerarJWS;
+  GerarJWS;
 
   GerarBearerToken;
 
@@ -486,12 +482,8 @@ begin
   OpenSSLPath := '"C:\Program Files\OpenSSL-Win64\bin\openssl.exe"';
 
   // Codificando em Base64URL (imagine que Base64ToBase64URL é uma função que faz isso)
-  HeaderBase64Url := Base64ToBase64URL(self.FHeader);
-  PayloadBase64Url := Base64ToBase64URL(self.FPayload);
-
-  //self.FJWS := HeaderBase64Url + '.' + PayloadBase64Url + '.' + Base64ToBase64URL(TFile.ReadAllText('C:\wander\signatureJWS.BASE64'));
-  self.FJWS := self.FHeaderBase64 + '.' + self.FPayloadBase64 + '.' + Base64ToBase64URL(TFile.ReadAllText('C:\wander\signatureJWS.BASE64'));
-  exit;
+  HeaderBase64Url := Base64ToBase64URL(Header);
+  PayloadBase64Url := Base64ToBase64URL(Payload);
 
   // Combine header e payload
   Combined := HeaderBase64Url + '.' + PayloadBase64Url;
@@ -499,13 +491,13 @@ begin
   // Usando OpenSSL para assinar a combinação do Header e Payload
   Command := OpenSSLPath + ' dgst -sha256 -keyform pem -sign "' +
              self.FPastaDeTrabalho + '\chaves\privada\oxymed.homologacao.key.pem" < ' +
-             '"' + Combined + '" > ' + 'c:\wander\signatureJWS.bin';
+             '"' + Combined + '" > ' + 'c:\waner\signatureJWS.bin';
 
   // Execute o comando OpenSSL
   RunCommand(Command);
 
   // Após isso, use o CertUtil ou alguma outra função para converter a assinatura para Base64URL
-  Base64Signature := GetBase64FromFile('c:\wander\signatureJWS.bin');
+  Base64Signature := ]GetBase64FromFile('c:\wander\signatureJWS.bin');
 
   // Retorne a assinatura (base64 URL)
   self.FJWS := Base64ToBase64URL(Base64Signature);
@@ -542,30 +534,6 @@ begin
   // Fechar handles
   CloseHandle(ProcessInfo.hProcess);
   CloseHandle(ProcessInfo.hThread);
-end;
-
-function TBradesco.GetBase64FromFile(const FileName: string): string;
-var
-  FileStream: TFileStream;
-  MemoryStream: TMemoryStream;
-begin
-  // Cria um stream para ler o arquivo
-  FileStream := TFileStream.Create(FileName, fmOpenRead);
-  try
-    // Cria um MemoryStream para armazenar o conteúdo do arquivo
-    MemoryStream := TMemoryStream.Create;
-    try
-      // Copia o conteúdo do arquivo para o MemoryStream
-      MemoryStream.CopyFrom(FileStream, FileStream.Size);
-
-      // Converte o conteúdo do MemoryStream para Base64
-      Result := TNetEncoding.Base64.EncodeBytesToString(MemoryStream.Memory, MemoryStream.Size);
-    finally
-      MemoryStream.Free;
-    end;
-  finally
-    FileStream.Free;
-  end;
 end;
 
 

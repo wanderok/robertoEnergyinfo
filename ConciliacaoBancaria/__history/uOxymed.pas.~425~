@@ -384,7 +384,7 @@ begin
 
   GerarAssinatura;
   GerarAssinaturaJWT;
-  //GerarJWS;
+  GerarJWS;
 
   GerarBearerToken;
 
@@ -486,12 +486,8 @@ begin
   OpenSSLPath := '"C:\Program Files\OpenSSL-Win64\bin\openssl.exe"';
 
   // Codificando em Base64URL (imagine que Base64ToBase64URL é uma função que faz isso)
-  HeaderBase64Url := Base64ToBase64URL(self.FHeader);
-  PayloadBase64Url := Base64ToBase64URL(self.FPayload);
-
-  //self.FJWS := HeaderBase64Url + '.' + PayloadBase64Url + '.' + Base64ToBase64URL(TFile.ReadAllText('C:\wander\signatureJWS.BASE64'));
-  self.FJWS := self.FHeaderBase64 + '.' + self.FPayloadBase64 + '.' + Base64ToBase64URL(TFile.ReadAllText('C:\wander\signatureJWS.BASE64'));
-  exit;
+  HeaderBase64Url := Base64ToBase64URL(Header);
+  PayloadBase64Url := Base64ToBase64URL(Payload);
 
   // Combine header e payload
   Combined := HeaderBase64Url + '.' + PayloadBase64Url;
@@ -499,7 +495,7 @@ begin
   // Usando OpenSSL para assinar a combinação do Header e Payload
   Command := OpenSSLPath + ' dgst -sha256 -keyform pem -sign "' +
              self.FPastaDeTrabalho + '\chaves\privada\oxymed.homologacao.key.pem" < ' +
-             '"' + Combined + '" > ' + 'c:\wander\signatureJWS.bin';
+             '"' + Combined + '" > ' + 'c:\waner\signatureJWS.bin';
 
   // Execute o comando OpenSSL
   RunCommand(Command);
