@@ -1,0 +1,40 @@
+
+devia ser assim:
+----------------
+
+echo -n "$(cat jwt.txt)" | openssl dgst -sha256 -keyform pem -sign C:\wander\chaves\privada\oxymed.homologacao.key.pem|base64 |tr -d '=[:space:]' | tr  '+/'  '-_'
+
+
+consegui assim:
+----------------
+echo -n "$(cat jwt.txt)" | openssl dgst -sha256 -keyform pem -sign C:\wander\chaves\privada\oxymed.homologacao.key.pem > signature.bin
+certutil -encode signature.bin signature.base64
+
+
+resultado:
+-----BEGIN CERTIFICATE-----
+CMgqescpZDgIUewl2r0px5Tglm3N+DwavfqjefehKKTr6NqGayZhjfG3Wk8vfC8b
+2tIzzW11rdhUWrvJbm3coh2ojUlKjreSHd+9B8PFBUqPk4XAuZsqNC4aX4FF78O9
+IHBoaqaLbmZm7j9RvTZAwmBbPbTYduE/GOPGqKuqLqp2NrwBSL2s90Q9w36cWM53
+fA7fcP+1ESxkpKe827XzqzgzAGfWz4UxmQowk8i9YUaZDGZWdS91Ids3O5W+odCT
+UxbtoCMYMNMCKBW5XeQGCDm4FIk3uTr3qdkmIdQhAwD6JnCflA4GAilQRn10YzWJ
+TkgdwzUqhXsikKsKa3oWrg==
+-----END CERTIFICATE-----
+
+===============================
+echo -n "eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJhdWQiOiJodHRwczpcL1wvcHJveHkuYXBpLnByZWJhbmNvLmNvbS5iclwvYXV0aFwvc2VydmVyXC92MS4xXC90b2tlbiIsInN1YiI6Ijk2OTNmMDZiLWI5MjktNGE5Yy04MTgyLWUyNTI3MGM0MDI5ZCIsImlhdCI6Mzk0NjIxODg3NSwiZXhwIjozOTQ2MjIyNDc1LCJqdGkiOjM5NDYyMTg4NzUwMDAsInZlciI6IjEuMSJ9" | openssl dgst -sha256 -keyform pem -sign C:\wander\chaves\privada\oxymed.homologacao.key.pem > signature.bin
+
+certutil -encode signature.bin signature3.base64
+
+
+a+GdPqLVE8IqNp2UGknNEW98FrvWuFhJsWoD4OPuxaN5+hQZCxvuWfyZo8u1HSMo
+7ed/kwaTysredMTG6FgLxK3AM+ORSCf9rqnux51+hD//v94RRBwPduahru3Fd7ND
+DLa2AOGnUsWCMfZrC2QMS8awdz/cHgiQ1h+1mg5JrkJQPKxh9ECrxjIMvjaudSB/
+aIXWvwZXOBNqErd79rAhiSS6jwET6XQ1Vnk6udc4na3KGiswFdD6CX6vM/cpVJDM
+d87Ki/ZhfVtJ9JSLTAZ8wMRDkYKSw164FTWIvQN1miznnKEyHcPbeJMdwetEd46Q
+0U98jJ74mKzvDqvljGVpgw==
+
+
+concatenei: header.payload.assinatura
+
+eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJhdWQiOiJodHRwczpcL1wvcHJveHkuYXBpLnByZWJhbmNvLmNvbS5iclwvYXV0aFwvc2VydmVyXC92MS4xXC90b2tlbiIsInN1YiI6Ijk2OTNmMDZiLWI5MjktNGE5Yy04MTgyLWUyNTI3MGM0MDI5ZCIsImlhdCI6Mzk0NjIxODg3NSwiZXhwIjozOTQ2MjIyNDc1LCJqdGkiOjM5NDYyMTg4NzUwMDAsInZlciI6IjEuMSJ9.a+GdPqLVE8IqNp2UGknNEW98FrvWuFhJsWoD4OPuxaN5+hQZCxvuWfyZo8u1HSMo7ed/kwaTysredMTG6FgLxK3AM+ORSCf9rqnux51+hD//v94RRBwPduahru3Fd7NDDLa2AOGnUsWCMfZrC2QMS8awdz/cHgiQ1h+1mg5JrkJQPKxh9ECrxjIMvjaudSB/aIXWvwZXOBNqErd79rAhiSS6jwET6XQ1Vnk6udc4na3KGiswFdD6CX6vM/cpVJDMd87Ki/ZhfVtJ9JSLTAZ8wMRDkYKSw164FTWIvQN1miznnKEyHcPbeJMdwetEd46Q0U98jJ74mKzvDqvljGVpgw==

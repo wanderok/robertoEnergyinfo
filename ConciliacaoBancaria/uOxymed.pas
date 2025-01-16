@@ -241,11 +241,11 @@ begin
     Headers[0].Name := 'Authorization';
     Headers[0].Value := 'Bearer ' + self.FBearerToken;
 
-//    Headers[1].Name := 'X-Brad-Nonce';
-//    Headers[1].Value := Nonce;
-//
-//    Headers[2].Name := 'X-Brad-Signature';
-//    Headers[2].Value := self.FAssinatura;
+    Headers[1].Name := 'X-Brad-Nonce';
+    Headers[1].Value := Nonce;
+
+    Headers[2].Name := 'X-Brad-Signature';
+    Headers[2].Value := self.FAssinatura;
 
     // Criação do stream de requisição (isso pode variar dependendo de como seu corpo de requisição deve ser montado)
     RequestStream := TMemoryStream.Create;
@@ -577,4 +577,7 @@ end.
   // Gera a assinatura JWS
   //Signature := selfGerarAssinatura;
   //Signature := Base64ToBase64URL(Signature);
+
+jws
+
 

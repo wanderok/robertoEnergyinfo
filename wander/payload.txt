@@ -1,4 +1,1 @@
-eyJhdWQiOiJodHRwczpcL1wvcHJveHkuYXBpLnByZWJhbmNvLmNvbS5iclwvYXV0aFwvc2VydmVy
-XC92MS4xXC90b2tlbiIsInN1YiI6Ijk2OTNmMDZiLWI5MjktNGE5Yy04MTgyLWUyNTI3MGM0MDI5
-ZCIsImlhdCI6Mzk0NTk2OTAyNCwiZXhwIjozOTQ1OTcyNjI0LCJqdGkiOjM5NDU5NjkwMjQwMDAs
-InZlciI6IjEuMSJ9
+{"aud":"https:\/\/proxy.api.prebanco.com.br\/auth\/server\/v1.1\/token","sub":"9693f06b-b929-4a9c-8182-e25270c4029d","iat":3946219743,"exp":3946223343,"jti":3946219743000,"ver":"1.1"}
