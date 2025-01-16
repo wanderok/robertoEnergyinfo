@@ -490,7 +490,14 @@ begin
   PayloadBase64Url := Base64ToBase64URL(self.FPayload);
 
   //self.FJWS := HeaderBase64Url + '.' + PayloadBase64Url + '.' + Base64ToBase64URL(TFile.ReadAllText('C:\wander\signatureJWS.BASE64'));
-  self.FJWS := self.FHeaderBase64 + '.' + self.FPayloadBase64 + '.' + Base64ToBase64URL(TFile.ReadAllText('C:\wander\signatureJWS.BASE64'));
+  self.FJWS := self.FHeaderBase64 + '.' + self.FPayloadBase64 + '.' + Base64ToBase64URL(TFile.ReadAllText('C:\wander\signature3.BASE64'));
+  self.FJWS := self.FHeaderBase64 + '.' + self.FPayloadBase64 + '.' + CodificarBase64('a+GdPqLVE8IqNp2UGknNEW98FrvWuFhJsWoD4OPuxaN5+hQZCxvuWfyZo8u1HSMo7ed/kwaTysredMTG6FgLxK3AM+ORSCf9rqnux51+hD//v94RRBwPduahru3Fd7NDDLa2AOGnUsWCMfZrC2QMS8awdz/cHgiQ1h+1mg5JrkJQPKxh9ECrxjIMvjaudSB/aIXWvwZXOBNqErd79rAhiSS6jwET6XQ1Vnk6udc4na3KGiswFdD6CX6vM/cpVJDMd87Ki/ZhfVtJ9JSLTAZ8wMRDkYKSw164FTWIvQN1miznnKEyHcPbeJMdwetEd46Q0U98jJ74mKzvDqvljGVpgw==');
+
+
+//eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9
+//eyJhdWQiOiJodHRwczpcL1wvcHJveHkuYXBpLnByZWJhbmNvLmNvbS5iclwvYXV0aFwvc2VydmVyXC92MS4xXC90b2tlbiIsInN1YiI6Ijk2OTNmMDZiLWI5MjktNGE5Yy04MTgyLWUyNTI3MGM0MDI5ZCIsImlhdCI6Mzk0NjIxODg3NSwiZXhwIjozOTQ2MjIyNDc1LCJqdGkiOjM5NDYyMTg4NzUwMDAsInZlciI6IjEuMSJ9
+//a+GdPqLVE8IqNp2UGknNEW98FrvWuFhJsWoD4OPuxaN5+hQZCxvuWfyZo8u1HSMo7ed/kwaTysredMTG6FgLxK3AM+ORSCf9rqnux51+hD//v94RRBwPduahru3Fd7NDDLa2AOGnUsWCMfZrC2QMS8awdz/cHgiQ1h+1mg5JrkJQPKxh9ECrxjIMvjaudSB/aIXWvwZXOBNqErd79rAhiSS6jwET6XQ1Vnk6udc4na3KGiswFdD6CX6vM/cpVJDMd87Ki/ZhfVtJ9JSLTAZ8wMRDkYKSw164FTWIvQN1miznnKEyHcPbeJMdwetEd46Q0U98jJ74mKzvDqvljGVpgw==
+
   exit;
 
   // Combine header e payload
@@ -580,4 +587,4 @@ end.
 
 jws
 
-
+ eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJhdWQiOiJodHRwczpcL1wvcHJveHkuYXBpLnByZWJhbmNvLmNvbS5iclwvYXV0aFwvc2VydmVyXC92MS4xXC90b2tlbiIsInN1YiI6Ijk2OTNmMDZiLWI5MjktNGE5Yy04MTgyLWUyNTI3MGM0MDI5ZCIsImlhdCI6Mzk0NjIxODg3NSwiZXhwIjozOTQ2MjIyNDc1LCJqdGkiOjM5NDYyMTg4NzUwMDAsInZlciI6IjEuMSJ9.a+GdPqLVE8IqNp2UGknNEW98FrvWuFhJsWoD4OPuxaN5+hQZCxvuWfyZo8u1HSMo7ed/kwaTysredMTG6FgLxK3AM+ORSCf9rqnux51+hD//v94RRBwPduahru3Fd7NDDLa2AOGnUsWCMfZrC2QMS8awdz/cHgiQ1h+1mg5JrkJQPKxh9ECrxjIMvjaudSB/aIXWvwZXOBNqErd79rAhiSS6jwET6XQ1Vnk6udc4na3KGiswFdD6CX6vM/cpVJDMd87Ki/ZhfVtJ9JSLTAZ8wMRDkYKSw164FTWIvQN1miznnKEyHcPbeJMdwetEd46Q0U98jJ74mKzvDqvljGVpgw==
