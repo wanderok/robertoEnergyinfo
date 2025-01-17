@@ -1,3 +1,5 @@
+"C:\Program Files\OpenSSL-Win64\bin\openssl.exe" dgst -sha256 -keyform pem -sign "C:\WANDER\chaves\privada\oxymed.homologacao.key.pem" < "C:\WANDER\payload.txt" > "C:\WANDER\signatureJWS170125.bin"
+
 
 devia ser assim:
 ----------------
@@ -70,3 +72,8 @@ KY2V2I6Z1F0PZ5osuugg5SZp07Zj6EquJGQzgSvBeYFsWIOc6ZsSausH4wmCCEA6
 concatenando:
 
 eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJhdWQiOiJodHRwczpcL1wvcHJveHkuYXBpLnByZWJhbmNvLmNvbS5iclwvYXV0aFwvc2VydmVyXC92MS4xXC90b2tlbiIsInN1YiI6Ijk2OTNmMDZiLWI5MjktNGE5Yy04MTgyLWUyNTI3MGM0MDI5ZCIsImlhdCI6Mzk0NjIxOTk4NywiZXhwIjozOTQ2MjIzNTg3LCJqdGkiOjM5NDYyMTk5ODcwMDAsInZlciI6IjEuMSJ9.oyxfnD1hmqg6jOr81SXd8q9WonGjn489k_pglmI3AIEbSjOAxaGPF5jF3Alc6y5xkPLOX03CkDWzQ0WvgeDm5fGXS86P0638pQGrlxkH7wmYo0arTllK5GKZK6GtmzdYcRyXL2dCZNAdbrmlFoRTOvQEhiIBmjgWe35LvL6DKdPiKfdwGHyEdgmVl7w76_2Uif9oUnQXFOw45xCapLvLjCbPIqFP8boT1xrekpHBbIWuLXBHeeXwlwVycbuepkH8KY2V2I6Z1F0PZ5osuugg5SZp07Zj6EquJGQzgSvBeYFsWIOc6ZsSausH4wmCCEA63XGBBSHBbsLZcaB8CD-I1g
+
+
+
+erros:
+"C:\Program Files\OpenSSL-Win64\bin\openssl.exe" dgst -sha256 -keyform pem -sign "C:\WANDER\chaves\privada\oxymed.homologacao.key.pem" < "{"alg":"RS256","typ":"JWT"}.{"aud":"https:\_\_proxy.api.prebanco.com.br\_auth\_server\_v1.1\_token","sub":"9693f06b-b929-4a9c-8182-e25270c4029d","iat":3946290405,"exp":3946294005,"jti":3946290405000,"ver":"1.1"}" > C:\WANDER\signatureJWS.bin
