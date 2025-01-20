@@ -148,16 +148,6 @@ var
   chavePublica, chavePrivada: AnsiString;
 begin
   Result := False;
-  ACBrEAD := TACBrEAD.Create(nil);
-
-  //ACBrEAD.CarregarChavePrivada('C:\wander\chaves\privada\oxymed.homologacao.key.pem');
-  ACBrEAD.LerChavesArquivoPFX('c:\wander\certificado.pfx','123456',chavePublica, chavePrivada);
-
-
-  //ACBrEAD.GerarChaves(chavePublica, chavePrivada); //Bradesco.CertificadoDigital);
-
-  showmessage(chavePublica);
-  showmessage(chavePrivada);
 
   //ACBrEAD.
   //showmessage(ACBrEAD.ConverteChavePublicaParaOpenSSH);
@@ -207,6 +197,10 @@ end;
 
 procedure TfrmPrincipal.Button1Click(Sender: TObject);
 var    vData1, vData2 : TDateTime;
+       Saida: TACBrEADDgstOutput;
+       Resultado: AnsiString;
+       Arquivo:String;
+       EAD : AnsiString;
 begin
      Bradesco := TBradesco.Create;
 
@@ -229,6 +223,44 @@ begin
      Bradesco.Iniciar;
      PreencheMemos(Bradesco);
      PosicionarNoInicio;
+
+     if cbxOut.ItemIndex > 0 then
+        Saida := outBase64
+      else
+        Saida := outHexa;
+
+     Arquivo:= Bradesco.PastaDeTrabalho+'\jwt.txt';
+     if not FileExists(Arquivo) then
+     begin
+       ShowMessage(Arquivo+ ' não existe!');
+       exit;
+     end;
+     Bradesco.Assinatura := ACBrEAD1.CalcularAssinaturaArquivo(Arquivo, TACBrEADDgst( cbxDgst.ItemIndex ), Saida );
+     Memo6.Lines.Clear;
+     Memo6.Lines.Add('Assinatura EAD:');
+     Memo6.Lines.Add('');
+     Memo6.lines.add(Resultado);
+
+     EAD := ACBrEAD1.AssinarArquivoComEAD( Arquivo, True ) ;
+
+//     Memo7.Lines.Clear;
+//     Memo7.Lines.Add('JWS (JWT Assinado):');
+//     Memo7.Lines.Add('');
+//     Memo7.lines.add(EAD);
+
+     Bradesco.JWS := EAD;
+
+
+     Memo6.Lines.Clear;
+     Memo6.Lines.Add('Assinatura:');
+     Memo6.Lines.Add('');
+     Memo6.lines.add(Bradesco.Assinatura);
+
+     Memo7.Lines.Clear;
+     Memo7.Lines.Add('JWS:');
+     Memo7.Lines.Add('');
+     Memo7.lines.add(Bradesco.JWS);
+
 
      Memo9.Lines.Clear;
      Memo9.Lines.Add('BearerToken:');

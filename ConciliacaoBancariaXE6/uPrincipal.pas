@@ -198,6 +198,9 @@ end;
 procedure TfrmPrincipal.Button1Click(Sender: TObject);
 var    vData1, vData2 : TDateTime;
        Saida: TACBrEADDgstOutput;
+       Resultado: AnsiString;
+       Arquivo:String;
+       EAD : AnsiString;
 begin
      Bradesco := TBradesco.Create;
 
@@ -225,8 +228,15 @@ begin
         Saida := outBase64
       else
         Saida := outHexa;
-     ACBrEAD1.CalcularAssinaturaArquivo(Bradesco.PastaDeTrabalho+'\jwt.TXT', TACBrEADDgst( cbxDgst.ItemIndex ), Saida );
 
+     Arquivo:= Bradesco.PastaDeTrabalho+'\jwt.txt';
+     if not FileExists(Arquivo) then
+     begin
+       ShowMessage(Arquivo+ ' não existe!');
+       exit;
+     end;
+     Bradesco.Assinatura := ACBrEAD1.CalcularAssinaturaArquivo(Arquivo, TACBrEADDgst( cbxDgst.ItemIndex ), Saida );
+     Bradesco.JWS := ACBrEAD1.AssinarArquivoComEAD( Arquivo, True ) ;
 
      Memo9.Lines.Clear;
      Memo9.Lines.Add('BearerToken:');
@@ -234,7 +244,7 @@ begin
      Memo9.lines.add(Bradesco.Extrato(vData1,vData2));
      Memo9.SelStart := 0;
 
-     AssinarAquiMesmo;
+//     AssinarAquiMesmo;
      PreencheMemos(Bradesco);
 
      Bradesco.Free;

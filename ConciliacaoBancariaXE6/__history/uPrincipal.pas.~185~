@@ -83,14 +83,13 @@ type
     cbxDgst: TComboBox;
     cbxOut: TComboBox;
     Label19: TLabel;
-    Button4: TButton;
     edVersaoOpenSSL: TEdit;
+    Label20: TLabel;
     procedure Button1Click(Sender: TObject);
     procedure FormShow(Sender: TObject);
     procedure Button3Click(Sender: TObject);
     procedure btLerPrivKeyClick(Sender: TObject);
     procedure btLerPubKeyClick(Sender: TObject);
-    procedure Button4Click(Sender: TObject);
   private
     { Private declarations }
     procedure LerConfig;
@@ -149,16 +148,6 @@ var
   chavePublica, chavePrivada: AnsiString;
 begin
   Result := False;
-  ACBrEAD := TACBrEAD.Create(nil);
-
-  //ACBrEAD.CarregarChavePrivada('C:\wander\chaves\privada\oxymed.homologacao.key.pem');
-  ACBrEAD.LerChavesArquivoPFX('c:\wander\certificado.pfx','123456',chavePublica, chavePrivada);
-
-
-  //ACBrEAD.GerarChaves(chavePublica, chavePrivada); //Bradesco.CertificadoDigital);
-
-  showmessage(chavePublica);
-  showmessage(chavePrivada);
 
   //ACBrEAD.
   //showmessage(ACBrEAD.ConverteChavePublicaParaOpenSSH);
@@ -208,6 +197,9 @@ end;
 
 procedure TfrmPrincipal.Button1Click(Sender: TObject);
 var    vData1, vData2 : TDateTime;
+       Saida: TACBrEADDgstOutput;
+       Resultado: AnsiString;
+       Arquivo:String;
 begin
      Bradesco := TBradesco.Create;
 
@@ -231,6 +223,19 @@ begin
      PreencheMemos(Bradesco);
      PosicionarNoInicio;
 
+     if cbxOut.ItemIndex > 0 then
+        Saida := outBase64
+      else
+        Saida := outHexa;
+
+     Arquivo:= Bradesco.PastaDeTrabalho+'\jwt.TXT';
+     Resultado:= ACBrEAD1.CalcularAssinaturaArquivo(Arquivo, TACBrEADDgst( cbxDgst.ItemIndex ), Saida );
+     Memo6.Lines.Clear;
+     Memo6.Lines.Add('Assinatura EAD:');
+     Memo6.Lines.Add('');
+     Memo6.lines.add(Resultado);
+
+
      Memo9.Lines.Clear;
      Memo9.Lines.Add('BearerToken:');
      Memo9.Lines.Add('');
@@ -247,11 +252,6 @@ end;
 procedure TfrmPrincipal.Button3Click(Sender: TObject);
 begin
    GravarConfig;
-end;
-
-procedure TfrmPrincipal.Button4Click(Sender: TObject);
-begin
-    edVersaoOpenSSL.Text:= ACBrEAD1.OpenSSL_Version;
 end;
 
 function TfrmPrincipal.CriptografarTexto(const Texto: string): string;
@@ -318,6 +318,7 @@ var
   Ini: TIniFile;
   localDoArquivoINI: String;
 begin
+  edVersaoOpenSSL.Text:= ACBrEAD1.OpenSSL_Version;
   if edtPastaDeTrabalhoBradesco.Text = '' then
   begin
     edtPastaDeTrabalhoBradesco.Text := 'C:\WANDER';
