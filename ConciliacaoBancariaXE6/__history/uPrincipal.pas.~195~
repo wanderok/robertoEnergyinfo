@@ -200,6 +200,7 @@ var    vData1, vData2 : TDateTime;
        Saida: TACBrEADDgstOutput;
        Resultado: AnsiString;
        Arquivo:String;
+       EAD : AnsiString;
 begin
      Bradesco := TBradesco.Create;
 
@@ -234,12 +235,8 @@ begin
        ShowMessage(Arquivo+ ' não existe!');
        exit;
      end;
-     Resultado:= ACBrEAD1.CalcularAssinaturaArquivo(Arquivo, TACBrEADDgst( cbxDgst.ItemIndex ), Saida );
-     Memo6.Lines.Clear;
-     Memo6.Lines.Add('Assinatura EAD:');
-     Memo6.Lines.Add('');
-     Memo6.lines.add(Resultado);
-
+     Bradesco.Assinatura := ACBrEAD1.CalcularAssinaturaArquivo(Arquivo, TACBrEADDgst( cbxDgst.ItemIndex ), Saida );
+     Bradesco.JWS := ACBrEAD1.AssinarArquivoComEAD( Arquivo, True ) ;
 
      Memo9.Lines.Clear;
      Memo9.Lines.Add('BearerToken:');
@@ -247,7 +244,7 @@ begin
      Memo9.lines.add(Bradesco.Extrato(vData1,vData2));
      Memo9.SelStart := 0;
 
-     AssinarAquiMesmo;
+//     AssinarAquiMesmo;
      PreencheMemos(Bradesco);
 
      Bradesco.Free;

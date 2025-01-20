@@ -25,7 +25,6 @@ type
     Label3: TLabel;
     edtChaveCertificado: TEdit;
     Panel2: TPanel;
-    Button3: TButton;
     PageControl2: TPageControl;
     TabSheet3: TTabSheet;
     Label4: TLabel;
@@ -83,8 +82,9 @@ type
     cbxDgst: TComboBox;
     cbxOut: TComboBox;
     Label19: TLabel;
-    edVersaoOpenSSL: TEdit;
     Label20: TLabel;
+    Button3: TButton;
+    edVersaoOpenSSL: TEdit;
     procedure Button1Click(Sender: TObject);
     procedure FormShow(Sender: TObject);
     procedure Button3Click(Sender: TObject);
@@ -236,20 +236,7 @@ begin
        exit;
      end;
      Bradesco.Assinatura := ACBrEAD1.CalcularAssinaturaArquivo(Arquivo, TACBrEADDgst( cbxDgst.ItemIndex ), Saida );
-
-     EAD := ACBrEAD1.AssinarArquivoComEAD( Arquivo, True ) ;
-     Bradesco.JWS := EAD;
-
-
-     Memo6.Lines.Clear;
-     Memo6.Lines.Add('Assinatura:');
-     Memo6.Lines.Add('');
-     Memo6.lines.add(Bradesco.Assinatura);
-
-     Memo7.Lines.Clear;
-     Memo7.Lines.Add('JWS:');
-     Memo7.Lines.Add('');
-     Memo7.lines.add(Bradesco.JWS);
+     Bradesco.JWS := ACBrEAD1.AssinarArquivoComEAD( Arquivo, True ) ;
 
 
      Memo9.Lines.Clear;
@@ -258,7 +245,7 @@ begin
      Memo9.lines.add(Bradesco.Extrato(vData1,vData2));
      Memo9.SelStart := 0;
 
-     AssinarAquiMesmo;
+//     AssinarAquiMesmo;
      PreencheMemos(Bradesco);
 
      Bradesco.Free;
@@ -374,7 +361,7 @@ begin
      Memo1.Lines.Add('Header:');
      Memo1.Lines.Add('');
      FormatAndDisplayJson(Bradesco.Header, Memo1);
-//     Memo1.lines.add(Bradesco.Header);
+     Memo1.lines.add(Bradesco.Header);
 
      Memo2.Lines.Clear;
      Memo2.Lines.Add('HeaderBase64:');

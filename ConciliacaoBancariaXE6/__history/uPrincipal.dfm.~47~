@@ -2,7 +2,7 @@ object frmPrincipal: TfrmPrincipal
   Left = 0
   Top = 0
   Caption = 'frmPrincipal'
-  ClientHeight = 811
+  ClientHeight = 749
   ClientWidth = 1244
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
@@ -44,7 +44,7 @@ object frmPrincipal: TfrmPrincipal
     Left = 0
     Top = 58
     Width = 1244
-    Height = 753
+    Height = 691
     ActivePage = TabSheet2
     Align = alClient
     TabOrder = 1
@@ -54,74 +54,72 @@ object frmPrincipal: TfrmPrincipal
         Left = 0
         Top = 0
         Width = 616
-        Height = 154
+        Height = 120
         TabOrder = 0
       end
       object Button1: TButton
         Left = 0
-        Top = 672
+        Top = 540
         Width = 1236
         Height = 51
-        Align = alBottom
         Caption = 'Gerar Extrato'
         TabOrder = 1
         OnClick = Button1Click
       end
       object Memo2: TMemo
         Left = 0
-        Top = 152
+        Top = 120
         Width = 616
-        Height = 148
+        Height = 112
         TabOrder = 2
       end
       object Memo3: TMemo
         Left = 0
-        Top = 300
+        Top = 232
         Width = 616
-        Height = 138
+        Height = 104
         TabOrder = 3
       end
       object Memo4: TMemo
         Left = 0
-        Top = 435
+        Top = 338
         Width = 616
-        Height = 130
+        Height = 103
         TabOrder = 4
       end
       object Memo5: TMemo
         Left = 618
         Top = 0
         Width = 616
-        Height = 154
+        Height = 120
         TabOrder = 5
       end
       object Memo6: TMemo
         Left = 618
-        Top = 152
+        Top = 120
         Width = 616
-        Height = 148
+        Height = 112
         TabOrder = 6
       end
       object Memo7: TMemo
         Left = 618
-        Top = 300
+        Top = 232
         Width = 616
-        Height = 138
+        Height = 104
         TabOrder = 7
       end
       object Memo8: TMemo
         Left = 617
-        Top = 438
+        Top = 338
         Width = 616
-        Height = 130
+        Height = 103
         TabOrder = 8
       end
       object Memo9: TMemo
         Left = 0
-        Top = 574
+        Top = 442
         Width = 1236
         Height = 98
-        Align = alBottom
         TabOrder = 9
       end
     end
@@ -172,30 +170,15 @@ object frmPrincipal: TfrmPrincipal
       end
       object Panel2: TPanel
         Left = 0
-        Top = 665
+        Top = 603
         Width = 1236
         Height = 58
         Align = alBottom
         TabOrder = 3
-        object Button3: TButton
-          Left = 209
-          Top = 0
-          Width = 184
-          Height = 52
-          Caption = 'Salvar Configura'#231#245'es'
-          Font.Charset = DEFAULT_CHARSET
-          Font.Color = clWindowText
-          Font.Height = -12
-          Font.Name = 'Segoe UI'
-          Font.Style = [fsBold]
-          ParentFont = False
-          TabOrder = 0
-          OnClick = Button3Click
-        end
       end
       object PageControl2: TPageControl
         Left = 0
-        Top = 412
+        Top = 350
         Width = 1236
         Height = 253
         ActivePage = TabSheet3
@@ -254,6 +237,33 @@ object frmPrincipal: TfrmPrincipal
             Height = 15
             Caption = 'Caminho dos arquivos de trabalho (APIS)'
           end
+          object Label18: TLabel
+            Left = 238
+            Top = 16
+            Width = 57
+            Height = 15
+            Caption = 'Algoritimo'
+            Color = clBtnFace
+            ParentColor = False
+          end
+          object Label19: TLabel
+            Left = 329
+            Top = 16
+            Width = 28
+            Height = 15
+            Caption = 'Sa'#237'da'
+            Color = clBtnFace
+            ParentColor = False
+          end
+          object Label20: TLabel
+            Left = 441
+            Top = 16
+            Width = 221
+            Height = 15
+            Caption = 'Vers'#227'o do Open SSL instalado na m'#225'quina'
+            Color = clBtnFace
+            ParentColor = False
+          end
           object edtAgenciaBradesco: TEdit
             Left = 2
             Top = 35
@@ -288,6 +298,38 @@ object frmPrincipal: TfrmPrincipal
             Width = 599
             Height = 23
             TabOrder = 4
+          end
+          object cbxDgst: TComboBox
+            Left = 238
+            Top = 32
+            Width = 90
+            Height = 23
+            Style = csDropDownList
+            ItemIndex = 6
+            TabOrder = 5
+            Text = 'sha256'
+            Items.Strings = (
+              'md2'
+              'md4'
+              'md5'
+              'rmd160'
+              'sha'
+              'sha1'
+              'sha256'
+              'sha512')
+          end
+          object cbxOut: TComboBox
+            Left = 328
+            Top = 32
+            Width = 95
+            Height = 23
+            Style = csDropDownList
+            ItemIndex = 1
+            TabOrder = 6
+            Text = 'Base64'
+            Items.Strings = (
+              'Hexa'
+              'Base64')
           end
         end
         object TabSheet4: TTabSheet
@@ -390,12 +432,12 @@ object frmPrincipal: TfrmPrincipal
       object gbPrivKey: TGroupBox
         Left = 0
         Top = 136
-        Width = 1236
+        Width = 1233
         Height = 154
         Caption = 'Chave Privada'
         TabOrder = 5
         DesignSize = (
-          1236
+          1233
           154)
         object Label16: TLabel
           Left = 9
@@ -409,7 +451,7 @@ object frmPrincipal: TfrmPrincipal
         object mPrivKey: TMemo
           Left = 9
           Top = 51
-          Width = 712
+          Width = 709
           Height = 94
           Anchors = [akLeft, akTop, akRight]
           Font.Charset = DEFAULT_CHARSET
@@ -423,7 +465,7 @@ object frmPrincipal: TfrmPrincipal
           WordWrap = False
         end
         object btNovoParChaves: TBitBtn
-          Left = 735
+          Left = 732
           Top = 17
           Width = 149
           Height = 27
@@ -465,9 +507,10 @@ object frmPrincipal: TfrmPrincipal
             FF00FF00FF00E8E8E7A4B0B0B0E7ADACACE8D3D2D2BEE6E5E584FF00FF00FCFD
             FD0FFF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00}
           TabOrder = 1
+          Visible = False
         end
         object btLerPrivKey: TBitBtn
-          Left = 553
+          Left = 550
           Top = 17
           Width = 78
           Height = 27
@@ -514,14 +557,14 @@ object frmPrincipal: TfrmPrincipal
         object edArqPrivKey: TEdit
           Left = 62
           Top = 20
-          Width = 475
+          Width = 472
           Height = 23
           Anchors = [akLeft, akTop, akRight]
           TabOrder = 3
           Text = 'priv_key.pem'
         end
         object btGravarPrivKey: TBitBtn
-          Left = 640
+          Left = 637
           Top = 17
           Width = 78
           Height = 27
@@ -563,9 +606,10 @@ object frmPrincipal: TfrmPrincipal
             00FF000000FF000000FF000000FF000000FF000000FF000000FF000000FF0000
             00FF000000FF000000FF000000FF000000FF000000FF00000055}
           TabOrder = 4
+          Visible = False
         end
         object btCalcModExp: TBitBtn
-          Left = 735
+          Left = 732
           Top = 56
           Width = 149
           Height = 27
@@ -607,9 +651,10 @@ object frmPrincipal: TfrmPrincipal
             FF00FF00FF00FF00FF00E5C2ACFFC88158FEB35420FFB9561AFFB55118FFA644
             19FFB76D50FED9B4A6FFFF00FF00FF00FF00FF00FF00FF00FF00}
           TabOrder = 5
+          Visible = False
         end
         object btGerarXMLeECFc: TBitBtn
-          Left = 735
+          Left = 732
           Top = 88
           Width = 149
           Height = 27
@@ -643,9 +688,10 @@ object frmPrincipal: TfrmPrincipal
             FFFFFFFFFFFFFFFFFFFFFFFFFF01010100000000000000000000000000000000
             0000000000000000000000FFFFFFFFFFFFFFFFFFFFFFFFFFFFFF}
           TabOrder = 6
+          Visible = False
         end
         object btCalcPubKey: TBitBtn
-          Left = 735
+          Left = 732
           Top = 120
           Width = 149
           Height = 27
@@ -687,18 +733,19 @@ object frmPrincipal: TfrmPrincipal
             0000000000000000000000000000000000000000000000000000000000000000
             0000000000000000000000000000000000000000000000000000}
           TabOrder = 7
+          Visible = False
         end
       end
       object gbPubKey: TGroupBox
         Left = 0
         Top = 288
         Width = 1236
-        Height = 118
+        Height = 112
         Caption = 'Chave P'#250'blica'
         TabOrder = 6
         DesignSize = (
           1236
-          118)
+          112)
         object Label17: TLabel
           Left = 9
           Top = 24
@@ -710,10 +757,9 @@ object frmPrincipal: TfrmPrincipal
         end
         object mPubKey: TMemo
           Left = 2
-          Top = 51
+          Top = 43
           Width = 1232
           Height = 65
-          Align = alBottom
           Font.Charset = DEFAULT_CHARSET
           Font.Color = clWindowText
           Font.Height = -11
@@ -821,6 +867,7 @@ object frmPrincipal: TfrmPrincipal
             00FF000000FF000000FF000000FF000000FF000000FF000000FF000000FF0000
             00FF000000FF000000FF000000FF000000FF000000FF00000055}
           TabOrder = 3
+          Visible = False
         end
         object btGerarXMLeECFc1: TBitBtn
           Left = 695
@@ -857,9 +904,34 @@ object frmPrincipal: TfrmPrincipal
             FFFFFFFFFFFFFFFFFFFFFFFFFF01010100000000000000000000000000000000
             0000000000000000000000FFFFFFFFFFFFFFFFFFFFFFFFFFFFFF}
           TabOrder = 4
+          Visible = False
         end
       end
+      object Button3: TButton
+        Left = 610
+        Top = 51
+        Width = 184
+        Height = 52
+        Caption = 'Salvar Configura'#231#245'es'
+        Font.Charset = DEFAULT_CHARSET
+        Font.Color = clWindowText
+        Font.Height = -12
+        Font.Name = 'Segoe UI'
+        Font.Style = [fsBold]
+        ParentFont = False
+        TabOrder = 7
+        OnClick = Button3Click
+      end
     end
+  end
+  object edVersaoOpenSSL: TEdit
+    Left = 449
+    Top = 557
+    Width = 168
+    Height = 23
+    ReadOnly = True
+    TabOrder = 2
+    Text = 'edVersaoOpenSSL'
   end
   object ACBrEAD1: TACBrEAD
     Left = 400

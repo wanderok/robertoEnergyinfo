@@ -1,22 +1,29 @@
 ﻿[Closed Files]
-File_0=TSourceModule,'c:\program files (x86)\embarcadero\studio\19.0\source\indy\abstraction\IPPeerAPI.pas',0,1,1106,1,1118,0,0,,
-File_1=TSourceModule,'c:\program files (x86)\embarcadero\studio\19.0\SOURCE\RTL\SYS\System.pas',0,1,16948,1,16960,0,0,,
-File_2=TSourceModule,'c:\program files (x86)\embarcadero\studio\19.0\source\rtl\net\System.Net.HttpClient.Win.pas',0,1,1107,1,1119,0,0,,
-File_3=TSourceModule,'C:\fi9404\pessoal\delphi\robertoEnergyinfo\ConciliacaoBancaria\uEnergyInform.pas',0,1,58,7,93,0,0,,
-File_4=TSourceModule,'c:\program files (x86)\embarcadero\studio\14.0\source\Indy10\Protocols\IdSSLOpenSSLHeaders.pas',0,1,18225,1,18245,0,0,,
+File_0=TSourceModule,'c:\program files (x86)\embarcadero\studio\14.0\SOURCE\VCL\Vcl.StdCtrls.pas',0,1,3822,1,3847,0,0,{{1650,4},{1668,15},{'TScrollWindow'}},
+File_1=TSourceModule,'c:\program files (x86)\embarcadero\studio\19.0\source\indy\abstraction\IPPeerAPI.pas',0,1,1106,1,1118,0,0,,
+File_2=TSourceModule,'c:\program files (x86)\embarcadero\studio\19.0\SOURCE\RTL\SYS\System.pas',0,1,16948,1,16960,0,0,,
+File_3=TSourceModule,'c:\program files (x86)\embarcadero\studio\19.0\source\rtl\net\System.Net.HttpClient.Win.pas',0,1,1107,1,1119,0,0,,
+File_4=TSourceModule,'C:\fi9404\pessoal\delphi\robertoEnergyinfo\ConciliacaoBancaria\uEnergyInform.pas',0,1,58,7,93,0,0,,
+File_5=TSourceModule,'c:\program files (x86)\embarcadero\studio\14.0\source\Indy10\Protocols\IdSSLOpenSSLHeaders.pas',0,1,18225,1,18245,0,0,,
 
 [Modules]
 Module0=C:\fi9404\pessoal\delphi\robertoEnergyinfo\ConciliacaoBancariaXE6\uPrincipal.pas
-Module1=C:\wip_sist_imbel\dev\ACBR_NEW\Fontes\ACBrOpenSSL\ACBrEAD.pas
-Module2=C:\wip_sist_imbel\dev\ACBR_NEW\Fontes\ACBrOpenSSL\OpenSSLExt.pas
-Module3=default.htm
-Module4=C:\fi9404\pessoal\delphi\robertoEnergyinfo\ConciliacaoBancariaXE6\uOxymed.pas
-Count=5
+Module1=C:\fi9404\pessoal\delphi\robertoEnergyinfo\ConciliacaoBancariaXE6\uOxymed.pas
+Module2=C:\wip_sist_imbel\dev\ACBR_NEW\Fontes\ACBrOpenSSL\ACBrEAD.pas
+Module3=C:\wip_sist_imbel\dev\ACBR_NEW\Fontes\ACBrOpenSSL\OpenSSLExt.pas
+Module4=c:\program files (x86)\embarcadero\studio\14.0\source\rtl\common\System.JSON.pas
+Module5=default.htm
+Count=6
 EditWindowCount=1
 
 [C:\fi9404\pessoal\delphi\robertoEnergyinfo\ConciliacaoBancariaXE6\uPrincipal.pas]
 ModuleType=TSourceModule
 FormState=1
+FormOnTop=0
+
+[C:\fi9404\pessoal\delphi\robertoEnergyinfo\ConciliacaoBancariaXE6\uOxymed.pas]
+ModuleType=TSourceModule
+FormState=0
 FormOnTop=0
 
 [C:\wip_sist_imbel\dev\ACBR_NEW\Fontes\ACBrOpenSSL\ACBrEAD.pas]
@@ -29,22 +36,23 @@ ModuleType=TSourceModule
 FormState=0
 FormOnTop=0
 
-[default.htm]
-ModuleType=TURLModule
-
-[C:\fi9404\pessoal\delphi\robertoEnergyinfo\ConciliacaoBancariaXE6\uOxymed.pas]
+[c:\program files (x86)\embarcadero\studio\14.0\source\rtl\common\System.JSON.pas]
 ModuleType=TSourceModule
 FormState=0
 FormOnTop=0
 
+[default.htm]
+ModuleType=TURLModule
+
 [EditWindow0]
-ViewCount=5
+ViewCount=6
 CurrentEditView=C:\fi9404\pessoal\delphi\robertoEnergyinfo\ConciliacaoBancariaXE6\uPrincipal.pas
 View0=0
 View1=1
 View2=2
 View3=3
 View4=4
+View5=5
 PercentageSizes=1
 Create=1
 Visible=1
@@ -81,9 +89,9 @@ WelcomePageURL=bds:/default.htm
 [View1]
 CustomEditViewType=TEditView
 Module=C:\fi9404\pessoal\delphi\robertoEnergyinfo\ConciliacaoBancariaXE6\uOxymed.pas
-CursorX=3
-CursorY=617
-TopLine=596
+CursorX=1
+CursorY=422
+TopLine=402
 LeftCol=1
 Elisions=
 Bookmarks=
@@ -91,35 +99,46 @@ EditViewName=C:\fi9404\pessoal\delphi\robertoEnergyinfo\ConciliacaoBancariaXE6\u
 
 [View2]
 CustomEditViewType=TEditView
-Module=C:\fi9404\pessoal\delphi\robertoEnergyinfo\ConciliacaoBancariaXE6\uPrincipal.pas
-CursorX=18
-CursorY=104
-TopLine=97
+Module=c:\program files (x86)\embarcadero\studio\14.0\source\rtl\common\System.JSON.pas
+CursorX=1
+CursorY=1812
+TopLine=1791
 LeftCol=1
 Elisions=
 Bookmarks=
-EditViewName=C:\fi9404\pessoal\delphi\robertoEnergyinfo\ConciliacaoBancariaXE6\uPrincipal.pas
+EditViewName=c:\program files (x86)\embarcadero\studio\14.0\source\rtl\common\System.JSON.pas
 
 [View3]
 CustomEditViewType=TEditView
-Module=C:\wip_sist_imbel\dev\ACBR_NEW\Fontes\ACBrOpenSSL\ACBrEAD.pas
-CursorX=3
-CursorY=730
-TopLine=716
+Module=C:\fi9404\pessoal\delphi\robertoEnergyinfo\ConciliacaoBancariaXE6\uPrincipal.pas
+CursorX=1
+CursorY=384
+TopLine=364
 LeftCol=1
 Elisions=
-Bookmarks={1,64,1}
-EditViewName=C:\wip_sist_imbel\dev\ACBR_NEW\Fontes\ACBrOpenSSL\ACBrEAD.pas
+Bookmarks={0,247,25}{1,207,16}
+EditViewName=C:\fi9404\pessoal\delphi\robertoEnergyinfo\ConciliacaoBancariaXE6\uPrincipal.pas
 
 [View4]
 CustomEditViewType=TEditView
-Module=C:\wip_sist_imbel\dev\ACBR_NEW\Fontes\ACBrOpenSSL\OpenSSLExt.pas
+Module=C:\wip_sist_imbel\dev\ACBR_NEW\Fontes\ACBrOpenSSL\ACBrEAD.pas
 CursorX=1
-CursorY=1
-TopLine=1
+CursorY=764
+TopLine=731
 LeftCol=1
 Elisions=
-Bookmarks=
+Bookmarks={1,406,23}
+EditViewName=C:\wip_sist_imbel\dev\ACBR_NEW\Fontes\ACBrOpenSSL\ACBrEAD.pas
+
+[View5]
+CustomEditViewType=TEditView
+Module=C:\wip_sist_imbel\dev\ACBR_NEW\Fontes\ACBrOpenSSL\OpenSSLExt.pas
+CursorX=3
+CursorY=4072
+TopLine=4051
+LeftCol=1
+Elisions=
+Bookmarks={1,2191,3}
 EditViewName=C:\wip_sist_imbel\dev\ACBR_NEW\Fontes\ACBrOpenSSL\OpenSSLExt.pas
 
 [Watches]
@@ -147,9 +166,15 @@ Dockable=1
 StayOnTop=0
 
 [Breakpoints]
-Count=2
+Count=8
 Breakpoint0='C:\fi9404\pessoal\delphi\robertoEnergyinfo\ConciliacaoBancaria\uPrincipal.pas',36,'',0,1,'',1,0,0,'',1,'','','',0,''
-Breakpoint1='C:\fi9404\pessoal\delphi\robertoEnergyinfo\ConciliacaoBancariaXE6\uPrincipal.pas',138,'',0,1,'',1,0,0,'',1,'','','',0,''
+Breakpoint1='C:\fi9404\pessoal\delphi\robertoEnergyinfo\ConciliacaoBancariaXE6\uPrincipal.pas',150,'',0,1,'',1,0,0,'',1,'','','',0,''
+Breakpoint2='C:\fi9404\pessoal\delphi\robertoEnergyinfo\ConciliacaoBancariaXE6\uPrincipal.pas',238,'',0,1,'',1,0,0,'',1,'','','',0,''
+Breakpoint3='C:\fi9404\pessoal\delphi\robertoEnergyinfo\ConciliacaoBancariaXE6\uPrincipal.pas',225,'',0,1,'',1,0,0,'',1,'','','',0,''
+Breakpoint4='C:\fi9404\pessoal\delphi\robertoEnergyinfo\ConciliacaoBancariaXE6\uOxymed.pas',422,'',0,1,'',1,0,0,'',1,'','','',0,''
+Breakpoint5='C:\fi9404\pessoal\delphi\robertoEnergyinfo\ConciliacaoBancariaXE6\uPrincipal.pas',227,'',0,1,'',1,0,0,'',1,'','','',0,''
+Breakpoint6='C:\fi9404\pessoal\delphi\robertoEnergyinfo\ConciliacaoBancariaXE6\uPrincipal.pas',384,'',0,1,'',1,0,0,'',1,'','','',0,''
+Breakpoint7='C:\fi9404\pessoal\delphi\robertoEnergyinfo\ConciliacaoBancariaXE6\uPrincipal.pas',421,'',0,1,'',1,0,0,'',1,'','','',0,''
 
 [EmbarcaderoWin32Debugger_AddressBreakpoints]
 Count=0
@@ -172,8 +197,8 @@ Create=1
 Visible=1
 Docked=0
 State=2
-Left=146
-Top=271
+Left=260
+Top=1919
 Width=8932
 Height=8517
 MaxLeft=-5
@@ -341,8 +366,8 @@ SplitPos=111
 
 [PropInspDesignerSelection]
 ArrangeBy=Name
-SelectedItem=Name,
-ExpandedItems=Anchors=0,Constraints=0,LiveBindings=0,"LiveBindings Designer=0",Margins=0
+SelectedItem=Align,CustomHint
+ExpandedItems=Anchors=0,Constraints=1,Font=0,BevelEdges=0,LiveBindings=0,"LiveBindings Designer=0",Margins=0,StyleElements=0,Touch=0
 
 [TFileExplorerForm]
 PercentageSizes=1

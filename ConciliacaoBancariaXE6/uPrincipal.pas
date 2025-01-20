@@ -25,7 +25,6 @@ type
     Label3: TLabel;
     edtChaveCertificado: TEdit;
     Panel2: TPanel;
-    Button3: TButton;
     PageControl2: TPageControl;
     TabSheet3: TTabSheet;
     Label4: TLabel;
@@ -83,8 +82,9 @@ type
     cbxDgst: TComboBox;
     cbxOut: TComboBox;
     Label19: TLabel;
-    edVersaoOpenSSL: TEdit;
     Label20: TLabel;
+    Button3: TButton;
+    edVersaoOpenSSL: TEdit;
     procedure Button1Click(Sender: TObject);
     procedure FormShow(Sender: TObject);
     procedure Button3Click(Sender: TObject);
@@ -238,6 +238,7 @@ begin
      Bradesco.Assinatura := ACBrEAD1.CalcularAssinaturaArquivo(Arquivo, TACBrEADDgst( cbxDgst.ItemIndex ), Saida );
      Bradesco.JWS := ACBrEAD1.AssinarArquivoComEAD( Arquivo, True ) ;
 
+
      Memo9.Lines.Clear;
      Memo9.Lines.Add('BearerToken:');
      Memo9.Lines.Add('');
@@ -360,7 +361,7 @@ begin
      Memo1.Lines.Add('Header:');
      Memo1.Lines.Add('');
      FormatAndDisplayJson(Bradesco.Header, Memo1);
-//     Memo1.lines.add(Bradesco.Header);
+     Memo1.lines.add(Bradesco.Header);
 
      Memo2.Lines.Clear;
      Memo2.Lines.Add('HeaderBase64:');
@@ -370,7 +371,8 @@ begin
      Memo3.Lines.Clear;
      Memo3.Lines.Add('Payload:');
      Memo3.Lines.Add('');
-     FormatAndDisplayJson(Bradesco.Payload, Memo3);
+     //FormatAndDisplayJson(Bradesco.Payload, Memo3);
+     Memo3.Lines.Add(Bradesco.Payload);
 
 
      Memo4.Lines.Clear;
@@ -457,7 +459,7 @@ begin
     if JsonValue <> nil then
     begin
       // Formata o JSON com indentação
-//      PrettyJson := JsonValue.Format(2);  // O número 2 define o número de espaços para a indentação
+      //PrettyJson := JsonValue.Format(2);  // O número 2 define o número de espaços para a indentação
 
       // Exibe o JSON formatado no TMemo
       Memo.Lines.add(PrettyJson);
