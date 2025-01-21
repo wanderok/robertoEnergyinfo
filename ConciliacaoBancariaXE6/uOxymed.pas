@@ -20,7 +20,9 @@ uses
   System.Diagnostics,
   System.DateUtils,
   Vcl.Clipbrd,
-  ACBrDFeSSL;
+  ACBrDFeSSL,
+
+  synacode;
 
 
 type
@@ -58,10 +60,11 @@ type
     procedure GerarTokenJWT;
     procedure GerarTokenJWTBase64;
 
+    function GerarAssinatura: string;
+
     procedure GerarJWS;
     procedure GerarBearerToken;
 
-    function GerarAssinatura: string;
     procedure GerarAssinaturaJWT;
     procedure RunCommand(const Command: string);
     function GetBase64FromFile(const FileName: string): string;
@@ -130,8 +133,8 @@ end;
 
 function TBradesco.CodificarBase64(const Texto: string): string;
 begin
-//  result := TNetEncoding.Base64.Encode(Texto);
-//  result := Base64ToBase64URL(result); // Converte de Base64 para Base64URL
+  result := EncodeBase64(Texto); //TNetEncoding.Base64.Encode(Texto);
+  result := Base64ToBase64URL(result); // Converte de Base64 para Base64URL
 end;
 
 constructor TBradesco.Create;
@@ -165,21 +168,20 @@ begin
 end;
 
 procedure TBradesco.CriarPayload;
-//var
-//  Payload: TJSONObject;
-//  Pair: TJSONPair;
-//  IAT, EXP, JTI: Int64; // Alterado para Int64  // Integer;
-//begin
-//  // Obter o timestamp atual em segundos
-//  IAT := Trunc(Now * 86400) + 25569;
-//  // Converte de "tData" para timestamp em segundos
-//  EXP := IAT + 3600; // Expiração de 1 hora
-//  JTI := IAT * 1000; // jti em milissegundos
-//
+var
+  Payload: TJSONObject;
+  Pair: TJSONPair;
+  IAT, EXP, JTI: Int64; // Alterado para Int64  // Integer;
+begin
+  // Obter o timestamp atual em segundos
+  IAT := Trunc(Now * 86400) + 25569;
+  // Converte de "tData" para timestamp em segundos
+  EXP := IAT + 3600; // Expiração de 1 hora
+  JTI := IAT * 1000; // jti em milissegundos
+
 //  Payload := TJSONObject.Create;
 //  Pair := TJSONPair.Create;
 //  try
-//
 //    Payload.AddPair('aud', self.APIToken);
 //    Payload.AddPair('sub', self.ClientKey);
 //    Payload.AddPair('iat', IAT);
@@ -190,10 +192,10 @@ procedure TBradesco.CriarPayload;
 //  finally
 //    Payload.Free;
 //  end;
-var
-  Payload: TJSONObject;
-  Pair: TJSONPair;
-begin
+//var
+//  Payload: TJSONObject;
+//  Pair: TJSONPair;
+//begin
   Payload := TJSONObject.Create;
   try
     // Criando pares de chave-valor corretamente com TJSONPair
@@ -203,13 +205,13 @@ begin
     Pair := TJSONPair.Create('sub', self.ClientKey);
     Payload.AddPair(Pair);
 
-    Pair := TJSONPair.Create('iat', 'IAT');
+    Pair := TJSONPair.Create('iat', intToStr(IAT));
     Payload.AddPair(Pair);
 
-    Pair := TJSONPair.Create('exp', 'EXP');
+    Pair := TJSONPair.Create('exp', intToStr(EXP));
     Payload.AddPair(Pair);
 
-    Pair := TJSONPair.Create('jti', 'JTI');
+    Pair := TJSONPair.Create('jti', intToStr(JTI));
     Payload.AddPair(Pair);
 
     Pair := TJSONPair.Create('ver', '1.1');
@@ -680,3 +682,10 @@ end.
 jws
 
  eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJhdWQiOiJodHRwczpcL1wvcHJveHkuYXBpLnByZWJhbmNvLmNvbS5iclwvYXV0aFwvc2VydmVyXC92MS4xXC90b2tlbiIsInN1YiI6Ijk2OTNmMDZiLWI5MjktNGE5Yy04MTgyLWUyNTI3MGM0MDI5ZCIsImlhdCI6Mzk0NjIxODg3NSwiZXhwIjozOTQ2MjIyNDc1LCJqdGkiOjM5NDYyMTg4NzUwMDAsInZlciI6IjEuMSJ9.a+GdPqLVE8IqNp2UGknNEW98FrvWuFhJsWoD4OPuxaN5+hQZCxvuWfyZo8u1HSMo7ed/kwaTysredMTG6FgLxK3AM+ORSCf9rqnux51+hD//v94RRBwPduahru3Fd7NDDLa2AOGnUsWCMfZrC2QMS8awdz/cHgiQ1h+1mg5JrkJQPKxh9ECrxjIMvjaudSB/aIXWvwZXOBNqErd79rAhiSS6jwET6XQ1Vnk6udc4na3KGiswFdD6CX6vM/cpVJDMd87Ki/ZhfVtJ9JSLTAZ8wMRDkYKSw164FTWIvQN1miznnKEyHcPbeJMdwetEd46Q0U98jJ74mKzvDqvljGVpgw==
+
+
+comando:
+echo -n "$(cat jwt.txt" | openssl dgst -sha256 -keyform pem -sign oxymed.homologacao.key.pem|base64|td -d '=[space:]' | tr '+/' '-_'
+
+erro:
+'base64' não é reconhecido como um comando interno ou externo, um programa operável ou um arquivo em lotes.

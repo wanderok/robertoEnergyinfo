@@ -99,6 +99,7 @@ begin
      Bradesco := TBradesco.Create;
 
      LerConfig;
+
      Bradesco.RazaoSocial := edtRazaoSocial.Text; // 'OXYMED COMERCIO E LOCACAO DE EQUIPAMENTO';
      Bradesco.CNPJ := edtCNPJ.Text; //'38.052.160/0057-01';
      Bradesco.ClientKey := edtClienteKeyBradesco.Text;

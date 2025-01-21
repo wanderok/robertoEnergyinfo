@@ -6,9 +6,8 @@ uses
   Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes, Vcl.Graphics,
   Vcl.Controls, Vcl.Forms, Vcl.Dialogs,Soap.InvokeRegistry, IdHTTP, IdSSL, IdSSLOpenSSL,
   Vcl.StdCtrls, Vcl.ExtCtrls, Vcl.ComCtrls, System.IniFiles, System.Rtti,
-  IdCoderMIME, IdGlobal, uOxymed, System.JSON, ACBrBase, ACBrEAD, Vcl.Buttons;
-
-
+  IdCoderMIME, IdGlobal, uOxymed, System.JSON, ACBrBase, ACBrEAD, Vcl.Buttons,
+  synacode;
 
 type
   TfrmPrincipal = class(TForm)
@@ -104,7 +103,8 @@ type
     function AssinarAquiMesmo:boolean;
     procedure Assinar;
     procedure TrazerChaves;
-      public
+    function Base64ToBase64URL(const Base64: string): string;
+  public
     { Public declarations }
   end;
 
@@ -175,6 +175,13 @@ begin
 
 end;
 
+function TfrmPrincipal.Base64ToBase64URL(const Base64: string): string;
+begin
+  result := StringReplace(Base64, '+', '-', [rfReplaceAll]);
+  result := StringReplace(result, '/', '_', [rfReplaceAll]);
+  result := StringReplace(result, '=', '', [rfReplaceAll]); // Remove paddings
+end;
+
 procedure TfrmPrincipal.btLerPrivKeyClick(Sender: TObject);
 begin
   OpenDialog1.FileName := edArqPrivKey.Text;
@@ -201,6 +208,7 @@ var    vData1, vData2 : TDateTime;
        Resultado: AnsiString;
        Arquivo:String;
        EAD : AnsiString;
+       vHeader64:String;
 begin
      Bradesco := TBradesco.Create;
 
@@ -235,8 +243,9 @@ begin
        ShowMessage(Arquivo+ ' não existe!');
        exit;
      end;
+
      Bradesco.Assinatura := ACBrEAD1.CalcularAssinaturaArquivo(Arquivo, TACBrEADDgst( cbxDgst.ItemIndex ), Saida );
-     Bradesco.JWS := ACBrEAD1.AssinarArquivoComEAD( Arquivo, True ) ;
+     //Bradesco.JWS := ACBrEAD1.AssinarArquivoComEAD( Arquivo, True ) ;
 
 
      Memo9.Lines.Clear;

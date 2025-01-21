@@ -175,8 +175,6 @@ object frmPrincipal: TfrmPrincipal
         Height = 58
         Align = alBottom
         TabOrder = 3
-        ExplicitTop = 391
-        ExplicitWidth = 616
         object Button3: TButton
           Left = 209
           Top = 0
@@ -201,8 +199,6 @@ object frmPrincipal: TfrmPrincipal
         ActivePage = TabSheet3
         Align = alBottom
         TabOrder = 4
-        ExplicitTop = 138
-        ExplicitWidth = 616
         object TabSheet3: TTabSheet
           Caption = 'Bradesco'
           object Label4: TLabel
@@ -236,7 +232,7 @@ object frmPrincipal: TfrmPrincipal
           object Label12: TLabel
             Left = 0
             Top = 0
-            Width = 62
+            Width = 1228
             Height = 15
             Align = alTop
             Alignment = taCenter
@@ -247,6 +243,7 @@ object frmPrincipal: TfrmPrincipal
             Font.Name = 'Segoe UI'
             Font.Style = [fsBold]
             ParentFont = False
+            ExplicitWidth = 62
           end
           object Label15: TLabel
             Left = 3
@@ -325,7 +322,7 @@ object frmPrincipal: TfrmPrincipal
           object Label13: TLabel
             Left = 0
             Top = 0
-            Width = 27
+            Width = 1228
             Height = 15
             Align = alTop
             Alignment = taCenter
@@ -336,6 +333,7 @@ object frmPrincipal: TfrmPrincipal
             Font.Name = 'Segoe UI'
             Font.Style = [fsBold]
             ParentFont = False
+            ExplicitWidth = 27
           end
           object Edit6: TEdit
             Left = 7
@@ -372,7 +370,7 @@ object frmPrincipal: TfrmPrincipal
           object Label14: TLabel
             Left = 0
             Top = 0
-            Width = 29
+            Width = 1228
             Height = 15
             Align = alTop
             Alignment = taCenter
@@ -383,6 +381,7 @@ object frmPrincipal: TfrmPrincipal
             Font.Name = 'Segoe UI'
             Font.Style = [fsBold]
             ParentFont = False
+            ExplicitWidth = 29
           end
         end
       end

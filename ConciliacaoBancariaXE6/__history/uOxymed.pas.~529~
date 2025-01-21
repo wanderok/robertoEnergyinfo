@@ -20,7 +20,9 @@ uses
   System.Diagnostics,
   System.DateUtils,
   Vcl.Clipbrd,
-  ACBrDFeSSL;
+  ACBrDFeSSL,
+
+  synacode;
 
 
 type
@@ -130,8 +132,8 @@ end;
 
 function TBradesco.CodificarBase64(const Texto: string): string;
 begin
-//  result := TNetEncoding.Base64.Encode(Texto);
-//  result := Base64ToBase64URL(result); // Converte de Base64 para Base64URL
+  result := EncodeBase64(Texto); //TNetEncoding.Base64.Encode(Texto);
+  result := Base64ToBase64URL(result); // Converte de Base64 para Base64URL
 end;
 
 constructor TBradesco.Create;
@@ -165,21 +167,20 @@ begin
 end;
 
 procedure TBradesco.CriarPayload;
-//var
-//  Payload: TJSONObject;
-//  Pair: TJSONPair;
-//  IAT, EXP, JTI: Int64; // Alterado para Int64  // Integer;
-//begin
-//  // Obter o timestamp atual em segundos
-//  IAT := Trunc(Now * 86400) + 25569;
-//  // Converte de "tData" para timestamp em segundos
-//  EXP := IAT + 3600; // Expiração de 1 hora
-//  JTI := IAT * 1000; // jti em milissegundos
-//
+var
+  Payload: TJSONObject;
+  Pair: TJSONPair;
+  IAT, EXP, JTI: Int64; // Alterado para Int64  // Integer;
+begin
+  // Obter o timestamp atual em segundos
+  IAT := Trunc(Now * 86400) + 25569;
+  // Converte de "tData" para timestamp em segundos
+  EXP := IAT + 3600; // Expiração de 1 hora
+  JTI := IAT * 1000; // jti em milissegundos
+
 //  Payload := TJSONObject.Create;
 //  Pair := TJSONPair.Create;
 //  try
-//
 //    Payload.AddPair('aud', self.APIToken);
 //    Payload.AddPair('sub', self.ClientKey);
 //    Payload.AddPair('iat', IAT);
@@ -190,10 +191,10 @@ procedure TBradesco.CriarPayload;
 //  finally
 //    Payload.Free;
 //  end;
-var
-  Payload: TJSONObject;
-  Pair: TJSONPair;
-begin
+//var
+//  Payload: TJSONObject;
+//  Pair: TJSONPair;
+//begin
   Payload := TJSONObject.Create;
   try
     // Criando pares de chave-valor corretamente com TJSONPair
@@ -203,24 +204,23 @@ begin
     Pair := TJSONPair.Create('sub', self.ClientKey);
     Payload.AddPair(Pair);
 
-    Pair := TJSONPair.Create('iat', 'IAT');
+    Pair := TJSONPair.Create('iat', Int64ToStr(IAT));
     Payload.AddPair(Pair);
 
-    Pair := TJSONPair.Create('exp', 'EXP');
+    Pair := TJSONPair.Create('exp', EXP);
     Payload.AddPair(Pair);
 
-    Pair := TJSONPair.Create('jti', 'JTI');
+    Pair := TJSONPair.Create('jti', JTI);
     Payload.AddPair(Pair);
-
-    Pair := TJSONPair.Create('ver', '1.1');
-    Payload.AddPair(Pair);
-
-    // Atribuindo o JSON a uma variável string
-    self.FPayload := Payload.ToString;
+//
+//    Pair := TJSONPair.Create('ver', '1.1');
+//    Payload.AddPair(Pair);
+//
+//    // Atribuindo o JSON a uma variável string
+//    self.FPayload := Payload.ToString;
   finally
     Payload.Free;
   end;
-end;
 end;
 
 procedure TBradesco.CriarPayloadBase64;

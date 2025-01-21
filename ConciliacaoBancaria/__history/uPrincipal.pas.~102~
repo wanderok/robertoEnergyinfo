@@ -6,7 +6,7 @@ uses
   Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes, Vcl.Graphics,
   Vcl.Controls, Vcl.Forms, Vcl.Dialogs,Soap.InvokeRegistry, IdHTTP, IdSSL, IdSSLOpenSSL,
   Vcl.StdCtrls, Vcl.ExtCtrls, Vcl.ComCtrls, System.IniFiles, System.Rtti,
-  IdCoderMIME, IdGlobal, uOxymed, System.JSON, ACBrBase, ACBrEAD, Vcl.Buttons;
+  IdCoderMIME, IdGlobal, uOxymed, System.JSON;
 
 
 
@@ -25,6 +25,7 @@ type
     Label3: TLabel;
     edtChaveCertificado: TEdit;
     Panel2: TPanel;
+    Button3: TButton;
     PageControl2: TPageControl;
     TabSheet3: TTabSheet;
     Label4: TLabel;
@@ -59,37 +60,9 @@ type
     Memo7: TMemo;
     Memo8: TMemo;
     Memo9: TMemo;
-    ACBrEAD1: TACBrEAD;
-    gbPrivKey: TGroupBox;
-    Label16: TLabel;
-    mPrivKey: TMemo;
-    btNovoParChaves: TBitBtn;
-    btLerPrivKey: TBitBtn;
-    edArqPrivKey: TEdit;
-    btGravarPrivKey: TBitBtn;
-    btCalcModExp: TBitBtn;
-    btGerarXMLeECFc: TBitBtn;
-    btCalcPubKey: TBitBtn;
-    OpenDialog1: TOpenDialog;
-    gbPubKey: TGroupBox;
-    Label17: TLabel;
-    mPubKey: TMemo;
-    btLerPubKey: TBitBtn;
-    edArqPubKey: TEdit;
-    btGravarPubKey: TBitBtn;
-    btGerarXMLeECFc1: TBitBtn;
-    Label18: TLabel;
-    cbxDgst: TComboBox;
-    cbxOut: TComboBox;
-    Label19: TLabel;
-    edVersaoOpenSSL: TEdit;
-    Label20: TLabel;
-    Button3: TButton;
     procedure Button1Click(Sender: TObject);
     procedure FormShow(Sender: TObject);
     procedure Button3Click(Sender: TObject);
-    procedure btLerPrivKeyClick(Sender: TObject);
-    procedure btLerPubKeyClick(Sender: TObject);
   private
     { Private declarations }
     procedure LerConfig;
@@ -101,16 +74,12 @@ type
     procedure PosicionarNoInicio;
     procedure ScrollMemo(Memo: TMemo; Direction: Integer);
     procedure FormatAndDisplayJson(const JsonStr: string; Memo: TMemo);
-    function AssinarAquiMesmo:boolean;
-    procedure Assinar;
-    procedure TrazerChaves;
       public
     { Public declarations }
   end;
 
 var
   frmPrincipal: TfrmPrincipal;
-  Bradesco : TBradesco;
 
 implementation
 
@@ -123,97 +92,19 @@ const
 
 
 
-procedure TfrmPrincipal.Assinar;
-var
-  Arquivo : TStrings;
-  ACBrEAD : TACBrEAD;
-  DialogArq: TOpenDialog;
-//  ChavePrivada : TChavePrivada;
-begin
-//  edArqPrivKey.Text :=
-
-end;
-
-function TfrmPrincipal.AssinarAquiMesmo:boolean;
-var
-//  Store : IStore3;
-//  CertsLista, CertsSelecionado : ICertificates2;
-//  CertDados : ICertificate;
- // lSigner : TSigner;
- // lSignedData : TSignedData;
-  vAssinatura:string;
-  //Crypt: EncryptedData;
-
-  ACBrEAD : TACBrEAD;
-  chavePublica, chavePrivada: AnsiString;
-begin
-  Result := False;
-
-  //ACBrEAD.
-  //showmessage(ACBrEAD.ConverteChavePublicaParaOpenSSH);
-
-
-  //Store := CoStore.Create;
-  //Store.Open(CAPICOM_CURRENT_USER_STORE, 'My', CAPICOM_STORE_OPEN_MAXIMUM_ALLOWED);
-
-  //CertsLista := Store.Certificates as ICertificates2;
-  //CertsSelecionado := CertsLista.Select('Certificado(s) Digital(is) disponível(is)', 'Selecione o Certificado Digital para uso no aplicativo', false);
-
-//  if not(CertsSelecionado.Count = 0) then
-  begin
-  //  CertDados := IInterface(CertsSelecionado.Item[1]) as ICertificate2;
-   // lSigner             := TSigner.Create(self);
-    //lSigner.Certificate := CertDados;
-    //lSignedData         := TSignedData.Create(self);
-    //lSignedData.Content := vCNPJs;
-
-    //edtAssinatura.Text := lSignedData.Sign(lSigner.DefaultInterface, false, CAPICOM_ENCODE_BASE64);
-    //Result := True;
-    //lSignedData.Free;
-    //lSigner.Free;
-  end;
-
-end;
-
-procedure TfrmPrincipal.btLerPrivKeyClick(Sender: TObject);
-begin
-  OpenDialog1.FileName := edArqPrivKey.Text;
-  if OpenDialog1.Execute then
-  begin
-     edArqPrivKey.Text := OpenDialog1.FileName;
-     mPrivKey.Lines.LoadFromFile( edArqPrivKey.Text );
-  end;
-end;
-
-procedure TfrmPrincipal.btLerPubKeyClick(Sender: TObject);
-begin
-   OpenDialog1.FileName := edArqPubKey.Text;
-   if OpenDialog1.Execute then
-   begin
-      edArqPubKey.Text := OpenDialog1.FileName;
-      mPubKey.Lines.LoadFromFile( edArqPubKey.Text );
-   end ;
-end;
-
 procedure TfrmPrincipal.Button1Click(Sender: TObject);
-var    vData1, vData2 : TDateTime;
-       Saida: TACBrEADDgstOutput;
-       Resultado: AnsiString;
-       Arquivo:String;
-       EAD : AnsiString;
+var Bradesco : TBradesco;
+    vData1, vData2 : TDateTime;
 begin
      Bradesco := TBradesco.Create;
 
      LerConfig;
      Bradesco.RazaoSocial := edtRazaoSocial.Text; // 'OXYMED COMERCIO E LOCACAO DE EQUIPAMENTO';
-     Bradesco.CNPJ := edtCNPJ.Text; //'38052160005701';
+     Bradesco.CNPJ := edtCNPJ.Text; //'38.052.160/0057-01';
      Bradesco.ClientKey := edtClienteKeyBradesco.Text;
      Bradesco.Agencia := edtAgenciaBradesco.Text; //'3995';
      Bradesco.Conta := edtContaBradesco.Text; // '75557-5';
      Bradesco.PastaDeTrabalho:= edtPastaDeTrabalhoBradesco.Text;
-     Bradesco.ArquivoChavePrivada:= edArqPrivKey.Text;
-     Bradesco.ArquivoChavePublica:= edArqPrivKey.Text;
-
      //Bradesco.ClienteID := 0000;
      Bradesco.CertificadoDigital := edtChaveCertificado.Text;// 'xxxx';
      Memo1.Lines.Clear;
@@ -224,28 +115,12 @@ begin
      PreencheMemos(Bradesco);
      PosicionarNoInicio;
 
-     if cbxOut.ItemIndex > 0 then
-        Saida := outBase64
-      else
-        Saida := outHexa;
-
-     Arquivo:= Bradesco.PastaDeTrabalho+'\jwt.txt';
-     if not FileExists(Arquivo) then
-     begin
-       ShowMessage(Arquivo+ ' não existe!');
-       exit;
-     end;
-     Bradesco.Assinatura := ACBrEAD1.CalcularAssinaturaArquivo(Arquivo, TACBrEADDgst( cbxDgst.ItemIndex ), Saida );
-     Bradesco.JWS := ACBrEAD1.AssinarArquivoComEAD( Arquivo, True ) ;
-
-
      Memo9.Lines.Clear;
      Memo9.Lines.Add('BearerToken:');
      Memo9.Lines.Add('');
      Memo9.lines.add(Bradesco.Extrato(vData1,vData2));
      Memo9.SelStart := 0;
 
-//     AssinarAquiMesmo;
      PreencheMemos(Bradesco);
 
      Bradesco.Free;
@@ -264,7 +139,7 @@ var
 begin
   OutValue := '';
   for i := 1 to Length(Texto) do
-    OutValue := OutValue + Ansichar((ord(Texto[i]) - 5));
+    OutValue := OutValue + Ansichar(Not(ord(Texto[i]) - 15));
   result := OutValue;
 end;
 
@@ -276,7 +151,7 @@ var
 begin
   OutValue := '';
   for i := 1 to Length(Texto) do
-    OutValue := OutValue + Ansichar((ord(Texto[i]) + 5));
+    OutValue := OutValue + Ansichar(Not(ord(Texto[i])) + 15);
   result := OutValue;
 end;
 
@@ -307,10 +182,6 @@ begin
     Ini.WriteString('Bradesco', 'Key', CriptografarTexto(edtClienteKeyBradesco.Text));
     Ini.WriteString('Bradesco', 'Secret', CriptografarTexto(edtClienteSecretBradesco.Text));
     Ini.WriteString('Bradesco', 'PastaDeTrabalho', CriptografarTexto(edtPastaDeTrabalhoBradesco.Text));
-    Ini.WriteString('Bradesco', 'ChavePrivada', CriptografarTexto(edArqPrivKey.Text));
-    Ini.WriteString('Bradesco', 'ChavePublica', CriptografarTexto(edArqPubKey.Text));
-    Ini.WriteInteger('Bradesco', 'Algoritmo', cbxDgst.ItemIndex);
-    Ini.WriteInteger('Bradesco', 'Base', cbxOut.ItemIndex);
   finally
     Ini.Free;
   end;
@@ -321,7 +192,6 @@ var
   Ini: TIniFile;
   localDoArquivoINI: String;
 begin
-  edVersaoOpenSSL.Text:= ACBrEAD1.OpenSSL_Version;
   if edtPastaDeTrabalhoBradesco.Text = '' then
   begin
     edtPastaDeTrabalhoBradesco.Text := 'C:\WANDER';
@@ -338,11 +208,6 @@ begin
     edtClienteKeyBradesco.Text := DescriptografarTexto(Ini.ReadString('Bradesco', 'Key', ''));
     edtClienteSecretBradesco.Text := DescriptografarTexto(Ini.ReadString('Bradesco', 'Secret', ''));
     edtPastaDeTrabalhoBradesco.Text := DescriptografarTexto(Ini.ReadString('Bradesco', 'PastaDeTrabalho', ''));
-    edArqPrivKey.Text := DescriptografarTexto(Ini.ReadString('Bradesco', 'ChavePrivada', ''));
-    edArqPubKey.Text := DescriptografarTexto(Ini.ReadString('Bradesco', 'ChavePublica', ''));
-    cbxDgst.ItemIndex:= Ini.ReadInteger('Bradesco', 'Algoritmo',0);
-    cbxOut.ItemIndex:= Ini.ReadInteger('Bradesco', 'Base', 0);
-    TrazerChaves;
   finally
     Ini.Free;
   end;
@@ -441,12 +306,6 @@ begin
 end;
 
 
-procedure TfrmPrincipal.TrazerChaves;
-begin
-   mPubKey.Lines.LoadFromFile( edArqPubKey.Text );
-   mPrivKey.Lines.LoadFromFile( edArqPrivKey.Text );
-end;
-
 procedure TfrmPrincipal.FormatAndDisplayJson(const JsonStr: string; Memo: TMemo);
 var
   JsonValue: TJSONObject;
@@ -458,7 +317,7 @@ begin
     if JsonValue <> nil then
     begin
       // Formata o JSON com indentação
-//      PrettyJson := JsonValue.Format(2);  // O número 2 define o número de espaços para a indentação
+      PrettyJson := JsonValue.Format(2);  // O número 2 define o número de espaços para a indentação
 
       // Exibe o JSON formatado no TMemo
       Memo.Lines.add(PrettyJson);
