@@ -1,10 +1,5 @@
 unit uOxymed;
-{https://jwt.io/}
-{
-As credenciais do ambiente de homologação já foram criadas, segue abaixo:
-Client Key: 9693f06b-b929-4a9c-8182-e25270c4029d
-Client Secret: 7cb3d3eb-a2c9-4084-8e03-72230000b4dd
-}
+
 interface
 
 uses
@@ -15,15 +10,16 @@ uses
 
   Winapi.ShellAPI,
 
-
   System.IOUtils,
   System.Diagnostics,
   System.DateUtils,
   Vcl.Clipbrd,
   ACBrDFeSSL,
 
-  synacode;
+IdCoderMIME,
+  synacode,
 
+  IdException;
 
 type
   TBradesco = class
@@ -69,7 +65,6 @@ type
     procedure RunCommand(const Command: string);
     function GetBase64FromFile(const FileName: string): string;
 
-
     procedure GravarParametrosGerados;
 
     function APIToken: String;
@@ -81,6 +76,7 @@ type
     procedure CriarRequestTxt(const Metodo, Endpoint, Parametros, Body: string);
     function GetCurrentTimeInMilliseconds: Int64;
     procedure GeraTokenAssinado;
+
 
   public
     constructor Create;
@@ -105,8 +101,10 @@ type
     property PastaDeTrabalho: string read FPastaDeTrabalho
       write FPastaDeTrabalho;
 
-    property ArquivoChavePrivada: string read FArquivoChavePrivada write FArquivoChavePrivada;
-    property ArquivoChavePublica: string read FArquivoChavePublica write FArquivoChavePublica;
+    property ArquivoChavePrivada: string read FArquivoChavePrivada
+      write FArquivoChavePrivada;
+    property ArquivoChavePublica: string read FArquivoChavePublica
+      write FArquivoChavePublica;
 
     function Extrato(Inicio, Fim: TDateTime): String;
     procedure Iniciar;
@@ -133,17 +131,17 @@ end;
 
 function TBradesco.CodificarBase64(const Texto: string): string;
 begin
-  result := EncodeBase64(Texto); //TNetEncoding.Base64.Encode(Texto);
+  result := EncodeBase64(Texto); // TNetEncoding.Base64.Encode(Texto);
   result := Base64ToBase64URL(result); // Converte de Base64 para Base64URL
 end;
 
 constructor TBradesco.Create;
 begin
-   self.FHeader :='';
-   self.FPayload :='';
+  self.FHeader := '';
+  self.FPayload := '';
 
-   self.FHeaderBase64 :='';
-   self.FPayloadBase64 :='';
+  self.FHeaderBase64 := '';
+  self.FPayloadBase64 := '';
 end;
 
 procedure TBradesco.CriarHeader;
@@ -179,23 +177,6 @@ begin
   EXP := IAT + 3600; // Expiração de 1 hora
   JTI := IAT * 1000; // jti em milissegundos
 
-//  Payload := TJSONObject.Create;
-//  Pair := TJSONPair.Create;
-//  try
-//    Payload.AddPair('aud', self.APIToken);
-//    Payload.AddPair('sub', self.ClientKey);
-//    Payload.AddPair('iat', IAT);
-//    Payload.AddPair('exp', EXP);
-//    Payload.AddPair('jti', JTI);
-//    Payload.AddPair('ver', '1.1');
-//    self.FPayload := Payload.ToString;
-//  finally
-//    Payload.Free;
-//  end;
-//var
-//  Payload: TJSONObject;
-//  Pair: TJSONPair;
-//begin
   Payload := TJSONObject.Create;
   try
     // Criando pares de chave-valor corretamente com TJSONPair
@@ -270,62 +251,38 @@ end;
 
 function TBradesco.Extrato(Inicio, Fim: TDateTime): String;
 var
-//  HttpClient: THttpClient;
-//  Response: IHTTPResponse;
+  IdHTTP: TIdHTTP;
+  Response: string;
   BearerToken, Nonce: string;
-//  Headers: TNetHeaders;
   RequestStream, ResponseStream: TMemoryStream;
-  HeaderBase64Url ,PayloadBase64Url, Base64Signature: String;
+  HeaderBase64Url, PayloadBase64Url, Base64Signature: String;
 begin
-  // Gera o nonce (pode ser o JTI ou timestamp)
-  Nonce := IntToStr(GetCurrentTimeInMilliseconds); // Exemplo com timestamp
+  try
+    // Gera o nonce (pode ser o JTI ou timestamp)
+    Nonce := intToStr(GetCurrentTimeInMilliseconds); // Exemplo com timestamp
 
-  // Cria um objeto HttpClient
-//  HttpClient := THttpClient.Create;
-//  try
-//    // Define os cabeçalhos da requisição
-//    SetLength(Headers, 3);
-//
-//    Headers[0].Name := 'Authorization';
-//    Headers[0].Value := 'Bearer ' + self.FBearerToken;
-//
-//    Headers[1].Name := 'X-Brad-Nonce';
-//    Headers[1].Value := Nonce;
-//
-//    Headers[2].Name := 'X-Brad-Signature';
-//    Headers[2].Value := self.FAssinatura;
-//
-//    // Criação do stream de requisição (isso pode variar dependendo de como seu corpo de requisição deve ser montado)
-//    RequestStream := TMemoryStream.Create;
-//    try
-//      // Aqui você pode adicionar o conteúdo do corpo da requisição no RequestStream
-//
-//      // Criação do stream de resposta (onde a resposta será lida)
-//      ResponseStream := TMemoryStream.Create;
-//      try
-//        // Envia a requisição POST para o endpoint desejado
-//        Response := HttpClient.Post(self.APIToken, RequestStream,
-//          ResponseStream, Headers);
-//
-//        if Response.StatusCode = 200 then
-//        begin
-//          ShowMessage('Requisição realizada com sucesso.');
-//        end
-//        else
-//        begin
-//          ShowMessage('Erro ao realizar a requisição: ' +
-//            Response.StatusCode.ToString + #13#10 + Response.ContentAsString());
-//        end;
-//
-//      finally
-//        ResponseStream.Free;
-//      end;
-//    finally
-//      RequestStream.Free;
-//    end;
-//  finally
-//    HttpClient.Free;
-//  end;
+    // Cria um objeto HttpClient
+    IdHTTP := TIdHTTP.Create(nil);
+
+    // Adicionando cabeçalhos personalizados
+    IdHTTP.Request.CustomHeaders.Add('Authorization: Bearer ' +
+      self.FBearerToken);
+    IdHTTP.Request.CustomHeaders.Add('X-Brad-Nonce: ' + Nonce);
+    IdHTTP.Request.CustomHeaders.Add('X-Brad-Signature: ' + self.FAssinatura);
+
+    try
+      Response := IdHTTP.Get('https://www.exemplo.com');
+      Writeln('Resposta: ' + Response);
+    except
+      on E: EIdHTTPProtocolException do
+        Writeln('Erro HTTP: ' + E.Message);
+      on E: Exception do
+        Writeln('Erro geral: ' + E.Message);
+    end;
+
+  finally
+    IdHTTP.Free;
+  end;
 end;
 
 function TBradesco.GerarAssinatura: string;
@@ -335,7 +292,7 @@ var
   ProcessInfo: TProcessInformation;
   StartupInfo: TStartupInfo;
   ExitCode: DWORD;
-  Buffer: array[0..1023] of AnsiChar;
+  Buffer: array [0 .. 1023] of AnsiChar;
   BytesRead: DWORD;
   OpenSSLPath: string;
   CmdOutputFile: string;
@@ -343,17 +300,20 @@ var
   HeaderBase64Url, PayloadBase64Url: string;
 begin
   // Caminhos dos arquivos
-  InputFile := self.FPastaDeTrabalho + '\jwt.txt';  // O arquivo de entrada
-  TempSignatureFile := self.FPastaDeTrabalho + '\signature.bin';  // Arquivo temporário para assinatura binária
-  CmdOutputFile := self.FPastaDeTrabalho + '\signature.base64.bin';  // Arquivo final com assinatura em base64
+  InputFile := self.FPastaDeTrabalho + '\jwt.txt'; // O arquivo de entrada
+  TempSignatureFile := self.FPastaDeTrabalho + '\signature.bin';
+  // Arquivo temporário para assinatura binária
+  CmdOutputFile := self.FPastaDeTrabalho + '\signature.base64.bin';
+  // Arquivo final com assinatura em base64
 
   // Caminho completo para o OpenSSL (adapte conforme a sua instalação)
-  OpenSSLPath := '"C:\Program Files\OpenSSL-Win64\bin\openssl.exe"';  // Exemplo, substitua pelo seu caminho real
+  OpenSSLPath := '"C:\Program Files\OpenSSL-Win64\bin\openssl.exe"';
+  // Exemplo, substitua pelo seu caminho real
 
   // Comando OpenSSL para assinar o conteúdo
   CmdLine := OpenSSLPath + ' dgst -sha256 -keyform pem -sign "' +
-             self.FPastaDeTrabalho + '\chaves\privada\oxymed.homologacao.key.pem" < "' +
-             InputFile + '" > "' + TempSignatureFile + '"';
+    self.FPastaDeTrabalho + '\chaves\privada\oxymed.homologacao.key.pem" < "' +
+    InputFile + '" > "' + TempSignatureFile + '"';
 
   TFile.WriteAllText(self.FPastaDeTrabalho + '\CmdLine2.txt', CmdLine);
 
@@ -362,7 +322,8 @@ begin
   StartupInfo.cb := SizeOf(StartupInfo);
 
   // Cria o processo para executar o comando OpenSSL
-  if not CreateProcess(nil, PChar('cmd.exe /C ' + CmdLine), nil, nil, False, CREATE_NO_WINDOW, nil, nil, StartupInfo, ProcessInfo) then
+  if not CreateProcess(nil, PChar('cmd.exe /C ' + CmdLine), nil, nil, False,
+    CREATE_NO_WINDOW, nil, nil, StartupInfo, ProcessInfo) then
   begin
     ShowMessage('Erro ao executar OpenSSL: ' + SysErrorMessage(GetLastError));
     Exit;
@@ -373,21 +334,23 @@ begin
   GetExitCodeProcess(ProcessInfo.hProcess, ExitCode);
 
   // Verifica o código de saída do OpenSSL
-//  if ExitCode <> 0 then
-//  begin
-//    ShowMessage('Erro ao executar OpenSSL. Código de saída: ' + IntToStr(ExitCode));
-//    Exit;
-//  end;
+  // if ExitCode <> 0 then
+  // begin
+  // ShowMessage('Erro ao executar OpenSSL. Código de saída: ' + IntToStr(ExitCode));
+  // Exit;
+  // end;
 
   // Fechar handles
   CloseHandle(ProcessInfo.hProcess);
   CloseHandle(ProcessInfo.hThread);
 
   // Agora, vamos usar o CertUtil para codificar a assinatura binária em Base64
-  CmdLine := 'certutil -encode "' + TempSignatureFile + '" "' + CmdOutputFile + '"';
+  CmdLine := 'certutil -encode "' + TempSignatureFile + '" "' +
+    CmdOutputFile + '"';
 
   // Inicializa novamente o processo para rodar o CertUtil
-  if not CreateProcess(nil, PChar('cmd.exe /C ' + CmdLine), nil, nil, False, CREATE_NO_WINDOW, nil, nil, StartupInfo, ProcessInfo) then
+  if not CreateProcess(nil, PChar('cmd.exe /C ' + CmdLine), nil, nil, False,
+    CREATE_NO_WINDOW, nil, nil, StartupInfo, ProcessInfo) then
   begin
     ShowMessage('Erro ao executar CertUtil: ' + SysErrorMessage(GetLastError));
     Exit;
@@ -398,11 +361,11 @@ begin
   GetExitCodeProcess(ProcessInfo.hProcess, ExitCode);
 
   // Verifica o código de saída do CertUtil
-//  if ExitCode <> 0 then
-//  begin
-//    ShowMessage('Erro ao executar CertUtil. Código de saída: ' + IntToStr(ExitCode));
-//    Exit;
-//  end;
+  // if ExitCode <> 0 then
+  // begin
+  // ShowMessage('Erro ao executar CertUtil. Código de saída: ' + IntToStr(ExitCode));
+  // Exit;
+  // end;
 
   // Fechar handles
   CloseHandle(ProcessInfo.hProcess);
@@ -412,7 +375,7 @@ begin
   Base64Signature := TFile.ReadAllText(CmdOutputFile);
 
   // Opcional: Remover a linha extra gerada pelo certutil (essa linha pode ser removida se estiver em formato certutil)
-  //Base64Signature := Copy(Base64Signature, Pos(#13#10, Base64Signature) + 2, MaxInt);
+  // Base64Signature := Copy(Base64Signature, Pos(#13#10, Base64Signature) + 2, MaxInt);
   Base64Signature := Base64ToBase64URL(Base64Signature);
 
   // Salva a assinatura gerada
@@ -441,38 +404,49 @@ end;
 
 procedure TBradesco.GerarBearerToken;
 var
-//  HttpClient: THTTPClient;
-//  Response: IHTTPResponse;
-  Params: TStringList;
+  IdHTTP: TIdHTTP;
+  Response: string;
+  Body: string;
+  StringStream: TStringStream;
+  SSLHandler: TIdSSLIOHandlerSocketOpenSSL;
 begin
-//  HttpClient := THTTPClient.Create;
-//  Params := TStringList.Create;
-//  try
-//    // Adiciona os parâmetros para a requisição
-//    Params.Add('grant_type=urn:ietf:params:oauth:grant-type:jwt-bearer');
-//    Params.Add('assertion=' + self.FJWS);
-//
-//    // Define o cabeçalho Content-Type
-//    HttpClient.ContentType := 'application/x-www-form-urlencoded';
-//
-//    // Envia a requisição POST para obter o Bearer Token
-//    Response := HttpClient.Post(self.APIToken, Params);
-//
-//    // Verificar a resposta da API
-//    if Response.StatusCode = 200 then
-//    begin
-//      // Se a resposta for 200 OK, o Bearer Token é extraído
-//      self.FBearerToken := Response.ContentAsString;
-//    end
-//    else
-//    begin
-//      // Se não for sucesso, exibe a resposta para depuração
-//      self.FBearerToken := 'Erro HTTP ' + IntToStr(Response.StatusCode) + ': ' + Response.ContentAsString();
-//    end;
-//  finally
-//    HttpClient.Free;
-//    Params.Free;
-//  end;
+  IdHTTP := TIdHTTP.Create(nil);
+  SSLHandler := TIdSSLIOHandlerSocketOpenSSL.Create(nil);
+  StringStream := TStringStream.Create('');
+
+  try
+    // Configurar o IOHandler para o IdHTTP
+    IdHTTP.IOHandler := SSLHandler;
+
+    // Forçar o uso do protocolo TLS 1.2
+    SSLHandler.SSLOptions.SSLVersions := [sslvTLSv1_2];  // Usando TLS 1.2
+
+    Body := 'grant_type=urn:ietf:params:oauth:grant-type:jwt-bearer&' +
+            'assertion=' + self.FJWS;
+
+    // Carregando o corpo na TStringStream
+    StringStream.WriteString(Body);
+    StringStream.Position := 0;  // Importante: Reiniciar a posição
+
+    // Adicionar o cabeçalho Content-Type corretamente
+    IdHTTP.Request.CustomHeaders.Add('Content-Type: application/x-www-form-urlencoded');
+
+    try
+      // Enviando a requisição POST com o corpo
+      Response := IdHTTP.Post(self.APIBarenToken, StringStream);
+      self.FBearerToken := Response;
+    except
+      on E: EIdHTTPProtocolException do
+        self.FBearerToken := 'Erro HTTP: ' + E.Message;
+      on E: Exception do
+        self.FBearerToken := 'Erro geral: ' + E.Message;
+    end;
+
+  finally
+    StringStream.Free;
+    SSLHandler.Free;
+    IdHTTP.Free;
+  end;
 end;
 
 procedure TBradesco.GerarTokenJWT;
@@ -482,7 +456,7 @@ end;
 
 procedure TBradesco.GerarTokenJWTBase64;
 begin
-   self.FJWTBase64 := CodificarBase64(self.FJWT);
+  self.FJWTBase64 := CodificarBase64(self.FJWT);
 end;
 
 procedure TBradesco.GeraTokenAssinado;
@@ -500,27 +474,31 @@ begin
   TFile.WriteAllText(self.FPastaDeTrabalho + '\header.txt', self.FHeader);
   TFile.WriteAllText(self.FPastaDeTrabalho + '\payload.txt', self.FPayload);
 
-  TFile.WriteAllText(self.FPastaDeTrabalho + '\headerBase64.txt', self.FHeaderBase64);
-  TFile.WriteAllText(self.FPastaDeTrabalho + '\payloadBase64.txt', self.FPayloadBase64);
+  TFile.WriteAllText(self.FPastaDeTrabalho + '\headerBase64.txt',
+    self.FHeaderBase64);
+  TFile.WriteAllText(self.FPastaDeTrabalho + '\payloadBase64.txt',
+    self.FPayloadBase64);
 
   TFile.WriteAllText(self.FPastaDeTrabalho + '\jwt.txt', self.FJWT);
   TFile.WriteAllText(self.FPastaDeTrabalho + '\jwtBase64.txt', self.FJWTBase64);
 
-  TFile.WriteAllText(self.FPastaDeTrabalho + '\AssinaturaOK.txt', self.FAssinatura);
+  TFile.WriteAllText(self.FPastaDeTrabalho + '\AssinaturaOK.txt',
+    self.FAssinatura);
 
   TFile.WriteAllText(self.FPastaDeTrabalho + '\jws.txt', self.FJWS);
 
-  TFile.WriteAllText(self.FPastaDeTrabalho + '\BearerToken.txt', self.FBearerToken);
+  TFile.WriteAllText(self.FPastaDeTrabalho + '\BearerToken.txt',
+    self.FBearerToken);
 end;
 
 procedure TBradesco.Iniciar;
 begin
-   GerarParametros;
+  GerarParametros;
 end;
 
 procedure TBradesco.GerarJWS;
 begin
-  //Base64ToBase64URL(Signature);
+  // Concatenando Header, Payload e a Assinatura Base64Url para formar o JWS
   self.FJWS := self.FHeaderBase64 + '.' + self.FPayloadBase64 + '.' + self.FAssinaturaBase64URL;
 end;
 
@@ -529,89 +507,65 @@ var
   HeaderBase64Url, PayloadBase64Url, Combined, Command: string;
   OpenSSLPath: string;
   Base64Signature: string;
-  ResultCode:integer;
+  ResultCode: Integer;
+  PayloadJson: string;
+  JsonFileName: string;
 
+procedure CreateTemporaryJsonFile(const AJsonContent: string; const AFileName: string);
+var
+  JsonFile: TextFile;
 begin
-//
-
-  try
-
-//      if not FileExists('C:\Program Files\OpenSSL-Win64\bin\openssl.exe') then
-//         if not FileExists('C:\Arquivos de Programas\OpenSSL-Win64\bin\openssl.exe') then
-//            Writeln('O arquivo "C:\Program Files\OpenSSL-Win64\bin\openssl.exe" não existe.');
-
-      // Caminho do OpenSSL
-//      OpenSSLPath := 'C:\Program Files\OpenSSL-Win64\bin\openssl.exe';
-      OpenSSLPath := self.FPastaDeTrabalho+'\OpenSSL-Win64\bin\openssl.exe';
-
-      // Codificando em Base64URL (imagine que Base64ToBase64URL é uma função que faz isso)
-      HeaderBase64Url := Base64ToBase64URL(self.FHeader);
-
-      //PayloadBase64Url := Base64ToBase64URL(self.FPayload);
-      PayloadBase64Url := Base64ToBase64URL(TFile.ReadAllText(self.FPastaDeTrabalho+'\payload.txt'));
-      //Base64Signature := ;
-
-      //self.FJWS := HeaderBase64Url + '.' + PayloadBase64Url + '.' + Base64ToBase64URL(TFile.ReadAllText(self.FPastaDeTrabalho+'\signatureJWS.BASE64'));
-      //self.FJWS := self.FHeaderBase64 + '.' + self.FPayloadBase64 + '.' + Base64ToBase64URL(TFile.ReadAllText(self.FPastaDeTrabalho+'\signature5.BASE64'));
-      //self.FJWS := self.FHeaderBase64 + '.' + self.FPayloadBase64 + '.' + Base64ToBase64URL(CodificarBase64('a+GdPqLVE8IqNp2UGknNEW98FrvWuFhJsWoD4OPuxaN5+hQZCxvuWfyZo8u1HSMo7ed/kwaTysredMTG6FgLxK3AM+ORSCf9rqnux51+hD//v94RRBwPduahru3Fd7NDDLa2AOGnUsWCMfZrC2QMS8awdz/cHgiQ1h+1mg5JrkJQPKxh9ECrxjIMvjaudSB/aIXWvwZXOBNqErd79rAhiSS6jwET6XQ1Vnk6udc4na3KGiswFdD6CX6vM/cpVJDMd87Ki/ZhfVtJ9JSLTAZ8wMRDkYKSw164FTWIvQN1miznnKEyHcPbeJMdwetEd46Q0U98jJ74mKzvDqvljGVpgw=='));
-
-
-    //eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9
-    //eyJhdWQiOiJodHRwczpcL1wvcHJveHkuYXBpLnByZWJhbmNvLmNvbS5iclwvYXV0aFwvc2VydmVyXC92MS4xXC90b2tlbiIsInN1YiI6Ijk2OTNmMDZiLWI5MjktNGE5Yy04MTgyLWUyNTI3MGM0MDI5ZCIsImlhdCI6Mzk0NjIxODg3NSwiZXhwIjozOTQ2MjIyNDc1LCJqdGkiOjM5NDYyMTg4NzUwMDAsInZlciI6IjEuMSJ9
-    //a+GdPqLVE8IqNp2UGknNEW98FrvWuFhJsWoD4OPuxaN5+hQZCxvuWfyZo8u1HSMo7ed/kwaTysredMTG6FgLxK3AM+ORSCf9rqnux51+hD//v94RRBwPduahru3Fd7NDDLa2AOGnUsWCMfZrC2QMS8awdz/cHgiQ1h+1mg5JrkJQPKxh9ECrxjIMvjaudSB/aIXWvwZXOBNqErd79rAhiSS6jwET6XQ1Vnk6udc4na3KGiswFdD6CX6vM/cpVJDMd87Ki/ZhfVtJ9JSLTAZ8wMRDkYKSw164FTWIvQN1miznnKEyHcPbeJMdwetEd46Q0U98jJ74mKzvDqvljGVpgw==
-
-      // Combine header e payload
-      Combined := HeaderBase64Url + '.' + PayloadBase64Url;
-
-      DeleteFile(self.FPastaDeTrabalho+'\signatureJWS.bin');
-
-      // Usando OpenSSL para assinar a combinação do Header e Payload
-      //Command := OpenSSLPath + ' dgst -sha256 -keyform pem -sign "' +
-      //           self.FPastaDeTrabalho + '\chaves\privada\oxymed.homologacao.key.pem" < ' +
-      //           '"' + Combined + '" > ' + self.FPastaDeTrabalho+'\signatureJWS.bin';
-
-      //Command := OpenSSLPath + ' dgst -sha256 -keyform pem -sign "' +
-      //       self.FPastaDeTrabalho+'\chaves\privada\oxymed.homologacao.key.pem' +
-      //       '" < "' + self.FPastaDeTrabalho+'\payload.txt" > "' + self.FPastaDeTrabalho+'\signatureJWS.bin' + '"';
-
-
-      //Command := self.FPastaDeTrabalho+'\OpenSSL-Win64\bin\openssl.exe dgst -sha256 -keyform pem -sign "'+self.FPastaDeTrabalho+'\chaves\privada\oxymed.homologacao.key.pem" < "'+self.FPastaDeTrabalho+'\payload.txt" > "'+self.FPastaDeTrabalho+'\signatureJWS.bin"';
-
-      //Clipboard.AsText := Command;
-
-      // Execute o comando OpenSSL
-//      RunCommand(Command);
-
-// Executa o comando no terminal
-//  ResultCode := ShellExecute(0, 'open', PChar(Command), nil, nil, SW_HIDE);
-//  ResultCode := ShellExecute(0, 'open', PChar(Command), nil, nil, SW_HIDE);
-
-  // Verifica o código de retorno
-  //if ResultCode > 32 then
-  //  Writeln('Comando executado com sucesso.')
-  //else
-  //  Writeln('Erro ao executar o comando. Código de erro: ', ResultCode);
-//    if ShellExecute(0, 'open', 'cmd.exe', Command, nil, SW_HIDE) > 32 then
-//       Writeln('Comando executado com sucesso.')
-//    else
-//      Writeln('Erro ao executar o comando.');
-
-    if not FileExists(self.FPastaDeTrabalho + '\signatureJWS170125.bin') then
-    begin
-        ShowMessage('Arquivo '+self.FPastaDeTrabalho+'\signatureJWS170125.bin não encontrado!');
-        exit;
-      end;
-
-      // Após isso, use o CertUtil ou alguma outra função para converter a assinatura para Base64URL
-      self.FAssinaturaBase64URL := Base64ToBase64URL(GetBase64FromFile(self.FPastaDeTrabalho+'\signatureJWS170125.bin'));
-  except
-     ShowMessage('Erro ao gerar assinatura JWT');
-  end;
-
+  AssignFile(JsonFile, AFileName);
+  Rewrite(JsonFile);
+  WriteLn(JsonFile, AJsonContent);
+  CloseFile(JsonFile);
 end;
 
+begin
+  try
+    // Caminho do OpenSSL
+    OpenSSLPath := self.FPastaDeTrabalho + '\OpenSSL-Win64\bin\openssl.exe';
 
+    PayloadJson := self.FHeader +'.' +self.FPayload;
 
+    // Caminho para o arquivo temporário
+    JsonFileName := self.FPastaDeTrabalho + '\temp_payload.json';
+
+    // Criando o arquivo temporário com o conteúdo JSON
+    CreateTemporaryJsonFile(PayloadJson, JsonFileName);
+
+    // Codificando em Base64URL
+    HeaderBase64Url := Base64ToBase64URL(self.FHeader);
+    PayloadBase64Url := Base64ToBase64URL(self.FPayload);
+
+    // Combina Header e Payload
+    Combined := HeaderBase64Url + '.' + PayloadBase64Url;
+
+// Montando o comando (usando o comando correto 'dgst')
+  Command := OpenSSLPath + ' dgst -sha256 -sign "' +
+             self.FPastaDeTrabalho + '\chaves\privada\oxymed.homologacao.key.pem" ' +
+             '-out "' + self.FPastaDeTrabalho + '\signatureJWS.bin" ' +
+             '"' + JsonFileName + '"';
+    // Execute o comando no terminal
+    RunCommand(Command);
+
+    // Após executar o comando OpenSSL, vamos converter a assinatura para Base64URL
+    if not FileExists(self.FPastaDeTrabalho + '\signatureJWS.bin') then
+    begin
+      ShowMessage('Arquivo de assinatura não encontrado!');
+      Exit;
+    end;
+
+    // Converte a assinatura binária para Base64URL
+    Base64Signature := GetBase64FromFile(self.FPastaDeTrabalho + '\signatureJWS.bin');
+    self.FAssinaturaBase64URL := Base64ToBase64URL(Base64Signature);
+
+    // A assinatura gerada é armazenada
+    self.FAssinatura := self.FAssinaturaBase64URL;
+  except
+    ShowMessage('Erro ao gerar assinatura JWT');
+  end;
+end;
 procedure TBradesco.RunCommand(const Command: string);
 var
   ProcessInfo: TProcessInformation;
@@ -623,7 +577,8 @@ begin
   StartupInfo.cb := SizeOf(StartupInfo);
 
   // Cria o processo para executar o comando
-  if not CreateProcess(nil, PChar('cmd.exe /C ' + Command), nil, nil, False, CREATE_NO_WINDOW, nil, nil, StartupInfo, ProcessInfo) then
+  if not CreateProcess(nil, PChar('cmd.exe /C ' + Command), nil, nil, False,
+    CREATE_NO_WINDOW, nil, nil, StartupInfo, ProcessInfo) then
   begin
     ShowMessage('Erro ao executar o comando: ' + SysErrorMessage(GetLastError));
     Exit;
@@ -636,7 +591,8 @@ begin
   // Verifica o código de saída do processo
   if ExitCode <> 0 then
   begin
-    ShowMessage('Erro ao executar o comando. Código de saída: ' + IntToStr(ExitCode));
+    ShowMessage('Erro ao executar o comando. Código de saída: ' +
+      intToStr(ExitCode));
     Exit;
   end;
 
@@ -645,10 +601,35 @@ begin
   CloseHandle(ProcessInfo.hThread);
 end;
 
+//function TBradesco.GetBase64FromFile(const FileName: string): string;
+//var
+//  FileStream: TFileStream;
+//  MemoryStream: TMemoryStream;
+//begin
+//  // Cria um stream para ler o arquivo
+//  FileStream := TFileStream.Create(FileName, fmOpenRead);
+//  try
+//    // Cria um MemoryStream para armazenar o conteúdo do arquivo
+//    MemoryStream := TMemoryStream.Create;
+//    try
+//      // Copia o conteúdo do arquivo para o MemoryStream
+//      MemoryStream.CopyFrom(FileStream, FileStream.Size);
+//
+//      // Converte o conteúdo do MemoryStream para Base64
+//      // Result := TNetEncoding.Base64.EncodeBytesToString(MemoryStream.Memory, MemoryStream.Size);
+//    finally
+//      MemoryStream.Free;
+//    end;
+//  finally
+//    FileStream.Free;
+//  end;
+//end;
+
 function TBradesco.GetBase64FromFile(const FileName: string): string;
 var
   FileStream: TFileStream;
   MemoryStream: TMemoryStream;
+  Encoder: TIdEncoderMIME;
 begin
   // Cria um stream para ler o arquivo
   FileStream := TFileStream.Create(FileName, fmOpenRead);
@@ -659,8 +640,14 @@ begin
       // Copia o conteúdo do arquivo para o MemoryStream
       MemoryStream.CopyFrom(FileStream, FileStream.Size);
 
-      // Converte o conteúdo do MemoryStream para Base64
-//      Result := TNetEncoding.Base64.EncodeBytesToString(MemoryStream.Memory, MemoryStream.Size);
+      // Agora, criamos o encoder MIME
+      Encoder := TIdEncoderMIME.Create(nil);
+      try
+        // Codifica os dados do MemoryStream diretamente em Base64
+        Result := Encoder.Encode(MemoryStream);
+      finally
+        Encoder.Free;
+      end;
     finally
       MemoryStream.Free;
     end;
@@ -669,23 +656,23 @@ begin
   end;
 end;
 
-
 end.
-// CmdLine := 'echo -n "(' + self.FPastaDeTrabalho + '\jwt.txt)" | openssl dgst -sha256 -keyform pem -sign "' +
-//              self.FPastaDeTrabalho + '\chaves\privada\oxymed.homologacao.key.pem" | ' +
-//              'base64 | tr -d ''=[:space:]'' | tr ''+/'' ''-_''';
 
-  // Gera a assinatura JWS
-  //Signature := selfGerarAssinatura;
-  //Signature := Base64ToBase64URL(Signature);
+  Comando bradesco:
 
-jws
+  echo - n " $
+(cat JWT.txt " | openssl dgst - sha256 - keyform pem -
+  sign oxymed.homologacao.key.pem | Base64 | td - d '=[space:]' | tr '+/' '-_'
 
- eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJhdWQiOiJodHRwczpcL1wvcHJveHkuYXBpLnByZWJhbmNvLmNvbS5iclwvYXV0aFwvc2VydmVyXC92MS4xXC90b2tlbiIsInN1YiI6Ijk2OTNmMDZiLWI5MjktNGE5Yy04MTgyLWUyNTI3MGM0MDI5ZCIsImlhdCI6Mzk0NjIxODg3NSwiZXhwIjozOTQ2MjIyNDc1LCJqdGkiOjM5NDYyMTg4NzUwMDAsInZlciI6IjEuMSJ9.a+GdPqLVE8IqNp2UGknNEW98FrvWuFhJsWoD4OPuxaN5+hQZCxvuWfyZo8u1HSMo7ed/kwaTysredMTG6FgLxK3AM+ORSCf9rqnux51+hD//v94RRBwPduahru3Fd7NDDLa2AOGnUsWCMfZrC2QMS8awdz/cHgiQ1h+1mg5JrkJQPKxh9ECrxjIMvjaudSB/aIXWvwZXOBNqErd79rAhiSS6jwET6XQ1Vnk6udc4na3KGiswFdD6CX6vM/cpVJDMd87Ki/ZhfVtJ9JSLTAZ8wMRDkYKSw164FTWIvQN1miznnKEyHcPbeJMdwetEd46Q0U98jJ74mKzvDqvljGVpgw==
+  erro: 'base64' não é reconhecido como um Comando interno ou externo,
+  um programa operável ou um arquivo em lotes.
 
+  { https://jwt.io/ }
+{
+  As credenciais do ambiente de homologação já foram criadas, segue abaixo:
+  Client Key: 9693f06b-b929-4a9c-8182-e25270c4029d
+  Client Secret: 7cb3d3eb-a2c9-4084-8e03-72230000b4dd
+}
 
-comando:
-echo -n "$(cat jwt.txt" | openssl dgst -sha256 -keyform pem -sign oxymed.homologacao.key.pem|base64|td -d '=[space:]' | tr '+/' '-_'
-
-erro:
-'base64' não é reconhecido como um comando interno ou externo, um programa operável ou um arquivo em lotes.
+//c:\wander\OpenSSL-Win64\bin\openssl.exe dgst -sha256 -keyform pem -sign "c:\wander\chaves\privada\oxymed.homologacao.key.pem" < "{"alg":"RS256","typ":"JWT"}.{"aud":"https:__proxy.api.prebanco.com.br_auth_server_v1.1_token","sub":"9693f06b-b929-4a9c-8182-e25270c4029d","iat":"3946727048","exp":"3946730648","jti":"3946727048000","ver":"1.1"}" > "c:\wander\signatureJWS.bin"
+//c:\wander\OpenSSL-Win64\bin\openssl.exe dgst -sha256 -keyform pem -sign "c:\wander\chaves\privada\oxymed.homologacao.key.pem" -in "c:\wander\temp_payload.json" -out "c:\wander\signatureJWS.bin"

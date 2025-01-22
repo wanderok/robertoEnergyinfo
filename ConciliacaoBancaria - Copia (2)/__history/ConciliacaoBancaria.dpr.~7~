@@ -1,0 +1,17 @@
+program ConciliacaoBancaria;
+
+uses
+  Vcl.Forms,
+  uPrincipal in 'uPrincipal.pas' {frmPrincipal},
+  uEnergyInform in 'uEnergyInform.pas' {Form1},
+  uOxymed in 'uOxymed.pas';
+
+{$R *.res}
+
+begin
+  Application.Initialize;
+  Application.MainFormOnTaskbar := True;
+  Application.CreateForm(TfrmPrincipal, frmPrincipal);
+  Application.CreateForm(TForm1, Form1);
+  Application.Run;
+end.

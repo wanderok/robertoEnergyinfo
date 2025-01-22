@@ -45,82 +45,25 @@ object frmPrincipal: TfrmPrincipal
     Top = 58
     Width = 1244
     Height = 691
-    ActivePage = TabSheet1
+    ActivePage = TabSheet8
     Align = alClient
     TabOrder = 1
     object TabSheet1: TTabSheet
       Caption = 'Extrato'
-      object Memo1: TMemo
-        Left = 0
-        Top = 0
-        Width = 616
-        Height = 120
-        TabOrder = 0
-      end
       object Button1: TButton
-        Left = 0
-        Top = 540
-        Width = 1236
+        Left = 56
+        Top = 20
+        Width = 200
         Height = 51
         Caption = 'Gerar Extrato'
-        TabOrder = 1
+        Font.Charset = DEFAULT_CHARSET
+        Font.Color = clWindowText
+        Font.Height = -16
+        Font.Name = 'Segoe UI'
+        Font.Style = [fsBold]
+        ParentFont = False
+        TabOrder = 0
         OnClick = Button1Click
-      end
-      object Memo2: TMemo
-        Left = 0
-        Top = 120
-        Width = 616
-        Height = 112
-        TabOrder = 2
-      end
-      object Memo3: TMemo
-        Left = 0
-        Top = 232
-        Width = 616
-        Height = 104
-        TabOrder = 3
-      end
-      object Memo4: TMemo
-        Left = 0
-        Top = 338
-        Width = 616
-        Height = 103
-        TabOrder = 4
-      end
-      object Memo5: TMemo
-        Left = 618
-        Top = 0
-        Width = 616
-        Height = 120
-        TabOrder = 5
-      end
-      object Memo6: TMemo
-        Left = 618
-        Top = 120
-        Width = 616
-        Height = 112
-        TabOrder = 6
-      end
-      object Memo7: TMemo
-        Left = 618
-        Top = 232
-        Width = 616
-        Height = 104
-        TabOrder = 7
-      end
-      object Memo8: TMemo
-        Left = 617
-        Top = 338
-        Width = 616
-        Height = 103
-        TabOrder = 8
-      end
-      object Memo9: TMemo
-        Left = 0
-        Top = 442
-        Width = 1236
-        Height = 98
-        TabOrder = 9
       end
     end
     object TabSheet2: TTabSheet
@@ -930,6 +873,310 @@ object frmPrincipal: TfrmPrincipal
         ParentFont = False
         TabOrder = 7
         OnClick = Button3Click
+      end
+    end
+    object TabSheet6: TTabSheet
+      Caption = 'Header'
+      ImageIndex = 2
+      object Panel3: TPanel
+        Left = 0
+        Top = 0
+        Width = 1236
+        Height = 661
+        Align = alClient
+        TabOrder = 0
+        ExplicitHeight = 337
+        object mmHeader: TMemo
+          Left = 1
+          Top = 42
+          Width = 1234
+          Height = 87
+          Align = alTop
+          Color = 8454143
+          Lines.Strings = (
+            'mmHeader')
+          TabOrder = 0
+          ExplicitTop = 36
+        end
+        object mmHeader64: TMemo
+          Left = 1
+          Top = 170
+          Width = 1234
+          Height = 87
+          Align = alTop
+          Color = 8454016
+          Lines.Strings = (
+            'mmHeader64')
+          TabOrder = 1
+          ExplicitTop = 176
+        end
+        object Panel5: TPanel
+          Left = 1
+          Top = 129
+          Width = 1234
+          Height = 41
+          Align = alTop
+          Caption = 'Header Base64'
+          Font.Charset = DEFAULT_CHARSET
+          Font.Color = clWindowText
+          Font.Height = -16
+          Font.Name = 'Segoe UI'
+          Font.Style = [fsBold]
+          ParentFont = False
+          TabOrder = 2
+          ExplicitLeft = 25
+          ExplicitTop = 258
+        end
+        object Panel6: TPanel
+          Left = 1
+          Top = 1
+          Width = 1234
+          Height = 41
+          Align = alTop
+          Caption = 'Header'
+          Font.Charset = DEFAULT_CHARSET
+          Font.Color = clWindowText
+          Font.Height = -16
+          Font.Name = 'Segoe UI'
+          Font.Style = [fsBold]
+          ParentFont = False
+          TabOrder = 3
+          ExplicitLeft = 2
+          ExplicitTop = 9
+        end
+      end
+    end
+    object TabSheet7: TTabSheet
+      Caption = 'Payload'
+      ImageIndex = 3
+      object Panel4: TPanel
+        Left = 0
+        Top = 0
+        Width = 1236
+        Height = 661
+        Align = alClient
+        TabOrder = 0
+        ExplicitTop = 297
+        ExplicitHeight = 216
+        object Panel7: TPanel
+          Left = 1
+          Top = 1
+          Width = 1234
+          Height = 41
+          Align = alTop
+          Caption = 'Payload'
+          Font.Charset = DEFAULT_CHARSET
+          Font.Color = clWindowText
+          Font.Height = -16
+          Font.Name = 'Segoe UI'
+          Font.Style = [fsBold]
+          ParentFont = False
+          TabOrder = 0
+          ExplicitLeft = 2
+          ExplicitTop = 9
+        end
+        object mmPayload: TMemo
+          Left = 1
+          Top = 42
+          Width = 1234
+          Height = 87
+          Align = alTop
+          Color = 8454143
+          Lines.Strings = (
+            'mmHeader')
+          TabOrder = 1
+          ExplicitLeft = 2
+          ExplicitTop = 50
+        end
+        object Panel8: TPanel
+          Left = 1
+          Top = 129
+          Width = 1234
+          Height = 41
+          Align = alTop
+          Caption = 'Payload Base64'
+          Font.Charset = DEFAULT_CHARSET
+          Font.Color = clWindowText
+          Font.Height = -16
+          Font.Name = 'Segoe UI'
+          Font.Style = [fsBold]
+          ParentFont = False
+          TabOrder = 2
+          ExplicitLeft = 2
+          ExplicitTop = 137
+        end
+        object mmPayload64: TMemo
+          Left = 1
+          Top = 170
+          Width = 1234
+          Height = 87
+          Align = alTop
+          Color = 8454016
+          Lines.Strings = (
+            'mmHeader64')
+          TabOrder = 3
+          ExplicitLeft = 2
+          ExplicitTop = 178
+        end
+      end
+    end
+    object TabSheet8: TTabSheet
+      Caption = 'JWT'
+      ImageIndex = 4
+      object Panel9: TPanel
+        Left = 0
+        Top = 0
+        Width = 1236
+        Height = 41
+        Align = alTop
+        Caption = 'JWT'
+        Font.Charset = DEFAULT_CHARSET
+        Font.Color = clWindowText
+        Font.Height = -16
+        Font.Name = 'Segoe UI'
+        Font.Style = [fsBold]
+        ParentFont = False
+        TabOrder = 0
+        ExplicitTop = 8
+      end
+      object mmJWT: TMemo
+        Left = 0
+        Top = 41
+        Width = 1236
+        Height = 504
+        Align = alTop
+        Color = 8454143
+        Lines.Strings = (
+          'mmJWT')
+        TabOrder = 1
+      end
+    end
+    object TabSheet9: TTabSheet
+      Caption = 'Assinatura'
+      ImageIndex = 5
+      object Panel10: TPanel
+        Left = 0
+        Top = 0
+        Width = 1236
+        Height = 41
+        Align = alTop
+        Caption = 'Assinatura'
+        Font.Charset = DEFAULT_CHARSET
+        Font.Color = clWindowText
+        Font.Height = -16
+        Font.Name = 'Segoe UI'
+        Font.Style = [fsBold]
+        ParentFont = False
+        TabOrder = 0
+        ExplicitTop = 8
+      end
+      object mmAssinatura: TMemo
+        Left = 0
+        Top = 41
+        Width = 1236
+        Height = 504
+        Align = alTop
+        Color = 8454143
+        Lines.Strings = (
+          'mmAssinatura')
+        TabOrder = 1
+        ExplicitTop = 49
+      end
+    end
+    object TabSheet10: TTabSheet
+      Caption = 'JWS'
+      ImageIndex = 6
+      object Panel11: TPanel
+        Left = 0
+        Top = 0
+        Width = 1236
+        Height = 41
+        Align = alTop
+        Caption = 'JWS'
+        Font.Charset = DEFAULT_CHARSET
+        Font.Color = clWindowText
+        Font.Height = -16
+        Font.Name = 'Segoe UI'
+        Font.Style = [fsBold]
+        ParentFont = False
+        TabOrder = 0
+        ExplicitTop = 8
+      end
+      object mmJWS: TMemo
+        Left = 0
+        Top = 41
+        Width = 1236
+        Height = 504
+        Align = alTop
+        Color = 8454143
+        Lines.Strings = (
+          'mmJWS')
+        TabOrder = 1
+        ExplicitTop = 49
+      end
+    end
+    object TabSheet11: TTabSheet
+      Caption = 'Access Token'
+      ImageIndex = 7
+      object Panel12: TPanel
+        Left = 0
+        Top = 0
+        Width = 1236
+        Height = 41
+        Align = alTop
+        Caption = 'Access Token'
+        Font.Charset = DEFAULT_CHARSET
+        Font.Color = clWindowText
+        Font.Height = -16
+        Font.Name = 'Segoe UI'
+        Font.Style = [fsBold]
+        ParentFont = False
+        TabOrder = 0
+        ExplicitTop = 8
+      end
+      object mmAccessToken: TMemo
+        Left = 0
+        Top = 41
+        Width = 1236
+        Height = 504
+        Align = alTop
+        Color = 8454143
+        Lines.Strings = (
+          'mmAccessToken')
+        TabOrder = 1
+        ExplicitTop = 49
+      end
+    end
+    object TabSheet12: TTabSheet
+      Caption = 'Extrato'
+      ImageIndex = 8
+      object Panel13: TPanel
+        Left = 0
+        Top = 0
+        Width = 1236
+        Height = 41
+        Align = alTop
+        Caption = 'Extrato'
+        Font.Charset = DEFAULT_CHARSET
+        Font.Color = clWindowText
+        Font.Height = -16
+        Font.Name = 'Segoe UI'
+        Font.Style = [fsBold]
+        ParentFont = False
+        TabOrder = 0
+        ExplicitTop = 8
+      end
+      object mmExtrato: TMemo
+        Left = 0
+        Top = 41
+        Width = 1236
+        Height = 504
+        Align = alTop
+        Color = 8454143
+        Lines.Strings = (
+          'mmExtrato')
+        TabOrder = 1
+        ExplicitTop = 49
       end
     end
   end

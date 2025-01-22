@@ -15,7 +15,6 @@ type
     Button2: TButton;
     PageControl1: TPageControl;
     TabSheet1: TTabSheet;
-    Memo1: TMemo;
     TabSheet2: TTabSheet;
     Label1: TLabel;
     edtRazaoSocial: TEdit;
@@ -48,16 +47,8 @@ type
     Label13: TLabel;
     Label14: TLabel;
     Button1: TButton;
-    Memo2: TMemo;
-    Memo3: TMemo;
     Label15: TLabel;
     edtPastaDeTrabalhoBradesco: TEdit;
-    Memo4: TMemo;
-    Memo5: TMemo;
-    Memo6: TMemo;
-    Memo7: TMemo;
-    Memo8: TMemo;
-    Memo9: TMemo;
     ACBrEAD1: TACBrEAD;
     gbPrivKey: TGroupBox;
     Label16: TLabel;
@@ -84,6 +75,33 @@ type
     Label20: TLabel;
     Button3: TButton;
     edVersaoOpenSSL: TEdit;
+    TabSheet6: TTabSheet;
+    Panel3: TPanel;
+    mmHeader: TMemo;
+    TabSheet7: TTabSheet;
+    Panel4: TPanel;
+    mmHeader64: TMemo;
+    Panel5: TPanel;
+    Panel6: TPanel;
+    Panel7: TPanel;
+    mmPayload: TMemo;
+    Panel8: TPanel;
+    mmPayload64: TMemo;
+    TabSheet8: TTabSheet;
+    Panel9: TPanel;
+    mmJWT: TMemo;
+    TabSheet9: TTabSheet;
+    Panel10: TPanel;
+    mmAssinatura: TMemo;
+    TabSheet10: TTabSheet;
+    Panel11: TPanel;
+    mmJWS: TMemo;
+    TabSheet11: TTabSheet;
+    Panel12: TPanel;
+    mmAccessToken: TMemo;
+    TabSheet12: TTabSheet;
+    Panel13: TPanel;
+    mmExtrato: TMemo;
     procedure Button1Click(Sender: TObject);
     procedure FormShow(Sender: TObject);
     procedure Button3Click(Sender: TObject);
@@ -224,7 +242,7 @@ begin
 
      //Bradesco.ClienteID := 0000;
      Bradesco.CertificadoDigital := edtChaveCertificado.Text;// 'xxxx';
-     Memo1.Lines.Clear;
+     mmHeader.Lines.Clear;
      vData1 := Date-30;
      vData2 := Date;
 
@@ -248,11 +266,11 @@ begin
      //Bradesco.JWS := ACBrEAD1.AssinarArquivoComEAD( Arquivo, True ) ;
 
 
-     Memo9.Lines.Clear;
-     Memo9.Lines.Add('BearerToken:');
-     Memo9.Lines.Add('');
-     Memo9.lines.add(Bradesco.Extrato(vData1,vData2));
-     Memo9.SelStart := 0;
+     mmExtrato.Lines.Clear;
+     mmExtrato.Lines.Add('');
+     mmExtrato.lines.add(Bradesco.Extrato(vData1,vData2));
+     mmExtrato.SelStart := 0;
+     PageControl1.ActivePageIndex:=8;
 
 //     AssinarAquiMesmo;
      PreencheMemos(Bradesco);
@@ -291,6 +309,7 @@ end;
 
 procedure TfrmPrincipal.FormShow(Sender: TObject);
 begin
+   PageControl1.ActivePageIndex:=0;
    LerConfig;
 end;
 
@@ -366,48 +385,48 @@ end;
 
 procedure TfrmPrincipal.PreencheMemos(Bradesco: TBradesco);
 begin
-     Memo1.Lines.Clear;
-     Memo1.Lines.Add('Header:');
-     Memo1.Lines.Add('');
-     FormatAndDisplayJson(Bradesco.Header, Memo1);
-     Memo1.lines.add(Bradesco.Header);
+     mmHeader.Lines.Clear;
+     //mmHeader.Lines.Add('Header:');
+     mmHeader.Lines.Add('');
+     FormatAndDisplayJson(Bradesco.Header, mmHeader);
+     mmHeader.lines.add(Bradesco.Header);
 
-     Memo2.Lines.Clear;
-     Memo2.Lines.Add('HeaderBase64:');
-     Memo2.Lines.Add('');
-     Memo2.lines.add(Bradesco.HeaderBase64);
+     mmHeader64.Lines.Clear;
+     //mmHeader64.Lines.Add('HeaderBase64:');
+     mmHeader64.Lines.Add('');
+     mmHeader64.lines.add(Bradesco.HeaderBase64);
 
-     Memo3.Lines.Clear;
-     Memo3.Lines.Add('Payload:');
-     Memo3.Lines.Add('');
-     //FormatAndDisplayJson(Bradesco.Payload, Memo3);
-     Memo3.Lines.Add(Bradesco.Payload);
+     mmPayload.Lines.Clear;
+     //mmPayload.Lines.Add('Payload:');
+     mmPayload.Lines.Add('');
+     //FormatAndDisplayJson(Bradesco.Payload, mmPayload);
+     mmPayload.Lines.Add(Bradesco.Payload);
 
 
-     Memo4.Lines.Clear;
-     Memo4.Lines.Add('PayloadBase64:');
-     Memo4.Lines.Add('');
-     Memo4.lines.add(Bradesco.PayloadBase64);
+     mmPayload64.Lines.Clear;
+     //mmPayload64.Lines.Add('PayloadBase64:');
+     mmPayload64.Lines.Add('');
+     mmPayload64.lines.add(Bradesco.PayloadBase64);
 
-     Memo5.Lines.Clear;
-     Memo5.Lines.Add('JWT:');
-     Memo5.Lines.Add('');
-     Memo5.Lines.Add(Bradesco.JWT);
+     mmJWT.Lines.Clear;
+     //mmJWT.Lines.Add('JWT:');
+     mmJWT.Lines.Add('');
+     mmJWT.Lines.Add(Bradesco.JWT);
 
-     Memo6.Lines.Clear;
-     Memo6.Lines.Add('Assinatura:');
-     Memo6.Lines.Add('');
-     Memo6.lines.add(Bradesco.Assinatura);
+     mmAssinatura.Lines.Clear;
+     //mmAssinatura.Lines.Add('Assinatura:');
+     mmAssinatura.Lines.Add('');
+     mmAssinatura.lines.add(Bradesco.Assinatura);
 
-     Memo7.Lines.Clear;
-     Memo7.Lines.Add('JWS:');
-     Memo7.Lines.Add('');
-     Memo7.lines.add(Bradesco.JWS);
+     mmJWS.Lines.Clear;
+     //mmJWS.Lines.Add('JWS:');
+     mmJWS.Lines.Add('');
+     mmJWS.lines.add(Bradesco.JWS);
 
-     Memo8.Lines.Clear;
-     Memo8.Lines.Add('BearerToken:');
-     Memo8.Lines.Add('');
-     Memo8.lines.add(Bradesco.BearerToken);
+     mmAccessToken.Lines.Clear;
+     //mmAccessToken.Lines.Add('BearerToken:');
+     mmAccessToken.Lines.Add('');
+     mmAccessToken.lines.add(Bradesco.BearerToken);
 end;
 
 
@@ -415,8 +434,8 @@ procedure TfrmPrincipal.PosicionarNoInicio;
 var
   i: Integer;
 begin
-   //ScrollMemo(Memo1, SB_LINEUP); // Rola para o início
-   //ScrollMemo(Memo1, SB_LINEDOWN); // Rola para o final
+   //ScrollMemo(mmHeader, SB_LINEUP); // Rola para o início
+   //ScrollMemo(mmHeader, SB_LINEDOWN); // Rola para o final
   // Itera por todos os componentes no Formulário
   for i := 0 to ComponentCount - 1 do
   begin
