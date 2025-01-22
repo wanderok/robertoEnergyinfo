@@ -572,11 +572,11 @@
                     </Platform>
                 </DeployClass>
                 <DeployClass Name="ProjectOSXDebug">
-                    <Platform Name="OSXARM64">
+                    <Platform Name="OSX64">
                         <RemoteDir>..\$(PROJECTNAME).app.dSYM\Contents\Resources\DWARF</RemoteDir>
                         <Operation>1</Operation>
                     </Platform>
-                    <Platform Name="OSX64">
+                    <Platform Name="OSXARM64">
                         <RemoteDir>..\$(PROJECTNAME).app.dSYM\Contents\Resources\DWARF</RemoteDir>
                         <Operation>1</Operation>
                     </Platform>

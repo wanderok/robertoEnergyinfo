@@ -16,6 +16,7 @@ uses
   Vcl.Clipbrd,
   ACBrDFeSSL,
 
+IdCoderMIME,
   synacode,
 
   IdException;
@@ -624,11 +625,11 @@ end;
 //  end;
 //end;
 
-
 function TBradesco.GetBase64FromFile(const FileName: string): string;
 var
   FileStream: TFileStream;
   MemoryStream: TMemoryStream;
+  Encoder: TIdEncoderMIME;
 begin
   // Cria um stream para ler o arquivo
   FileStream := TFileStream.Create(FileName, fmOpenRead);
@@ -639,8 +640,14 @@ begin
       // Copia o conteúdo do arquivo para o MemoryStream
       MemoryStream.CopyFrom(FileStream, FileStream.Size);
 
-      // Codifica o conteúdo do MemoryStream em Base64
-      result := EncodeBase64(MemoryStream.Memory, MemoryStream.Size);
+      // Agora, criamos o encoder MIME
+      Encoder := TIdEncoderMIME.Create(nil);
+      try
+        // Codifica os dados do MemoryStream diretamente em Base64
+        Result := Encoder.Encode(MemoryStream);
+      finally
+        Encoder.Free;
+      end;
     finally
       MemoryStream.Free;
     end;
@@ -648,7 +655,6 @@ begin
     FileStream.Free;
   end;
 end;
-
 
 end.
 

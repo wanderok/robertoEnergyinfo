@@ -672,7 +672,17 @@ end.
   As credenciais do ambiente de homologação já foram criadas, segue abaixo:
   Client Key: 9693f06b-b929-4a9c-8182-e25270c4029d
   Client Secret: 7cb3d3eb-a2c9-4084-8e03-72230000b4dd
+  https://proxy.api.prebanco.com.br/auth/server/v1.1/token
 }
 
 //c:\wander\OpenSSL-Win64\bin\openssl.exe dgst -sha256 -keyform pem -sign "c:\wander\chaves\privada\oxymed.homologacao.key.pem" < "{"alg":"RS256","typ":"JWT"}.{"aud":"https:__proxy.api.prebanco.com.br_auth_server_v1.1_token","sub":"9693f06b-b929-4a9c-8182-e25270c4029d","iat":"3946727048","exp":"3946730648","jti":"3946727048000","ver":"1.1"}" > "c:\wander\signatureJWS.bin"
 //c:\wander\OpenSSL-Win64\bin\openssl.exe dgst -sha256 -keyform pem -sign "c:\wander\chaves\privada\oxymed.homologacao.key.pem" -in "c:\wander\temp_payload.json" -out "c:\wander\signatureJWS.bin"
+
+
+o payload precisa ter as seguintes pares:
+aud
+sub
+iat
+exp
+jti
+ver
