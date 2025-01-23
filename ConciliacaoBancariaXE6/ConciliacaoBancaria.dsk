@@ -7,21 +7,41 @@ File_4=TSourceModule,'c:\program files (x86)\embarcadero\studio\19.0\source\rtl\
 File_5=TSourceModule,'C:\fi9404\pessoal\delphi\robertoEnergyinfo\ConciliacaoBancaria\uEnergyInform.pas',0,1,58,7,93,0,0,,
 
 [Modules]
-Module0=C:\fi9404\pessoal\delphi\robertoEnergyinfo\ConciliacaoBancariaXE6\uOxymed.pas
-Module1=c:\program files (x86)\embarcadero\studio\14.0\source\Indy10\Protocols\IdSSLOpenSSL.pas
-Module2=c:\program files (x86)\embarcadero\studio\14.0\source\Indy10\Protocols\IdSSLOpenSSLHeaders.pas
-Module3=C:\fi9404\pessoal\delphi\robertoEnergyinfo\ConciliacaoBancariaXE6\uPrincipal.pas
-Module4=c:\program files (x86)\embarcadero\studio\14.0\source\rtl\common\System.JSON.pas
-Module5=C:\wip_sist_imbel\dev\ACBR_NEW\Fontes\ACBrOpenSSL\ACBrEAD.pas
-Module6=C:\wip_sist_imbel\dev\ACBR_NEW\Fontes\Terceiros\synalist\synacode.pas
-Module7=default.htm
-Count=8
+Module0=C:\fi9404\pessoal\delphi\robertoEnergyinfo\ConciliacaoBancariaXE6\uPrincipal.pas
+Module1=C:\fi9404\pessoal\delphi\robertoEnergyinfo\ConciliacaoBancariaXE6\uOxymed.pas
+Module2=c:\program files (x86)\embarcadero\studio\14.0\source\Indy10\Protocols\IdHTTP.pas
+Module3=c:\program files (x86)\embarcadero\studio\14.0\source\Indy10\System\IdGlobal.pas
+Module4=default.htm
+Module5=c:\program files (x86)\embarcadero\studio\14.0\source\Indy10\Protocols\IdSSLOpenSSL.pas
+Module6=c:\program files (x86)\embarcadero\studio\14.0\source\Indy10\Protocols\IdSSLOpenSSLHeaders.pas
+Module7=c:\program files (x86)\embarcadero\studio\14.0\source\rtl\common\System.JSON.pas
+Module8=C:\wip_sist_imbel\dev\ACBR_NEW\Fontes\ACBrOpenSSL\ACBrEAD.pas
+Module9=C:\wip_sist_imbel\dev\ACBR_NEW\Fontes\Terceiros\synalist\synacode.pas
+Count=10
 EditWindowCount=1
+
+[C:\fi9404\pessoal\delphi\robertoEnergyinfo\ConciliacaoBancariaXE6\uPrincipal.pas]
+ModuleType=TSourceModule
+FormState=1
+FormOnTop=0
 
 [C:\fi9404\pessoal\delphi\robertoEnergyinfo\ConciliacaoBancariaXE6\uOxymed.pas]
 ModuleType=TSourceModule
 FormState=0
 FormOnTop=0
+
+[c:\program files (x86)\embarcadero\studio\14.0\source\Indy10\Protocols\IdHTTP.pas]
+ModuleType=TSourceModule
+FormState=0
+FormOnTop=0
+
+[c:\program files (x86)\embarcadero\studio\14.0\source\Indy10\System\IdGlobal.pas]
+ModuleType=TSourceModule
+FormState=0
+FormOnTop=0
+
+[default.htm]
+ModuleType=TURLModule
 
 [c:\program files (x86)\embarcadero\studio\14.0\source\Indy10\Protocols\IdSSLOpenSSL.pas]
 ModuleType=TSourceModule
@@ -31,11 +51,6 @@ FormOnTop=0
 [c:\program files (x86)\embarcadero\studio\14.0\source\Indy10\Protocols\IdSSLOpenSSLHeaders.pas]
 ModuleType=TSourceModule
 FormState=0
-FormOnTop=0
-
-[C:\fi9404\pessoal\delphi\robertoEnergyinfo\ConciliacaoBancariaXE6\uPrincipal.pas]
-ModuleType=TSourceModule
-FormState=1
 FormOnTop=0
 
 [c:\program files (x86)\embarcadero\studio\14.0\source\rtl\common\System.JSON.pas]
@@ -53,12 +68,9 @@ ModuleType=TSourceModule
 FormState=0
 FormOnTop=0
 
-[default.htm]
-ModuleType=TURLModule
-
 [EditWindow0]
-ViewCount=8
-CurrentEditView=C:\fi9404\pessoal\delphi\robertoEnergyinfo\ConciliacaoBancariaXE6\uOxymed.pas
+ViewCount=10
+CurrentEditView=C:\fi9404\pessoal\delphi\robertoEnergyinfo\ConciliacaoBancariaXE6\uPrincipal.pas
 View0=0
 View1=1
 View2=2
@@ -67,6 +79,8 @@ View4=4
 View5=5
 View6=6
 View7=7
+View8=8
+View9=9
 PercentageSizes=1
 Create=1
 Visible=1
@@ -103,15 +117,26 @@ WelcomePageURL=bds:/default.htm
 [View1]
 CustomEditViewType=TEditView
 Module=C:\fi9404\pessoal\delphi\robertoEnergyinfo\ConciliacaoBancariaXE6\uOxymed.pas
-CursorX=49
-CursorY=423
-TopLine=412
+CursorX=1
+CursorY=387
+TopLine=367
 LeftCol=1
 Elisions=
-Bookmarks={1,408,20}
+Bookmarks={1,454,1}
 EditViewName=C:\fi9404\pessoal\delphi\robertoEnergyinfo\ConciliacaoBancariaXE6\uOxymed.pas
 
 [View2]
+CustomEditViewType=TEditView
+Module=c:\program files (x86)\embarcadero\studio\14.0\source\Indy10\Protocols\IdHTTP.pas
+CursorX=38
+CursorY=785
+TopLine=789
+LeftCol=1
+Elisions=
+Bookmarks=
+EditViewName=c:\program files (x86)\embarcadero\studio\14.0\source\Indy10\Protocols\IdHTTP.pas
+
+[View3]
 CustomEditViewType=TEditView
 Module=c:\program files (x86)\embarcadero\studio\14.0\source\Indy10\Protocols\IdSSLOpenSSL.pas
 CursorX=89
@@ -122,7 +147,7 @@ Elisions=
 Bookmarks={1,237,1}
 EditViewName=c:\program files (x86)\embarcadero\studio\14.0\source\Indy10\Protocols\IdSSLOpenSSL.pas
 
-[View3]
+[View4]
 CustomEditViewType=TEditView
 Module=c:\program files (x86)\embarcadero\studio\14.0\source\Indy10\Protocols\IdSSLOpenSSLHeaders.pas
 CursorX=1
@@ -133,7 +158,7 @@ Elisions=
 Bookmarks=
 EditViewName=c:\program files (x86)\embarcadero\studio\14.0\source\Indy10\Protocols\IdSSLOpenSSLHeaders.pas
 
-[View4]
+[View5]
 CustomEditViewType=TEditView
 Module=c:\program files (x86)\embarcadero\studio\14.0\source\rtl\common\System.JSON.pas
 CursorX=3
@@ -144,18 +169,29 @@ Elisions=
 Bookmarks=
 EditViewName=c:\program files (x86)\embarcadero\studio\14.0\source\rtl\common\System.JSON.pas
 
-[View5]
+[View6]
 CustomEditViewType=TEditView
 Module=C:\fi9404\pessoal\delphi\robertoEnergyinfo\ConciliacaoBancariaXE6\uPrincipal.pas
-CursorX=19
-CursorY=249
-TopLine=218
+CursorX=42
+CursorY=244
+TopLine=231
 LeftCol=1
 Elisions=
 Bookmarks=
 EditViewName=C:\fi9404\pessoal\delphi\robertoEnergyinfo\ConciliacaoBancariaXE6\uPrincipal.pas
 
-[View6]
+[View7]
+CustomEditViewType=TEditView
+Module=c:\program files (x86)\embarcadero\studio\14.0\source\Indy10\System\IdGlobal.pas
+CursorX=71
+CursorY=20
+TopLine=1
+LeftCol=1
+Elisions=
+Bookmarks=
+EditViewName=c:\program files (x86)\embarcadero\studio\14.0\source\Indy10\System\IdGlobal.pas
+
+[View8]
 CustomEditViewType=TEditView
 Module=C:\wip_sist_imbel\dev\ACBR_NEW\Fontes\ACBrOpenSSL\ACBrEAD.pas
 CursorX=1
@@ -166,7 +202,7 @@ Elisions=
 Bookmarks=
 EditViewName=C:\wip_sist_imbel\dev\ACBR_NEW\Fontes\ACBrOpenSSL\ACBrEAD.pas
 
-[View7]
+[View9]
 CustomEditViewType=TEditView
 Module=C:\wip_sist_imbel\dev\ACBR_NEW\Fontes\Terceiros\synalist\synacode.pas
 CursorX=6
@@ -202,7 +238,7 @@ Dockable=1
 StayOnTop=0
 
 [Breakpoints]
-Count=10
+Count=9
 Breakpoint0='C:\fi9404\pessoal\delphi\robertoEnergyinfo\ConciliacaoBancaria\uPrincipal.pas',35,'',0,1,'',1,0,0,'',1,'','','',0,''
 Breakpoint1='C:\fi9404\pessoal\delphi\robertoEnergyinfo\ConciliacaoBancariaXE6\uPrincipal.pas',168,'',0,1,'',1,0,0,'',1,'','','',0,''
 Breakpoint2='C:\sistemas\robertoEnergyinfo\ConciliacaoBancariaXE6\uPrincipal.pas',251,'',0,1,'',1,0,0,'',1,'','','',0,''
@@ -212,7 +248,6 @@ Breakpoint5='C:\fi9404\pessoal\delphi\robertoEnergyinfo\ConciliacaoBancariaXE6\u
 Breakpoint6='C:\fi9404\pessoal\delphi\robertoEnergyinfo\ConciliacaoBancariaXE6\uPrincipal.pas',451,'',0,1,'',1,0,0,'',1,'','','',0,''
 Breakpoint7='C:\fi9404\pessoal\delphi\robertoEnergyinfo\ConciliacaoBancariaXE6\uPrincipal.pas',253,'',0,1,'',1,0,0,'',1,'','','',0,''
 Breakpoint8='C:\fi9404\pessoal\delphi\robertoEnergyinfo\ConciliacaoBancariaXE6\uOxymed.pas',387,'',0,1,'',1,0,0,'',1,'','','',0,''
-Breakpoint9='C:\fi9404\pessoal\delphi\robertoEnergyinfo\ConciliacaoBancariaXE6\uOxymed.pas',423,'',0,1,'',1,0,0,'',1,'','','',0,''
 
 [EmbarcaderoWin32Debugger_AddressBreakpoints]
 Count=0
@@ -401,6 +436,11 @@ LRDockWidth=1896
 Dockable=1
 StayOnTop=0
 SplitPos=111
+
+[PropInspDesignerSelection]
+ArrangeBy=Name
+SelectedItem=Name,
+ExpandedItems=Anchors=0,Constraints=0,Font=0,LiveBindings=0,"LiveBindings Designer=0",Margins=0,StyleElements=0,Options=0,OptionsEx=0
 
 [TFileExplorerForm]
 PercentageSizes=1
