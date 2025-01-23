@@ -16,6 +16,7 @@ uses
   Vcl.Clipbrd,
   ACBrDFeSSL,
 
+IdCoderMIME,
   synacode,
 
   IdException;
@@ -333,11 +334,11 @@ begin
   GetExitCodeProcess(ProcessInfo.hProcess, ExitCode);
 
   // Verifica o código de saída do OpenSSL
-  // if ExitCode <> 0 then
-  // begin
-  // ShowMessage('Erro ao executar OpenSSL. Código de saída: ' + IntToStr(ExitCode));
-  // Exit;
-  // end;
+//   if ExitCode <> 0 then
+//   begin
+//   ShowMessage('Erro ao executar OpenSSL. Código de saída: ' + IntToStr(ExitCode));
+//   Exit;
+//   end;
 
   // Fechar handles
   CloseHandle(ProcessInfo.hProcess);
@@ -393,13 +394,62 @@ begin
   GerarTokenJWTBase64;
 
   GerarAssinatura;
-  GerarAssinaturaJWT;
+  //GerarAssinaturaJWT;
   GerarJWS;
 
   GerarBearerToken;
 
   GravarParametrosGerados;
 end;
+
+//procedure TBradesco.GerarBearerToken;
+//var
+//  IdHTTP: TIdHTTP;
+//  Response: string;
+//  Body: string;
+//  StringStream: TStringStream;
+//  SSLHandler: TIdSSLIOHandlerSocketOpenSSL;
+//begin
+//  IdHTTP := TIdHTTP.Create(nil);
+//  SSLHandler := TIdSSLIOHandlerSocketOpenSSL.Create(nil);
+//  StringStream := TStringStream.Create('');
+//
+//  try
+//    // Configurar o IOHandler para o IdHTTP
+//    IdHTTP.IOHandler := SSLHandler;
+//
+//    // Forçar o uso do protocolo TLS 1.2
+//    SSLHandler.SSLOptions.SSLVersions := [sslvTLSv1_2];  // Usando TLS 1.2
+//
+//
+//
+//    Body := 'grant_type=urn:ietf:params:oauth:grant-type:jwt-bearer&' +
+//            'assertion=' + self.FJWS;
+//
+//    // Carregando o corpo na TStringStream
+//    StringStream.WriteString(Body);
+//    StringStream.Position := 0;  // Importante: Reiniciar a posição
+//
+//    // Adicionar o cabeçalho Content-Type corretamente
+//    IdHTTP.Request.CustomHeaders.Add('Content-Type: application/x-www-form-urlencoded');
+//
+//    try
+//      // Enviando a requisição POST com o corpo
+//      Response := IdHTTP.Post(self.APIBarenToken, StringStream);
+//      self.FBearerToken := Response;
+//    except
+//      on E: EIdHTTPProtocolException do
+//        self.FBearerToken := 'Erro HTTP: ' + E.Message;
+//      on E: Exception do
+//        self.FBearerToken := 'Erro geral: ' + E.Message;
+//    end;
+//
+//  finally
+//    StringStream.Free;
+//    SSLHandler.Free;
+//    IdHTTP.Free;
+//  end;
+//end;
 
 procedure TBradesco.GerarBearerToken;
 var
@@ -419,6 +469,9 @@ begin
 
     // Forçar o uso do protocolo TLS 1.2
     SSLHandler.SSLOptions.SSLVersions := [sslvTLSv1_2];  // Usando TLS 1.2
+
+    // Configurar as cifras permitidas (algoritmos de cifra especificados pela API)
+    SSLHandler.SSLOptions.Ciphers := 'TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256:TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384';
 
     Body := 'grant_type=urn:ietf:params:oauth:grant-type:jwt-bearer&' +
             'assertion=' + self.FJWS;
@@ -447,6 +500,7 @@ begin
     IdHTTP.Free;
   end;
 end;
+
 
 procedure TBradesco.GerarTokenJWT;
 begin
@@ -498,7 +552,7 @@ end;
 procedure TBradesco.GerarJWS;
 begin
   // Concatenando Header, Payload e a Assinatura Base64Url para formar o JWS
-  self.FJWS := self.FHeaderBase64 + '.' + self.FPayloadBase64 + '.' + self.FAssinaturaBase64URL;
+  self.FJWS := self.FHeaderBase64 + '.' + self.FPayloadBase64 + '.' + self.FAssinatura; // self.FAssinaturaBase64URL;
 end;
 
 procedure TBradesco.GerarAssinaturaJWT;
@@ -628,7 +682,7 @@ function TBradesco.GetBase64FromFile(const FileName: string): string;
 var
   FileStream: TFileStream;
   MemoryStream: TMemoryStream;
-  FileData: TBytes;
+  Encoder: TIdEncoderMIME;
 begin
   // Cria um stream para ler o arquivo
   FileStream := TFileStream.Create(FileName, fmOpenRead);
@@ -639,13 +693,14 @@ begin
       // Copia o conteúdo do arquivo para o MemoryStream
       MemoryStream.CopyFrom(FileStream, FileStream.Size);
 
-      // Agora, criamos um array de bytes com os dados do MemoryStream
-      SetLength(FileData, MemoryStream.Size);
-      MemoryStream.Position := 0; // Coloca a posição de leitura no início
-      MemoryStream.ReadBuffer(FileData[0], MemoryStream.Size);
-
-      // Utilizamos a função EncodeBase64 corretamente com TBytes
-      Result := EncodeBase64(FileData);  // Result será um string
+      // Agora, criamos o encoder MIME
+      Encoder := TIdEncoderMIME.Create(nil);
+      try
+        // Codifica os dados do MemoryStream diretamente em Base64
+        Result := Encoder.Encode(MemoryStream);
+      finally
+        Encoder.Free;
+      end;
     finally
       MemoryStream.Free;
     end;
@@ -670,7 +725,17 @@ end.
   As credenciais do ambiente de homologação já foram criadas, segue abaixo:
   Client Key: 9693f06b-b929-4a9c-8182-e25270c4029d
   Client Secret: 7cb3d3eb-a2c9-4084-8e03-72230000b4dd
+  https://proxy.api.prebanco.com.br/auth/server/v1.1/token
 }
 
 //c:\wander\OpenSSL-Win64\bin\openssl.exe dgst -sha256 -keyform pem -sign "c:\wander\chaves\privada\oxymed.homologacao.key.pem" < "{"alg":"RS256","typ":"JWT"}.{"aud":"https:__proxy.api.prebanco.com.br_auth_server_v1.1_token","sub":"9693f06b-b929-4a9c-8182-e25270c4029d","iat":"3946727048","exp":"3946730648","jti":"3946727048000","ver":"1.1"}" > "c:\wander\signatureJWS.bin"
 //c:\wander\OpenSSL-Win64\bin\openssl.exe dgst -sha256 -keyform pem -sign "c:\wander\chaves\privada\oxymed.homologacao.key.pem" -in "c:\wander\temp_payload.json" -out "c:\wander\signatureJWS.bin"
+
+
+o payload precisa ter as seguintes pares:
+aud
+sub
+iat
+exp
+jti
+ver

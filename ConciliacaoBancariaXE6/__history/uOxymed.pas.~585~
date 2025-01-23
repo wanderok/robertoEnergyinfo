@@ -16,6 +16,7 @@ uses
   Vcl.Clipbrd,
   ACBrDFeSSL,
 
+IdCoderMIME,
   synacode,
 
   IdException;
@@ -333,11 +334,11 @@ begin
   GetExitCodeProcess(ProcessInfo.hProcess, ExitCode);
 
   // Verifica o código de saída do OpenSSL
-  // if ExitCode <> 0 then
-  // begin
-  // ShowMessage('Erro ao executar OpenSSL. Código de saída: ' + IntToStr(ExitCode));
-  // Exit;
-  // end;
+//   if ExitCode <> 0 then
+//   begin
+//   ShowMessage('Erro ao executar OpenSSL. Código de saída: ' + IntToStr(ExitCode));
+//   Exit;
+//   end;
 
   // Fechar handles
   CloseHandle(ProcessInfo.hProcess);
@@ -393,7 +394,7 @@ begin
   GerarTokenJWTBase64;
 
   GerarAssinatura;
-  GerarAssinaturaJWT;
+  //GerarAssinaturaJWT;
   GerarJWS;
 
   GerarBearerToken;
@@ -498,7 +499,7 @@ end;
 procedure TBradesco.GerarJWS;
 begin
   // Concatenando Header, Payload e a Assinatura Base64Url para formar o JWS
-  self.FJWS := self.FHeaderBase64 + '.' + self.FPayloadBase64 + '.' + self.FAssinaturaBase64URL;
+  self.FJWS := self.FHeaderBase64 + '.' + self.FPayloadBase64 + '.' + self.FAssinatura; // self.FAssinaturaBase64URL;
 end;
 
 procedure TBradesco.GerarAssinaturaJWT;
@@ -624,11 +625,11 @@ end;
 //  end;
 //end;
 
-
 function TBradesco.GetBase64FromFile(const FileName: string): string;
 var
   FileStream: TFileStream;
   MemoryStream: TMemoryStream;
+  Encoder: TIdEncoderMIME;
 begin
   // Cria um stream para ler o arquivo
   FileStream := TFileStream.Create(FileName, fmOpenRead);
@@ -639,8 +640,14 @@ begin
       // Copia o conteúdo do arquivo para o MemoryStream
       MemoryStream.CopyFrom(FileStream, FileStream.Size);
 
-      // Converte o conteúdo do MemoryStream para Base64 usando IdGlobal.EncodeBase64
-      result := EncodeBase64(MemoryStream.Memory, MemoryStream.Size);
+      // Agora, criamos o encoder MIME
+      Encoder := TIdEncoderMIME.Create(nil);
+      try
+        // Codifica os dados do MemoryStream diretamente em Base64
+        Result := Encoder.Encode(MemoryStream);
+      finally
+        Encoder.Free;
+      end;
     finally
       MemoryStream.Free;
     end;
@@ -648,8 +655,6 @@ begin
     FileStream.Free;
   end;
 end;
-
-
 
 end.
 
@@ -667,7 +672,17 @@ end.
   As credenciais do ambiente de homologação já foram criadas, segue abaixo:
   Client Key: 9693f06b-b929-4a9c-8182-e25270c4029d
   Client Secret: 7cb3d3eb-a2c9-4084-8e03-72230000b4dd
+  https://proxy.api.prebanco.com.br/auth/server/v1.1/token
 }
 
 //c:\wander\OpenSSL-Win64\bin\openssl.exe dgst -sha256 -keyform pem -sign "c:\wander\chaves\privada\oxymed.homologacao.key.pem" < "{"alg":"RS256","typ":"JWT"}.{"aud":"https:__proxy.api.prebanco.com.br_auth_server_v1.1_token","sub":"9693f06b-b929-4a9c-8182-e25270c4029d","iat":"3946727048","exp":"3946730648","jti":"3946727048000","ver":"1.1"}" > "c:\wander\signatureJWS.bin"
 //c:\wander\OpenSSL-Win64\bin\openssl.exe dgst -sha256 -keyform pem -sign "c:\wander\chaves\privada\oxymed.homologacao.key.pem" -in "c:\wander\temp_payload.json" -out "c:\wander\signatureJWS.bin"
+
+
+o payload precisa ter as seguintes pares:
+aud
+sub
+iat
+exp
+jti
+ver

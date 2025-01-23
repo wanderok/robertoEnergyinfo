@@ -262,7 +262,7 @@ begin
        exit;
      end;
 
-     Bradesco.Assinatura := ACBrEAD1.CalcularAssinaturaArquivo(Arquivo, TACBrEADDgst( cbxDgst.ItemIndex ), Saida );
+     //Bradesco.Assinatura := ACBrEAD1.CalcularAssinaturaArquivo(Arquivo, TACBrEADDgst( cbxDgst.ItemIndex ), Saida );
      //Bradesco.JWS := ACBrEAD1.AssinarArquivoComEAD( Arquivo, True ) ;
 
 

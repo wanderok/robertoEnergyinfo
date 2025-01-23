@@ -45,7 +45,7 @@ object frmPrincipal: TfrmPrincipal
     Top = 58
     Width = 1244
     Height = 691
-    ActivePage = TabSheet8
+    ActivePage = TabSheet2
     Align = alClient
     TabOrder = 1
     object TabSheet1: TTabSheet
@@ -199,8 +199,8 @@ object frmPrincipal: TfrmPrincipal
             ParentColor = False
           end
           object Label20: TLabel
-            Left = 441
-            Top = 24
+            Left = 689
+            Top = 56
             Width = 221
             Height = 15
             Caption = 'Vers'#227'o do Open SSL instalado na m'#225'quina'
@@ -275,8 +275,8 @@ object frmPrincipal: TfrmPrincipal
               'Base64')
           end
           object edVersaoOpenSSL: TEdit
-            Left = 441
-            Top = 40
+            Left = 689
+            Top = 72
             Width = 168
             Height = 23
             ReadOnly = True
@@ -885,7 +885,6 @@ object frmPrincipal: TfrmPrincipal
         Height = 661
         Align = alClient
         TabOrder = 0
-        ExplicitHeight = 337
         object mmHeader: TMemo
           Left = 1
           Top = 42
@@ -896,7 +895,6 @@ object frmPrincipal: TfrmPrincipal
           Lines.Strings = (
             'mmHeader')
           TabOrder = 0
-          ExplicitTop = 36
         end
         object mmHeader64: TMemo
           Left = 1
@@ -908,7 +906,6 @@ object frmPrincipal: TfrmPrincipal
           Lines.Strings = (
             'mmHeader64')
           TabOrder = 1
-          ExplicitTop = 176
         end
         object Panel5: TPanel
           Left = 1
@@ -924,8 +921,6 @@ object frmPrincipal: TfrmPrincipal
           Font.Style = [fsBold]
           ParentFont = False
           TabOrder = 2
-          ExplicitLeft = 25
-          ExplicitTop = 258
         end
         object Panel6: TPanel
           Left = 1
@@ -941,8 +936,6 @@ object frmPrincipal: TfrmPrincipal
           Font.Style = [fsBold]
           ParentFont = False
           TabOrder = 3
-          ExplicitLeft = 2
-          ExplicitTop = 9
         end
       end
     end
@@ -956,8 +949,6 @@ object frmPrincipal: TfrmPrincipal
         Height = 661
         Align = alClient
         TabOrder = 0
-        ExplicitTop = 297
-        ExplicitHeight = 216
         object Panel7: TPanel
           Left = 1
           Top = 1
@@ -972,8 +963,6 @@ object frmPrincipal: TfrmPrincipal
           Font.Style = [fsBold]
           ParentFont = False
           TabOrder = 0
-          ExplicitLeft = 2
-          ExplicitTop = 9
         end
         object mmPayload: TMemo
           Left = 1
@@ -985,8 +974,6 @@ object frmPrincipal: TfrmPrincipal
           Lines.Strings = (
             'mmHeader')
           TabOrder = 1
-          ExplicitLeft = 2
-          ExplicitTop = 50
         end
         object Panel8: TPanel
           Left = 1
@@ -1002,8 +989,6 @@ object frmPrincipal: TfrmPrincipal
           Font.Style = [fsBold]
           ParentFont = False
           TabOrder = 2
-          ExplicitLeft = 2
-          ExplicitTop = 137
         end
         object mmPayload64: TMemo
           Left = 1
@@ -1015,8 +1000,6 @@ object frmPrincipal: TfrmPrincipal
           Lines.Strings = (
             'mmHeader64')
           TabOrder = 3
-          ExplicitLeft = 2
-          ExplicitTop = 178
         end
       end
     end
@@ -1037,7 +1020,6 @@ object frmPrincipal: TfrmPrincipal
         Font.Style = [fsBold]
         ParentFont = False
         TabOrder = 0
-        ExplicitTop = 8
       end
       object mmJWT: TMemo
         Left = 0
@@ -1068,7 +1050,6 @@ object frmPrincipal: TfrmPrincipal
         Font.Style = [fsBold]
         ParentFont = False
         TabOrder = 0
-        ExplicitTop = 8
       end
       object mmAssinatura: TMemo
         Left = 0
@@ -1080,7 +1061,6 @@ object frmPrincipal: TfrmPrincipal
         Lines.Strings = (
           'mmAssinatura')
         TabOrder = 1
-        ExplicitTop = 49
       end
     end
     object TabSheet10: TTabSheet
@@ -1100,7 +1080,6 @@ object frmPrincipal: TfrmPrincipal
         Font.Style = [fsBold]
         ParentFont = False
         TabOrder = 0
-        ExplicitTop = 8
       end
       object mmJWS: TMemo
         Left = 0
@@ -1112,7 +1091,6 @@ object frmPrincipal: TfrmPrincipal
         Lines.Strings = (
           'mmJWS')
         TabOrder = 1
-        ExplicitTop = 49
       end
     end
     object TabSheet11: TTabSheet
@@ -1132,7 +1110,6 @@ object frmPrincipal: TfrmPrincipal
         Font.Style = [fsBold]
         ParentFont = False
         TabOrder = 0
-        ExplicitTop = 8
       end
       object mmAccessToken: TMemo
         Left = 0
@@ -1144,7 +1121,6 @@ object frmPrincipal: TfrmPrincipal
         Lines.Strings = (
           'mmAccessToken')
         TabOrder = 1
-        ExplicitTop = 49
       end
     end
     object TabSheet12: TTabSheet
@@ -1164,7 +1140,6 @@ object frmPrincipal: TfrmPrincipal
         Font.Style = [fsBold]
         ParentFont = False
         TabOrder = 0
-        ExplicitTop = 8
       end
       object mmExtrato: TMemo
         Left = 0
@@ -1176,7 +1151,6 @@ object frmPrincipal: TfrmPrincipal
         Lines.Strings = (
           'mmExtrato')
         TabOrder = 1
-        ExplicitTop = 49
       end
     end
   end

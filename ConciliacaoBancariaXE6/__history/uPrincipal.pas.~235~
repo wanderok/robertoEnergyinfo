@@ -49,8 +49,6 @@ type
     Button1: TButton;
     Label15: TLabel;
     edtPastaDeTrabalhoBradesco: TEdit;
-    Memo8: TMemo;
-    Memo9: TMemo;
     ACBrEAD1: TACBrEAD;
     gbPrivKey: TGroupBox;
     Label16: TLabel;
@@ -98,6 +96,12 @@ type
     TabSheet10: TTabSheet;
     Panel11: TPanel;
     mmJWS: TMemo;
+    TabSheet11: TTabSheet;
+    Panel12: TPanel;
+    mmAccessToken: TMemo;
+    TabSheet12: TTabSheet;
+    Panel13: TPanel;
+    mmExtrato: TMemo;
     procedure Button1Click(Sender: TObject);
     procedure FormShow(Sender: TObject);
     procedure Button3Click(Sender: TObject);
@@ -262,11 +266,11 @@ begin
      //Bradesco.JWS := ACBrEAD1.AssinarArquivoComEAD( Arquivo, True ) ;
 
 
-     Memo9.Lines.Clear;
-     Memo9.Lines.Add('BearerToken:');
-     Memo9.Lines.Add('');
-     Memo9.lines.add(Bradesco.Extrato(vData1,vData2));
-     Memo9.SelStart := 0;
+     mmExtrato.Lines.Clear;
+     mmExtrato.Lines.Add('');
+     mmExtrato.lines.add(Bradesco.Extrato(vData1,vData2));
+     mmExtrato.SelStart := 0;
+     PageControl1.ActivePageIndex:=8;
 
 //     AssinarAquiMesmo;
      PreencheMemos(Bradesco);
@@ -305,6 +309,7 @@ end;
 
 procedure TfrmPrincipal.FormShow(Sender: TObject);
 begin
+   PageControl1.ActivePageIndex:=0;
    LerConfig;
 end;
 
@@ -413,15 +418,15 @@ begin
      mmAssinatura.Lines.Add('');
      mmAssinatura.lines.add(Bradesco.Assinatura);
 
-     Memo7.Lines.Clear;
-     Memo7.Lines.Add('JWS:');
-     Memo7.Lines.Add('');
-     Memo7.lines.add(Bradesco.JWS);
+     mmJWS.Lines.Clear;
+     //mmJWS.Lines.Add('JWS:');
+     mmJWS.Lines.Add('');
+     mmJWS.lines.add(Bradesco.JWS);
 
-     Memo8.Lines.Clear;
-     Memo8.Lines.Add('BearerToken:');
-     Memo8.Lines.Add('');
-     Memo8.lines.add(Bradesco.BearerToken);
+     mmAccessToken.Lines.Clear;
+     //mmAccessToken.Lines.Add('BearerToken:');
+     mmAccessToken.Lines.Add('');
+     mmAccessToken.lines.add(Bradesco.BearerToken);
 end;
 
 

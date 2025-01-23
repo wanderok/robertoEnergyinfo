@@ -334,11 +334,11 @@ begin
   GetExitCodeProcess(ProcessInfo.hProcess, ExitCode);
 
   // Verifica o código de saída do OpenSSL
-  // if ExitCode <> 0 then
-  // begin
-  // ShowMessage('Erro ao executar OpenSSL. Código de saída: ' + IntToStr(ExitCode));
-  // Exit;
-  // end;
+//   if ExitCode <> 0 then
+//   begin
+//   ShowMessage('Erro ao executar OpenSSL. Código de saída: ' + IntToStr(ExitCode));
+//   Exit;
+//   end;
 
   // Fechar handles
   CloseHandle(ProcessInfo.hProcess);
@@ -394,7 +394,7 @@ begin
   GerarTokenJWTBase64;
 
   GerarAssinatura;
-  GerarAssinaturaJWT;
+  //GerarAssinaturaJWT;
   GerarJWS;
 
   GerarBearerToken;
@@ -420,6 +420,8 @@ begin
 
     // Forçar o uso do protocolo TLS 1.2
     SSLHandler.SSLOptions.SSLVersions := [sslvTLSv1_2];  // Usando TLS 1.2
+
+
 
     Body := 'grant_type=urn:ietf:params:oauth:grant-type:jwt-bearer&' +
             'assertion=' + self.FJWS;
@@ -448,6 +450,7 @@ begin
     IdHTTP.Free;
   end;
 end;
+
 
 procedure TBradesco.GerarTokenJWT;
 begin
@@ -499,7 +502,7 @@ end;
 procedure TBradesco.GerarJWS;
 begin
   // Concatenando Header, Payload e a Assinatura Base64Url para formar o JWS
-  self.FJWS := self.FHeaderBase64 + '.' + self.FPayloadBase64 + '.' + self.FAssinaturaBase64URL;
+  self.FJWS := self.FHeaderBase64 + '.' + self.FPayloadBase64 + '.' + self.FAssinatura; // self.FAssinaturaBase64URL;
 end;
 
 procedure TBradesco.GerarAssinaturaJWT;
