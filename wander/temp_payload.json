@@ -1,0 +1,1 @@
+{"alg":"RS256","typ":"JWT"}.{"aud":"https://proxy.api.prebanco.com.br/auth/server/v1.1/token","sub":"9693f06b-b929-4a9c-8182-e25270c4029d","iat":"3947204326","exp":"3947207926","jti":"3947204326000","ver":"1.1"}

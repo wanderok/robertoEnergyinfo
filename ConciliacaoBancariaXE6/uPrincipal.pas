@@ -102,6 +102,8 @@ type
     TabSheet12: TTabSheet;
     Panel13: TPanel;
     mmExtrato: TMemo;
+    mmJWT64: TMemo;
+    mmAssinatura64: TMemo;
     procedure Button1Click(Sender: TObject);
     procedure FormShow(Sender: TObject);
     procedure Button3Click(Sender: TObject);
@@ -114,12 +116,9 @@ type
     function CriptografarTexto(const Texto: string): string;
     function DescriptografarTexto(const Texto: string): string;
     procedure PreencheMemos(Bradesco:TBradesco);
-//    procedure PosicionarNoInicio(Memo:TMemo);
     procedure PosicionarNoInicio;
     procedure ScrollMemo(Memo: TMemo; Direction: Integer);
     procedure FormatAndDisplayJson(const JsonStr: string; Memo: TMemo);
-    function AssinarAquiMesmo:boolean;
-    procedure Assinar;
     procedure TrazerChaves;
     function Base64ToBase64URL(const Base64: string): string;
   public
@@ -134,64 +133,8 @@ implementation
 
 {$R *.dfm}
 
-
 const
   ARQUIVO_INI = 'oxymed.ini';
-  CHAVE_CRIPTOGRAFIA = 'OXYMED COMERCIO E LOCACAO DE EQUIPAMENTO'; // Troque pela chave que você usar para criptografar
-
-
-
-procedure TfrmPrincipal.Assinar;
-var
-  Arquivo : TStrings;
-  ACBrEAD : TACBrEAD;
-  DialogArq: TOpenDialog;
-//  ChavePrivada : TChavePrivada;
-begin
-//  edArqPrivKey.Text :=
-
-end;
-
-function TfrmPrincipal.AssinarAquiMesmo:boolean;
-var
-//  Store : IStore3;
-//  CertsLista, CertsSelecionado : ICertificates2;
-//  CertDados : ICertificate;
- // lSigner : TSigner;
- // lSignedData : TSignedData;
-  vAssinatura:string;
-  //Crypt: EncryptedData;
-
-  ACBrEAD : TACBrEAD;
-  chavePublica, chavePrivada: AnsiString;
-begin
-  Result := False;
-
-  //ACBrEAD.
-  //showmessage(ACBrEAD.ConverteChavePublicaParaOpenSSH);
-
-
-  //Store := CoStore.Create;
-  //Store.Open(CAPICOM_CURRENT_USER_STORE, 'My', CAPICOM_STORE_OPEN_MAXIMUM_ALLOWED);
-
-  //CertsLista := Store.Certificates as ICertificates2;
-  //CertsSelecionado := CertsLista.Select('Certificado(s) Digital(is) disponível(is)', 'Selecione o Certificado Digital para uso no aplicativo', false);
-
-//  if not(CertsSelecionado.Count = 0) then
-  begin
-  //  CertDados := IInterface(CertsSelecionado.Item[1]) as ICertificate2;
-   // lSigner             := TSigner.Create(self);
-    //lSigner.Certificate := CertDados;
-    //lSignedData         := TSignedData.Create(self);
-    //lSignedData.Content := vCNPJs;
-
-    //edtAssinatura.Text := lSignedData.Sign(lSigner.DefaultInterface, false, CAPICOM_ENCODE_BASE64);
-    //Result := True;
-    //lSignedData.Free;
-    //lSigner.Free;
-  end;
-
-end;
 
 function TfrmPrincipal.Base64ToBase64URL(const Base64: string): string;
 begin
@@ -217,7 +160,7 @@ begin
    begin
       edArqPubKey.Text := OpenDialog1.FileName;
       mPubKey.Lines.LoadFromFile( edArqPubKey.Text );
-   end ;
+   end;
 end;
 
 procedure TfrmPrincipal.Button1Click(Sender: TObject);
@@ -230,7 +173,10 @@ var    vData1, vData2 : TDateTime;
 begin
      Bradesco := TBradesco.Create;
 
+     Bradesco.Ambiente := aHomologacao;
+
      LerConfig;
+
      Bradesco.RazaoSocial := edtRazaoSocial.Text; // 'OXYMED COMERCIO E LOCACAO DE EQUIPAMENTO';
      Bradesco.CNPJ := edtCNPJ.Text; //'38052160005701';
      Bradesco.ClientKey := edtClienteKeyBradesco.Text;
@@ -240,7 +186,6 @@ begin
      Bradesco.ArquivoChavePrivada:= edArqPrivKey.Text;
      Bradesco.ArquivoChavePublica:= edArqPrivKey.Text;
 
-     //Bradesco.ClienteID := 0000;
      Bradesco.CertificadoDigital := edtChaveCertificado.Text;// 'xxxx';
      mmHeader.Lines.Clear;
      vData1 := Date-30;
@@ -262,17 +207,12 @@ begin
        exit;
      end;
 
-     //Bradesco.Assinatura := ACBrEAD1.CalcularAssinaturaArquivo(Arquivo, TACBrEADDgst( cbxDgst.ItemIndex ), Saida );
-     //Bradesco.JWS := ACBrEAD1.AssinarArquivoComEAD( Arquivo, True ) ;
-
-
      mmExtrato.Lines.Clear;
      mmExtrato.Lines.Add('');
      mmExtrato.lines.add(Bradesco.Extrato(vData1,vData2));
      mmExtrato.SelStart := 0;
      PageControl1.ActivePageIndex:=8;
 
-//     AssinarAquiMesmo;
      PreencheMemos(Bradesco);
 
      Bradesco.Free;
@@ -376,56 +316,37 @@ begin
   end;
 end;
 
-
-//procedure TfrmPrincipal.PosicionarNoInicio(Memo: TMemo);
-//begin
-//  Memo.SelStart := 0;
-//  Perform(WM_VSCROLL, SB_TOP, 0);
-//end;
-
 procedure TfrmPrincipal.PreencheMemos(Bradesco: TBradesco);
 begin
      mmHeader.Lines.Clear;
-     //mmHeader.Lines.Add('Header:');
-     mmHeader.Lines.Add('');
      FormatAndDisplayJson(Bradesco.Header, mmHeader);
      mmHeader.lines.add(Bradesco.Header);
 
      mmHeader64.Lines.Clear;
-     //mmHeader64.Lines.Add('HeaderBase64:');
-     mmHeader64.Lines.Add('');
      mmHeader64.lines.add(Bradesco.HeaderBase64);
 
      mmPayload.Lines.Clear;
-     //mmPayload.Lines.Add('Payload:');
-     mmPayload.Lines.Add('');
-     //FormatAndDisplayJson(Bradesco.Payload, mmPayload);
      mmPayload.Lines.Add(Bradesco.Payload);
 
-
      mmPayload64.Lines.Clear;
-     //mmPayload64.Lines.Add('PayloadBase64:');
-     mmPayload64.Lines.Add('');
      mmPayload64.lines.add(Bradesco.PayloadBase64);
 
      mmJWT.Lines.Clear;
-     //mmJWT.Lines.Add('JWT:');
-     mmJWT.Lines.Add('');
      mmJWT.Lines.Add(Bradesco.JWT);
 
+     mmJWT64.Lines.Clear;
+     mmJWT64.Lines.Add(Bradesco.JWTBase64);
+
      mmAssinatura.Lines.Clear;
-     //mmAssinatura.Lines.Add('Assinatura:');
-     mmAssinatura.Lines.Add('');
      mmAssinatura.lines.add(Bradesco.Assinatura);
 
+     mmAssinatura64.Lines.Clear;
+     mmAssinatura64.lines.add(Bradesco.AssinaturaBase64URL);
+
      mmJWS.Lines.Clear;
-     //mmJWS.Lines.Add('JWS:');
-     mmJWS.Lines.Add('');
      mmJWS.lines.add(Bradesco.JWS);
 
      mmAccessToken.Lines.Clear;
-     //mmAccessToken.Lines.Add('BearerToken:');
-     mmAccessToken.Lines.Add('');
      mmAccessToken.lines.add(Bradesco.BearerToken);
 end;
 
@@ -434,18 +355,11 @@ procedure TfrmPrincipal.PosicionarNoInicio;
 var
   i: Integer;
 begin
-   //ScrollMemo(mmHeader, SB_LINEUP); // Rola para o início
-   //ScrollMemo(mmHeader, SB_LINEDOWN); // Rola para o final
-  // Itera por todos os componentes no Formulário
   for i := 0 to ComponentCount - 1 do
   begin
     if Components[i] is TMemo then
     begin
       ScrollMemo((Components[i] as TMemo), SB_LINEUP);
-
-//      TMemo(Components[i]).SetFocus;
-//      TMemo(Components[i]).SelStart := 0; // Posiciona o cursor no início
-//      TMemo(Components[i]).Perform(WM_VSCROLL, SB_TOP, 0); // Rolagem para o topo
     end;
   end;
 end;
@@ -481,15 +395,10 @@ var
   JsonValue: TJSONObject;
   PrettyJson: string;
 begin
-  // Converte a string JSON para um objeto JSON
   JsonValue := TJSONObject.ParseJSONValue(JsonStr) as TJSONObject;
   try
     if JsonValue <> nil then
     begin
-      // Formata o JSON com indentação
-      //PrettyJson := JsonValue.Format(2);  // O número 2 define o número de espaços para a indentação
-
-      // Exibe o JSON formatado no TMemo
       Memo.Lines.add(PrettyJson);
     end
     else
@@ -498,7 +407,6 @@ begin
     JsonValue.Free;
   end;
 end;
-
 
 end.
 

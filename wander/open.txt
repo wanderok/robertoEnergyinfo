@@ -1,0 +1,1 @@
+echo -n "$(cat JWT.txt" | c:\wander\openssl\openssl dgst -sha256 -keyform pem -sign oxymed.homologacao.key.pem|enc -base64|tr -d '=[space:]' | tr '+/' '-_'

@@ -1,0 +1,54 @@
+<launch>
+  <arg name="date" default="" />
+  <arg name="log_files" default="false"/>
+  <arg name="topics" default="/uav/error /uav/line /plt_cv/lines /mavros/global_position/local /mavros/state" />
+  
+  <!-- OPTIONS: median blur gaussian bilateral -->
+  <arg name="kernel" default="3"/>
+  <arg name="filter" default="blur"/>
+
+  <!-- OPTIONS: sobel canny laplacian -->
+  <arg name="edge" default="sobel"/>
+
+  <arg name="line" default="houghlines"/>
+  <arg name="houghThreshold" default="150"/>
+
+  <arg name="use_rosbag" default="false"/>
+  <!-- You should have a bagfile with images captured by the vant typhoon or a stream of the camera-->
+  <arg name="bagfile" default="missionZ16m"/>
+  <arg name="option" default=""/>
+
+  <!-- Image processing node -->
+  <include file="$(find plt_cv)/launch/img_preprocessing.launch">
+    <arg name="filter" value="$(arg filter)"/>
+    <arg name="kernel" value="$(arg kernel)"/>
+    <arg name="edge" value="$(arg edge)"/>
+    <arg name="line" value="$(arg line)"/>
+    <arg name="houghThreshold" value="$(arg houghThreshold)"/>
+  </include>
+
+  <!-- Line tracking node -->
+  <include file="$(find plt_cv)/launch/line_tracking.launch"/>
+
+
+  <!-- Rosbag playback node -->
+  <!-- Play Bagfile -->
+  <group if="$(arg use_rosbag)">
+    <include file="$(find plt_resources)/launch/rosbag_play.launch">
+      <arg name="bagfile" value="$(arg bagfile)"/>
+      <arg name="option" value="$(arg option)"/>
+    </include>
+  </group>
+
+  <!-- Rosbag record topics node -->
+  <group if="$(arg log_files)">
+    <include file="$(find plt_resources)/launch/record_log.launch">
+      <arg name="date" value="$(arg date)"/>
+      <arg name="bagfile" value="$(arg bagfile)"/>
+      <arg name="edge" value="$(arg edge)"/>
+      <arg name="filter" value="$(arg filter)"/>
+      <arg name="topics" value="$(arg topics)"/>
+    </include>
+  </group>
+
+</launch>

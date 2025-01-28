@@ -1,0 +1,1 @@
+c:\wander\openssl\bin\openssl.exe base64 -in c:\wander\signature.base64.txt -out c:\wander\signature.base64ok.txt

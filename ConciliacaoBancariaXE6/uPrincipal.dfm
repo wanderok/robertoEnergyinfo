@@ -45,7 +45,7 @@ object frmPrincipal: TfrmPrincipal
     Top = 58
     Width = 1244
     Height = 691
-    ActivePage = TabSheet2
+    ActivePage = TabSheet9
     Align = alClient
     TabOrder = 1
     object TabSheet1: TTabSheet
@@ -1025,12 +1025,24 @@ object frmPrincipal: TfrmPrincipal
         Left = 0
         Top = 41
         Width = 1236
-        Height = 504
+        Height = 291
         Align = alTop
         Color = 8454143
         Lines.Strings = (
           'mmJWT')
         TabOrder = 1
+      end
+      object mmJWT64: TMemo
+        Left = 0
+        Top = 333
+        Width = 1236
+        Height = 328
+        Align = alBottom
+        Color = 8454016
+        Lines.Strings = (
+          'mmJWT')
+        TabOrder = 2
+        ExplicitTop = 49
       end
     end
     object TabSheet9: TTabSheet
@@ -1055,12 +1067,24 @@ object frmPrincipal: TfrmPrincipal
         Left = 0
         Top = 41
         Width = 1236
-        Height = 504
+        Height = 291
         Align = alTop
         Color = 8454143
         Lines.Strings = (
           'mmAssinatura')
         TabOrder = 1
+      end
+      object mmAssinatura64: TMemo
+        Left = 0
+        Top = 333
+        Width = 1236
+        Height = 328
+        Align = alBottom
+        Color = 8454016
+        Lines.Strings = (
+          'mmJWT')
+        TabOrder = 2
+        ExplicitTop = 49
       end
     end
     object TabSheet10: TTabSheet

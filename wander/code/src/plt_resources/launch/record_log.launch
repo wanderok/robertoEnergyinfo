@@ -1,0 +1,18 @@
+<launch>
+
+    <arg name="date" default="2000-01-01-00:00:00" />
+    <arg name="bagfile" default="none" />
+    <arg name="edge" default="none" />
+    <arg name="filter" default="none" />
+
+    <arg name="path" default="$(find plt_resources)/logs" />
+    <arg name="topics" default="" />
+
+    <node pkg="rosbag" type="record" name="rosbag_record"
+        args="record -O 
+        $(arg path)/$(arg date)/$(arg bagfile)/$(arg edge)/$(arg filter)/log.bag
+    
+        $(arg topics)"
+    />
+
+</launch>

@@ -1,0 +1,11 @@
+na pasta c:\openssl
+
+existem 3 arquivos:
+
+1. criar1.bat
+
+2. criar2.bat
+
+3. assinar_exe.bat
+
+Basta executar o 1 e 2 e antes de executar o 3o, alterar o nome do executavel.

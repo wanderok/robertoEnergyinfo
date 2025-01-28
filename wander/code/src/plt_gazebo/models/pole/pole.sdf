@@ -1,0 +1,185 @@
+<sdf version='1.6'>
+  <model name='pole'>
+    <link name='footprint'>
+      <pose frame=''>0 0 0 0 -0 0</pose>
+      <inertial>
+        <pose frame=''>0.044423 0 0.064166 0 -0 0</pose>
+        <mass>101.3</mass>
+        <inertia>
+          <ixx>871.771</ixx>
+          <ixy>-4.44089e-16</ixy>
+          <ixz>-22.2113</ixz>
+          <iyy>938.276</iyy>
+          <iyz>0</iyz>
+          <izz>75.2211</izz>
+        </inertia>
+      </inertial>
+      <collision name='footprint_fixed_joint_lump__base_link_collision'>
+        <pose frame=''>0 0 0 0 -0 0</pose>
+        <geometry>
+          <cylinder>
+            <length>10</length>
+            <radius>0.25</radius>
+          </cylinder>
+        </geometry>
+        <surface>
+          <contact>
+            <ode/>
+          </contact>
+          <friction>
+            <ode/>
+          </friction>
+        </surface>
+      </collision>
+      <collision name='footprint_fixed_joint_lump__top_collision_1'>
+        <pose frame=''>0 0 5 0 -0 1.5708</pose>
+        <geometry>
+          <box>
+            <size>4.2 0.4 0.4</size>
+          </box>
+        </geometry>
+        <surface>
+          <contact>
+            <ode/>
+          </contact>
+          <friction>
+            <ode/>
+          </friction>
+        </surface>
+      </collision>
+      <collision name='footprint_fixed_joint_lump__center_cable_link_collision_2'>
+        <pose frame=''>15 0 5 3.14159 1.57079 3.14159</pose>
+        <geometry>
+          <cylinder>
+            <length>30</length>
+            <radius>0.015</radius>
+          </cylinder>
+        </geometry>
+        <surface>
+          <contact>
+            <ode/>
+          </contact>
+          <friction>
+            <ode/>
+          </friction>
+        </surface>
+      </collision>
+      <collision name='footprint_fixed_joint_lump__left_cable_link_collision_3'>
+        <pose frame=''>15 1.995 5 3.14159 1.57079 3.14159</pose>
+        <geometry>
+          <cylinder>
+            <length>30</length>
+            <radius>0.015</radius>
+          </cylinder>
+        </geometry>
+        <surface>
+          <contact>
+            <ode/>
+          </contact>
+          <friction>
+            <ode/>
+          </friction>
+        </surface>
+      </collision>
+      <collision name='footprint_fixed_joint_lump__right_cable_link_collision_4'>
+        <pose frame=''>15 -1.995 5 3.14159 1.57079 3.14159</pose>
+        <geometry>
+          <cylinder>
+            <length>30</length>
+            <radius>0.015</radius>
+          </cylinder>
+        </geometry>
+        <surface>
+          <contact>
+            <ode/>
+          </contact>
+          <friction>
+            <ode/>
+          </friction>
+        </surface>
+      </collision>
+      <visual name='footprint_fixed_joint_lump__base_link_visual'>
+        <pose frame=''>0 0 0 0 -0 0</pose>
+        <geometry>
+          <cylinder>
+            <length>10</length>
+            <radius>0.25</radius>
+          </cylinder>
+        </geometry>
+        <material>
+          <script>
+            <name>Gazebo/Orange</name>
+            <uri>file://media/materials/scripts/gazebo.material</uri>
+          </script>
+        </material>
+      </visual>
+      <visual name='footprint_fixed_joint_lump__top_visual_1'>
+        <pose frame=''>0 0 5 0 -0 1.5708</pose>
+        <geometry>
+          <box>
+            <size>4.2 0.4 0.4</size>
+          </box>
+        </geometry>
+        <material>
+          <script>
+            <name>Gazebo/Orange</name>
+            <uri>file://media/materials/scripts/gazebo.material</uri>
+          </script>
+        </material>
+      </visual>
+      <visual name='footprint_fixed_joint_lump__center_cable_link_visual_2'>
+        <pose frame=''>15 0 5 3.14159 1.57079 3.14159</pose>
+        <geometry>
+          <cylinder>
+            <length>30</length>
+            <radius>0.015</radius>
+          </cylinder>
+        </geometry>
+        <material>
+          <script>
+            <name>Gazebo/Black</name>
+            <uri>file://media/materials/scripts/gazebo.material</uri>
+          </script>
+        </material>
+      </visual>
+      <visual name='footprint_fixed_joint_lump__left_cable_link_visual_3'>
+        <pose frame=''>15 1.995 5 3.14159 1.57079 3.14159</pose>
+        <geometry>
+          <cylinder>
+            <length>30</length>
+            <radius>0.015</radius>
+          </cylinder>
+        </geometry>
+        <material>
+          <script>
+            <name>Gazebo/Black</name>
+            <uri>file://media/materials/scripts/gazebo.material</uri>
+          </script>
+        </material>
+      </visual>
+      <visual name='footprint_fixed_joint_lump__right_cable_link_visual_4'>
+        <pose frame=''>15 -1.995 5 3.14159 1.57079 3.14159</pose>
+        <geometry>
+          <cylinder>
+            <length>30</length>
+            <radius>0.015</radius>
+          </cylinder>
+        </geometry>
+        <material>
+          <script>
+            <name>Gazebo/Black</name>
+            <uri>file://media/materials/scripts/gazebo.material</uri>
+          </script>
+        </material>
+      </visual>
+      <velocity_decay/>
+      <velocity_decay/>
+      <velocity_decay/>
+      <velocity_decay/>
+      <gravity>1</gravity>
+      <velocity_decay/>
+      <self_collide>0</self_collide>
+    </link>
+    <static>1</static>
+  </model>
+</sdf>

@@ -1,0 +1,1 @@
+c:\wander\openssl\bin\openssl.exe dgst -sha256 -keyform PEM -sign c:\wander\oxymed.homologacao.key.pem -out c:\wander\signature.base64.txt c:\wander\jwt.txt
