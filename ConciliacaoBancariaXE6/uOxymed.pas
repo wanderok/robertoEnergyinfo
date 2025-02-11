@@ -17,10 +17,10 @@ uses
   System.Diagnostics,
   System.DateUtils,
   Vcl.Clipbrd,
-  ACBrDFeSSL,
+//  ACBrDFeSSL,
 
 IdCoderMIME,
-  synacode,
+  //synacode,
 
   IdException;
 
@@ -619,6 +619,10 @@ var
   ExitCode: DWORD;
   OutputFile:String;
 begin
+
+self.FAssinatura := '';
+exit;
+
     CriarEExecutarBat;
 
     OutputFile := self.FPastaDeTrabalho+ '\signature.base64ok.txt';
@@ -786,7 +790,10 @@ end;
 
 procedure TBradesco.GerarJWS;
 begin
-  self.FJWS := self.FHeaderBase64 + '.' + self.FPayloadBase64 + '.' + self.FAssinaturaBase64URL;
+  self.FJWS := self.FHeaderBase64 + '.' + self.FPayloadBase64 + '.' +
+  'EuXYGh-QKmWEM34luCw9JMBQ41n9spcwl7_Xmv1euACK3-CRmE8h7jHFpA99D1HFoKV7hcuP0RuiqjIC5tADQDWoTu2Fo8YjbpqLu_rqAdxrsvjiPID6mcD9nk1-acBWAQ3TZOq3Dz6WYUa7uYnejeAOq67gs8zyTF6hI-tG5yfRO8-GD-OlaqXToYSjQXD_q4936e1D-hCtXiylCUKL9C7OGkB7ovPCMihWZdN8hbwEnc7Q0yLkrP06MnMnkOI-0YQ4VBEjCiLp3jNpXd8WFItGbYonytFPr0-Czqq7Iyg15x-5ZXTLcjUPN1pujgPHrGvA1UANaQN4Eg80H-Ledw';
+
+//  self.FAssinaturaBase64URL;
 end;
 
 procedure TBradesco.GerarAssinaturaJWT;
@@ -921,7 +928,11 @@ end;
 end.
 
 
-  { https://jwt.io/ }
+{
+https://jwt.io/
+https://www.timestamp-converter.com/
+
+}
 {
   As credenciais do ambiente de homologação já foram criadas, segue abaixo:
   Client Key: 9693f06b-b929-4a9c-8182-e25270c4029d
@@ -940,3 +951,5 @@ iat
 exp
 jti
 ver
+
+

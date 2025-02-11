@@ -120,6 +120,7 @@ type
     property ClientKey: string read FClientKey write FClientKey;
     property BearerToken: string read FBearerToken write FBearerToken;
     property Assinatura: string read FAssinatura write FAssinatura;
+    property AssinaturaBase64URL: string read FAssinaturaBase64URL write FAssinaturaBase64URL;
     property PastaDeTrabalho: string read FPastaDeTrabalho
       write FPastaDeTrabalho;
 
@@ -193,7 +194,6 @@ procedure TBradesco.CriarHeader;
 var
   Header: TJSONObject;
 begin
-
   Header := TJSONObject.Create;
   try
     Header.AddPair('alg', 'RS256');
@@ -220,27 +220,36 @@ begin
   EXP := IAT + 3600;
   JTI := IAT * 1000;
 
-  Payload := TJSONObject.Create;
+//  Payload := TJSONObject.Create;
   try
-    Pair := TJSONPair.Create('aud', self.FAPIToken);
-    Payload.AddPair(Pair);
+//    Pair := TJSONPair.Create('aud', self.FAPIToken);
+//    Payload.AddPair(Pair);
+//
+//    Pair := TJSONPair.Create('sub', self.ClientKey);
+//    Payload.AddPair(Pair);
+//
+//    Pair := TJSONPair.Create('iat', intToStr(IAT));
+//    Payload.AddPair(Pair);
+//
+//    Pair := TJSONPair.Create('exp', intToStr(EXP));
+//    Payload.AddPair(Pair);
+//
+//    Pair := TJSONPair.Create('jti', intToStr(JTI));
+//    Payload.AddPair(Pair);
+//
+//    Pair := TJSONPair.Create('ver', '1.1');
+//    Payload.AddPair(Pair);
+//
+//    self.FPayload := Payload.ToString;
+Payload := TJSONObject.Create;
+Payload.AddPair('aud', self.FAPIToken);
+Payload.AddPair('sub', self.ClientKey);
+Payload.AddPair('iat', IntToStr(IAT));
+Payload.AddPair('exp', IntToStr(EXP));
+Payload.AddPair('jti', IntToStr(JTI));
+Payload.AddPair('ver', '1.1');
+self.FPayload := Payload.ToString;
 
-    Pair := TJSONPair.Create('sub', self.ClientKey);
-    Payload.AddPair(Pair);
-
-    Pair := TJSONPair.Create('iat', intToStr(IAT));
-    Payload.AddPair(Pair);
-
-    Pair := TJSONPair.Create('exp', intToStr(EXP));
-    Payload.AddPair(Pair);
-
-    Pair := TJSONPair.Create('jti', intToStr(JTI));
-    Payload.AddPair(Pair);
-
-    Pair := TJSONPair.Create('ver', '1.1');
-    Payload.AddPair(Pair);
-
-    self.FPayload := Payload.ToString;
   finally
     Payload.Free;
   end;
@@ -620,7 +629,8 @@ begin
   end;
 
   //self.FAssinatura := Base64ToBase64URL(TFile.ReadAllText(OutputFile).Trim); // Retorna o conteúdo do arquivo
-  self.FAssinatura := ToBase64Url(TFile.ReadAllText(OutputFile).Trim); // Retorna o conteúdo do arquivo
+  self.FAssinatura := TFile.ReadAllText(OutputFile).Trim; // Retorna o conteúdo do arquivo
+  self.FAssinaturaBase64URL := ToBase64Url(self.FAssinatura);
 
   exit;
 {
@@ -776,7 +786,7 @@ end;
 
 procedure TBradesco.GerarJWS;
 begin
-  self.FJWS := self.FHeaderBase64 + '.' + self.FPayloadBase64 + '.' + self.FAssinatura; // self.FAssinaturaBase64URL;
+  self.FJWS := self.FHeaderBase64 + '.' + self.FPayloadBase64 + '.' + self.FAssinaturaBase64URL;
 end;
 
 procedure TBradesco.GerarAssinaturaJWT;
@@ -830,9 +840,10 @@ begin
     end;
 
     Base64Signature := GetBase64FromFile(self.FPastaDeTrabalho + '\signatureJWS.bin');
+    self.FAssinatura := Base64Signature;
     self.FAssinaturaBase64URL := Base64ToBase64URL(Base64Signature);
 
-    self.FAssinatura := self.FAssinaturaBase64URL;
+    //self.FAssinaturaBase64URL := self.FAssinaturaBase64URL;
   except
     ShowMessage('Erro ao gerar assinatura JWT');
   end;

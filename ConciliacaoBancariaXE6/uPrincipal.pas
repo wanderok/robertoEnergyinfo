@@ -6,8 +6,9 @@ uses
   Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes, Vcl.Graphics,
   Vcl.Controls, Vcl.Forms, Vcl.Dialogs,Soap.InvokeRegistry, IdHTTP, IdSSL, IdSSLOpenSSL,
   Vcl.StdCtrls, Vcl.ExtCtrls, Vcl.ComCtrls, System.IniFiles, System.Rtti,
-  IdCoderMIME, IdGlobal, uOxymed, System.JSON, ACBrBase, ACBrEAD, Vcl.Buttons,
-  synacode;
+  IdCoderMIME, IdGlobal, uOxymed, System.JSON,
+  //ACBrBase, ACBrEAD, synacode;
+  Vcl.Buttons;
 
 type
   TfrmPrincipal = class(TForm)
@@ -49,7 +50,6 @@ type
     Button1: TButton;
     Label15: TLabel;
     edtPastaDeTrabalhoBradesco: TEdit;
-    ACBrEAD1: TACBrEAD;
     gbPrivKey: TGroupBox;
     Label16: TLabel;
     mPrivKey: TMemo;
