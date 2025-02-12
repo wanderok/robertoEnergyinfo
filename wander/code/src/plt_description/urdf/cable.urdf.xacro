@@ -1,0 +1,44 @@
+<?xml version="1.0"?>
+
+<!-- XML namespaces -->
+<robot xmlns:xacro="http://www.ros.org/wiki/xacro">
+
+    <xacro:property name="M_PI" value="3.1415926535897931" />
+    <xacro:property name="cylinder_radius" value="0.015" />
+
+    <!-- ============================   Cable Macro   ============================ -->
+    <xacro:macro name="cable_macro" params="prefix parent reflect parent_length cable_length">
+        <joint name="${prefix}_cable_joint" type="fixed">
+            <origin xyz="${cable_length/2} ${0.95*reflect*parent_length/2.0} 0" rpy="0 ${M_PI/2} 0" />
+            <parent link="${parent}"/>
+            <child link="${prefix}_cable_link"/>
+        </joint>
+
+        <link name="${prefix}_cable_link">
+            <inertial>
+                <mass value="0.1"/>
+                <inertia ixx="1.0" ixy="0.0" ixz="0.0" iyy="1.0" iyz="0.0" izz="1.0"/>
+            </inertial>
+            <visual>
+                <geometry>
+                    <cylinder length="${cable_length}" radius="${cylinder_radius}"/>
+                </geometry>
+                <origin rpy="0 0 0" xyz="0 0 0"/>
+                <material name="cinza"/>
+            </visual>
+            <collision>
+                <geometry>
+                    <cylinder length="${cable_length}" radius="${cylinder_radius}"/>
+                </geometry>
+                <origin rpy="0 0 0" xyz="0 0 0"/>
+                <material name="cinza"/>
+            </collision>
+        </link>
+    
+        <!-- Trocando a cor -->
+        <gazebo reference="${prefix}_cable_link">
+            <material>Gazebo/Black</material>
+        </gazebo>
+    </xacro:macro>
+
+</robot>

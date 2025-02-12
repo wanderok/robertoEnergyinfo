@@ -8,7 +8,7 @@ uses
   Vcl.StdCtrls, Vcl.ExtCtrls, Vcl.ComCtrls, System.IniFiles, System.Rtti,
   IdCoderMIME, IdGlobal, uOxymed, System.JSON,
   //ACBrBase, ACBrEAD, synacode;
-  Vcl.Buttons;
+  Vcl.Buttons, ACBrBase, ACBrEAD;
 
 type
   TfrmPrincipal = class(TForm)
@@ -104,6 +104,7 @@ type
     mmExtrato: TMemo;
     mmJWT64: TMemo;
     mmAssinatura64: TMemo;
+    ACBrEAD1: TACBrEAD;
     procedure Button1Click(Sender: TObject);
     procedure FormShow(Sender: TObject);
     procedure Button3Click(Sender: TObject);

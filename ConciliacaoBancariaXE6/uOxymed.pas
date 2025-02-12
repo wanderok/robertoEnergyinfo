@@ -210,50 +210,82 @@ begin
   self.FHeaderBase64 := CodificarBase64(self.FHeader);
 end;
 
+//procedure TBradesco.CriarPayload;
+//var
+//  Payload: TJSONObject;
+//  Pair: TJSONPair;
+//  IAT, EXP, JTI: Int64;
+//begin
+//  IAT := Trunc(Now * 86400) + 25569;
+//  EXP := IAT + 3600;
+//  JTI := IAT * 1000;
+//
+////  Payload := TJSONObject.Create;
+//  try
+////    Pair := TJSONPair.Create('aud', self.FAPIToken);
+////    Payload.AddPair(Pair);
+////
+////    Pair := TJSONPair.Create('sub', self.ClientKey);
+////    Payload.AddPair(Pair);
+////
+////    Pair := TJSONPair.Create('iat', intToStr(IAT));
+////    Payload.AddPair(Pair);
+////
+////    Pair := TJSONPair.Create('exp', intToStr(EXP));
+////    Payload.AddPair(Pair);
+////
+////    Pair := TJSONPair.Create('jti', intToStr(JTI));
+////    Payload.AddPair(Pair);
+////
+////    Pair := TJSONPair.Create('ver', '1.1');
+////    Payload.AddPair(Pair);
+////
+////    self.FPayload := Payload.ToString;
+//Payload := TJSONObject.Create;
+//Payload.AddPair('aud', self.FAPIToken);
+//Payload.AddPair('sub', self.ClientKey);
+//Payload.AddPair('iat', IntToStr(IAT));
+//Payload.AddPair('exp', IntToStr(EXP));
+//Payload.AddPair('jti', IntToStr(JTI));
+//Payload.AddPair('ver', '1.1');
+//self.FPayload := Payload.ToString;
+//
+//  finally
+//    Payload.Free;
+//  end;
+//end;
+
 procedure TBradesco.CriarPayload;
 var
   Payload: TJSONObject;
   Pair: TJSONPair;
   IAT, EXP, JTI: Int64;
 begin
-  IAT := Trunc(Now * 86400) + 25569;
+  // Calculando Unix Timestamp em segundos
+  IAT := Trunc((Now - EncodeDate(1970, 1, 1)) * 86400);
+
+  // EXP é 1 hora após IAT
   EXP := IAT + 3600;
+
+  // JTI é o IAT em milissegundos
   JTI := IAT * 1000;
 
-//  Payload := TJSONObject.Create;
-  try
-//    Pair := TJSONPair.Create('aud', self.FAPIToken);
-//    Payload.AddPair(Pair);
-//
-//    Pair := TJSONPair.Create('sub', self.ClientKey);
-//    Payload.AddPair(Pair);
-//
-//    Pair := TJSONPair.Create('iat', intToStr(IAT));
-//    Payload.AddPair(Pair);
-//
-//    Pair := TJSONPair.Create('exp', intToStr(EXP));
-//    Payload.AddPair(Pair);
-//
-//    Pair := TJSONPair.Create('jti', intToStr(JTI));
-//    Payload.AddPair(Pair);
-//
-//    Pair := TJSONPair.Create('ver', '1.1');
-//    Payload.AddPair(Pair);
-//
-//    self.FPayload := Payload.ToString;
-Payload := TJSONObject.Create;
-Payload.AddPair('aud', self.FAPIToken);
-Payload.AddPair('sub', self.ClientKey);
-Payload.AddPair('iat', IntToStr(IAT));
-Payload.AddPair('exp', IntToStr(EXP));
-Payload.AddPair('jti', IntToStr(JTI));
-Payload.AddPair('ver', '1.1');
-self.FPayload := Payload.ToString;
+  // Criando o payload
+  Payload := TJSONObject.Create;
+  Payload.AddPair('aud', self.FAPIToken);
+  Payload.AddPair('sub', self.ClientKey);
+  Payload.AddPair('iat', IntToStr(IAT));  // Unix timestamp em segundos
+  Payload.AddPair('exp', IntToStr(EXP));  // Unix timestamp em segundos
+  Payload.AddPair('jti', IntToStr(JTI));  // Unix timestamp em milissegundos
+  Payload.AddPair('ver', '1.1');
 
-  finally
-    Payload.Free;
-  end;
+  self.FPayload := Payload.ToString;
+
+  // Libera o Payload
+  Payload.Free;
 end;
+
+
 
 procedure TBradesco.CriarPayloadBase64;
 begin
@@ -619,10 +651,6 @@ var
   ExitCode: DWORD;
   OutputFile:String;
 begin
-
-self.FAssinatura := '';
-exit;
-
     CriarEExecutarBat;
 
     OutputFile := self.FPastaDeTrabalho+ '\signature.base64ok.txt';
@@ -790,8 +818,9 @@ end;
 
 procedure TBradesco.GerarJWS;
 begin
-  self.FJWS := self.FHeaderBase64 + '.' + self.FPayloadBase64 + '.' +
-  'EuXYGh-QKmWEM34luCw9JMBQ41n9spcwl7_Xmv1euACK3-CRmE8h7jHFpA99D1HFoKV7hcuP0RuiqjIC5tADQDWoTu2Fo8YjbpqLu_rqAdxrsvjiPID6mcD9nk1-acBWAQ3TZOq3Dz6WYUa7uYnejeAOq67gs8zyTF6hI-tG5yfRO8-GD-OlaqXToYSjQXD_q4936e1D-hCtXiylCUKL9C7OGkB7ovPCMihWZdN8hbwEnc7Q0yLkrP06MnMnkOI-0YQ4VBEjCiLp3jNpXd8WFItGbYonytFPr0-Czqq7Iyg15x-5ZXTLcjUPN1pujgPHrGvA1UANaQN4Eg80H-Ledw';
+  self.FJWS := self.FHeaderBase64 + '.' + self.FPayloadBase64+ '.' +self.FAssinaturaBase64URL;
+  // + '.' +
+  //'EuXYGh-QKmWEM34luCw9JMBQ41n9spcwl7_Xmv1euACK3-CRmE8h7jHFpA99D1HFoKV7hcuP0RuiqjIC5tADQDWoTu2Fo8YjbpqLu_rqAdxrsvjiPID6mcD9nk1-acBWAQ3TZOq3Dz6WYUa7uYnejeAOq67gs8zyTF6hI-tG5yfRO8-GD-OlaqXToYSjQXD_q4936e1D-hCtXiylCUKL9C7OGkB7ovPCMihWZdN8hbwEnc7Q0yLkrP06MnMnkOI-0YQ4VBEjCiLp3jNpXd8WFItGbYonytFPr0-Czqq7Iyg15x-5ZXTLcjUPN1pujgPHrGvA1UANaQN4Eg80H-Ledw';
 
 //  self.FAssinaturaBase64URL;
 end;

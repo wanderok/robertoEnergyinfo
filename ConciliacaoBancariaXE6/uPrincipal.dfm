@@ -50,10 +50,6 @@ object frmPrincipal: TfrmPrincipal
     TabOrder = 1
     object TabSheet1: TTabSheet
       Caption = 'Extrato'
-      ExplicitLeft = 0
-      ExplicitTop = 0
-      ExplicitWidth = 0
-      ExplicitHeight = 0
       object Button1: TButton
         Left = 56
         Top = 20
@@ -73,10 +69,6 @@ object frmPrincipal: TfrmPrincipal
     object TabSheet2: TTabSheet
       Caption = 'Configura'#231#245'es'
       ImageIndex = 1
-      ExplicitLeft = 0
-      ExplicitTop = 0
-      ExplicitWidth = 0
-      ExplicitHeight = 0
       object Label1: TLabel
         Left = 6
         Top = 8
@@ -896,10 +888,6 @@ object frmPrincipal: TfrmPrincipal
     object TabSheet6: TTabSheet
       Caption = 'Header'
       ImageIndex = 2
-      ExplicitLeft = 0
-      ExplicitTop = 0
-      ExplicitWidth = 0
-      ExplicitHeight = 0
       object Panel3: TPanel
         Left = 0
         Top = 0
@@ -964,10 +952,6 @@ object frmPrincipal: TfrmPrincipal
     object TabSheet7: TTabSheet
       Caption = 'Payload'
       ImageIndex = 3
-      ExplicitLeft = 0
-      ExplicitTop = 0
-      ExplicitWidth = 0
-      ExplicitHeight = 0
       object Panel4: TPanel
         Left = 0
         Top = 0
@@ -1032,10 +1016,6 @@ object frmPrincipal: TfrmPrincipal
     object TabSheet8: TTabSheet
       Caption = 'JWT'
       ImageIndex = 4
-      ExplicitLeft = 0
-      ExplicitTop = 0
-      ExplicitWidth = 0
-      ExplicitHeight = 0
       object Panel9: TPanel
         Left = 0
         Top = 0
@@ -1072,16 +1052,11 @@ object frmPrincipal: TfrmPrincipal
         Lines.Strings = (
           'mmJWT')
         TabOrder = 2
-        ExplicitTop = 49
       end
     end
     object TabSheet9: TTabSheet
       Caption = 'Assinatura'
       ImageIndex = 5
-      ExplicitLeft = 0
-      ExplicitTop = 0
-      ExplicitWidth = 0
-      ExplicitHeight = 0
       object Panel10: TPanel
         Left = 0
         Top = 0
@@ -1118,16 +1093,11 @@ object frmPrincipal: TfrmPrincipal
         Lines.Strings = (
           'mmJWT')
         TabOrder = 2
-        ExplicitTop = 49
       end
     end
     object TabSheet10: TTabSheet
       Caption = 'JWS'
       ImageIndex = 6
-      ExplicitLeft = 0
-      ExplicitTop = 0
-      ExplicitWidth = 0
-      ExplicitHeight = 0
       object Panel11: TPanel
         Left = 0
         Top = 0
@@ -1158,10 +1128,6 @@ object frmPrincipal: TfrmPrincipal
     object TabSheet11: TTabSheet
       Caption = 'Access Token'
       ImageIndex = 7
-      ExplicitLeft = 0
-      ExplicitTop = 0
-      ExplicitWidth = 0
-      ExplicitHeight = 0
       object Panel12: TPanel
         Left = 0
         Top = 0
@@ -1192,10 +1158,6 @@ object frmPrincipal: TfrmPrincipal
     object TabSheet12: TTabSheet
       Caption = 'Extrato'
       ImageIndex = 8
-      ExplicitLeft = 0
-      ExplicitTop = 0
-      ExplicitWidth = 0
-      ExplicitHeight = 0
       object Panel13: TPanel
         Left = 0
         Top = 0
@@ -1227,5 +1189,9 @@ object frmPrincipal: TfrmPrincipal
   object OpenDialog1: TOpenDialog
     Left = 560
     Top = 424
+  end
+  object ACBrEAD1: TACBrEAD
+    Left = 336
+    Top = 192
   end
 end
